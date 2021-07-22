@@ -51,7 +51,7 @@ gradle clean build
     ├── generated
     ├── java
     │   └── com
-    │       └── ssafy
+    │       └── babble
     │           ├── GroupCallApplication.java
     │           ├── api  /* REST API 요청관련 컨트롤러, 서비스, 요청/응답 모델 정의*/
     │           │   ├── controller
@@ -121,7 +121,7 @@ gradle clean build
         │   │   ├── element-icons.abe71f7d.ttf
         │   │   └── element-icons.d9491be2.woff
         │   ├── img
-        │   │   └── ssafy-logo.74eec4f3.png
+        │   │   └── babble-logo.74eec4f3.png
         │   ├── index.html
         │   └── js
         │       ├── app.2a195a37.js
@@ -138,7 +138,7 @@ gradle clean build
         │   ├── assets /* 리소스 저장용 폴더 */
         │   │   ├── images
         │   │   |   ├── sample-image.png
-        │   │   |   └── ssafy-logo.png
+        │   │   |   └── babble-logo.png
         |   |   └── fonts /* 폰트 저장 폴더 */
         │   ├── common
         │   │   ├── css

@@ -1,4 +1,4 @@
-package com.ssafy.db.entity;
+package com.babble.db.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 

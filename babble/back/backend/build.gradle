@@ -46,7 +46,7 @@ repositories {
     maven { url "https://build.shibboleth.net/nexus/content/repositories/releases" }
 }
 
-group 'com.ssafy'
+group 'com.babble'
 version '1.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
