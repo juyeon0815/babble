@@ -1,5 +1,6 @@
 <template>
  <h1>메인.vue</h1>
+ <router-view></router-view>
 </template>
 
 <style>
