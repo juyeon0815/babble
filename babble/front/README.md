@@ -1,6 +1,27 @@
-front
+# babble
 
-07-22 init eunji
+## Project setup
+```
+npm install
+```
 
-07-22 init jimin
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
 
