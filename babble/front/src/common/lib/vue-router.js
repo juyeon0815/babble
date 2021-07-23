@@ -4,7 +4,7 @@ import ConferencesDetail from '@/views/conferences/conference-detail'
 
 const fullMenu = require('@/views/main/menu.json')
 function makeRoutesFromMenu () {
-  let routes = Object.keys(fullMenu).map((key) => { 
+  let routes = Object.keys(fullMenu).map((key) => {
     if (key === 'home') {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else { // menu.json 에 들어있는 로그아웃 메뉴
