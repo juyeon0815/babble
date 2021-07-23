@@ -18,6 +18,6 @@ public class UserUpdatePatchReq {
 	String position;
 	@ApiModelProperty(name="유저 name", example="your_name")
 	String name;
-	@ApiModelProperty(name="유저 ID", example="ssafy_web")
+	@ApiModelProperty(name="유저 ID", example="your_id")
 	String id;
 }
