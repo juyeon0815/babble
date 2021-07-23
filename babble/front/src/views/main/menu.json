@@ -2,15 +2,11 @@
   "home" : {
     "name" : "홈",       
     "hidden" : false,
-    "path" : "/",
-    "icon" : "el-icon-s-home",
-    "children" : []
+    "path" : "/"
   },
-  "history" : {
-    "name" : "지난 회의 이력",
+  "category" : {
+    "name" : "카테고리",
     "hidden" : false,
-    "path" : "/history",
-    "icon" : "el-icon-s-order",
-    "children" : []
+    "path" : "/category"
   }
 }

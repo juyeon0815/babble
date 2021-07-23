@@ -1,4 +1,5 @@
 // ROOT STATE 변수 정의 및 기본값 대입
+const menuData = require('@/views/main/menu.json')
 
 
 /**
@@ -45,5 +46,7 @@ const token = getJwt()
 
 export default {
   isDesktopPlatform: IsDesktop,
+  activeMenu: 'home',
+  menus: menuData,
   token: token
 }

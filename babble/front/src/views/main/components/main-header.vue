@@ -1,30 +1,24 @@
 <template>
-  <div class="header-space">
-    <el-row class="lg-nav">
-      <h2>Babble</h2>
-      <el-input prefix-icon="el-icon-search" class="search-bar"></el-input>
-      <el-button type="info" plain>카테고리</el-button>
-      <div>
-        <el-button type="primary" plain @click="clickSignup">회원가입</el-button>
-        <el-button type="info" plain @click="clickLogin">로그인</el-button>
-      </div>
-    </el-row>
-  </div>
+  <el-row class="navbar">
+    <h2 @click="clickLogo">Babble</h2>
+    <el-input prefix-icon="el-icon-search" class="search-bar"></el-input>
+    <el-button type="info" plain @click="clickCategory">카테고리</el-button>
+    <div>
+      <el-button type="primary" plain @click="clickSignup">회원가입</el-button>
+      <el-button type="info" plain @click="clickLogin">로그인</el-button>
+    </div>
+  </el-row>
 </template>
 
 <style scoped>
-  .header-space {
-    height: 500px;
+  .navbar {
+    padding-top: 5px;
+    justify-content: space-around;
+    align-items: center;
     background-color: #d3c4ed;
   }
 
-  .header-space .lg-nav {
-    padding-top: 10px;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-  .header-space .lg-nav .search-bar {
+  .navbar .search-bar {
     width: 400px;
     display: inline;
     margin: 20px;
@@ -32,8 +26,24 @@
 </style>
 
 <script>
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+
+
 export default {
   setup() {
+    const router = useRouter()
+    const store = useStore()
+
+    const clickLogo = () => {
+      store.commit('root/setMenuActive', 0)
+      const MenuItems = store.getters['root/getMenus']
+      let keys = Object.keys(MenuItems)
+      router.push({
+        name: keys[0]
+      })
+    }
+
     const clickSignup = function () {
       console.log('clickSignup')
     }
@@ -42,7 +52,16 @@ export default {
       console.log('clickLogin')
     }
 
-    return { clickSignup, clickLogin }
+    const clickCategory = function () {
+      store.commit('root/setMenuActive', 1)
+      const MenuItems = store.getters['root/getMenus']
+      let keys = Object.keys(MenuItems)
+      router.push({
+        name: keys[1]
+      })
+    }
+
+    return { clickLogo, clickSignup, clickLogin, clickCategory }
   }
 }
 </script>
