@@ -1,7 +1,12 @@
 <template>
-  <MainHeader />
+  <MainHeader
+    @openLoginDialog="onOpenLoginDialog"/>
   <router-view></router-view>
   <MainFooter />
+  <LoginDialog
+    :open="loginDialogOpen"
+    @closeLoginDialog="onCloseLoginDialog"/>
+
 </template>
 
 <style>
@@ -13,19 +18,28 @@
 <script>
 import MainHeader from './components/main-header'
 import MainFooter from './components/main-footer'
+import LoginDialog from './components/login-dialog'
 
 export default {
   name: 'Main',
   components: {
     MainHeader,
-    MainFooter
+    MainFooter,
+    LoginDialog,
   },
   data () {
     return {
+      loginDialogOpen: false,
     }
   },
 
   methods: {
+    onOpenLoginDialog () {
+      this.loginDialogOpen = true
+    },
+    onCloseLoginDialog () {
+      this.loginDialogOpen = false
+    },
 
   }
 }

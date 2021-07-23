@@ -5,7 +5,7 @@
       <el-input prefix-icon="el-icon-search" class="search-bar"></el-input>
       <el-button type="info" plain>카테고리</el-button>
       <div>
-        <el-button type="primary" plain @click="clickSignup">회원가입</el-button>
+        <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
         <el-button type="info" plain @click="clickLogin">로그인</el-button>
       </div>
     </el-row>
@@ -32,17 +32,30 @@
 </style>
 
 <script>
+import { reactive, computed, onMounted } from 'vue'
+// import { useStore } from 'vuex'
+// import { useRouter } from 'vue-router'
+
 export default {
-  setup() {
-    const clickSignup = function () {
-      console.log('clickSignup')
+  name: 'main-header',
+
+  setup(props, { emit }) {
+    const state = reactive({
+      isLoggedin: computed(() => {
+        return store.getters['root/getToken']
+      })
+    })
+
+    const clickJoin = function () {
+      console.log('clickJoin')
     }
 
     const clickLogin = function () {
-      console.log('clickLogin')
+      // console.log('clickLogin')
+      emit('openLoginDialog')
     }
 
-    return { clickSignup, clickLogin }
+    return { state, clickJoin, clickLogin }
   }
 }
 </script>
