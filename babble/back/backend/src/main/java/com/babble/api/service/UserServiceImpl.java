@@ -1,11 +1,12 @@
 package com.babble.api.service;
 
+import com.babble.api.request.UserUpdatePasswordReq;
+import com.babble.api.request.UserUpdatePictureReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.babble.api.request.UserRegisterPostReq;
-import com.babble.api.request.UserUpdatePatchReq;
 import com.babble.db.entity.User;
 import com.babble.db.repository.UserRepository;
 import com.babble.db.repository.UserRepositorySupport;
@@ -37,26 +38,36 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserByUserEmail(String email) {
-		// 디비에 유저 정보 조회 (userId 를 통한 조회).
+		// 디비에 유저 정보 조회 (email 를 통한 조회).
 		User user = userRepositorySupport.findUserByUserEmail(email).get();
 		return user;
 	}
 
 	@Override
-	public boolean checkEmail(String email) {
-		// TODO Auto-generated method stub
-		boolean flag = userRepositorySupport.checkEmail(email);
-		return flag;
+	public User checkEmail(String email) {
+		User user = userRepositorySupport.findUserByUserEmail(email).get();
+		return  user;
 	}
-//
-//	@Override
-//	public void deleteUser(String userId) {
-//		userRepositorySupport.deleteUser(userId);
-//
-//	}
-//
-//	@Override
-//	public void updateUser(UserUpdatePatchReq userUpdateInfo) {
-//		userRepositorySupport.updateUser(userUpdateInfo);
-//	}
+
+	@Override
+	public void deleteUser(String email) {
+		User user = userRepositorySupport.findUserByUserEmail(email).get();
+		userRepository.delete(user);
+	}
+
+	@Override
+	public void updatePicture(UserUpdatePictureReq userInfo) {
+		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail()).get();
+
+		user.setPicture(userInfo.getPicture());
+		userRepository.save(user);
+	}
+
+	@Override
+	public void updatePassword(UserUpdatePasswordReq userInfo) {
+		System.out.println("여기는?");
+		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail()).get();
+		user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+		userRepository.save(user);
+	}
 }

@@ -1,7 +1,8 @@
 package com.babble.api.service;
 
 import com.babble.api.request.UserRegisterPostReq;
-import com.babble.api.request.UserUpdatePatchReq;
+import com.babble.api.request.UserUpdatePasswordReq;
+import com.babble.api.request.UserUpdatePictureReq;
 import com.babble.db.entity.User;
 
 /**
@@ -10,7 +11,8 @@ import com.babble.db.entity.User;
 public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserEmail(String email);
-	boolean checkEmail(String email);
-//	void deleteUser(String userId);
-//	void updateUser(UserUpdatePatchReq userUpdateInfo);
+	User checkEmail(String email);
+	void updatePicture(UserUpdatePictureReq userInfo);
+	void updatePassword(UserUpdatePasswordReq userInfo);
+	void deleteUser(String email);
 }

@@ -1,5 +1,7 @@
 package com.babble.api.controller;
 
+import com.babble.api.request.UserUpdatePasswordReq;
+import com.babble.api.request.UserUpdatePictureReq;
 import com.babble.api.response.UserRes;
 import com.babble.api.service.EmailService;
 import com.babble.common.auth.BabbleUserDetails;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.babble.api.request.UserRegisterPostReq;
@@ -61,7 +64,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> emailConfirm(
-			@RequestBody @ApiParam(value="이메일정보 정보", required = true) String email) throws Exception {
+			@RequestParam @ApiParam(value="이메일정보 정보", required = true) String email) throws Exception {
 
 		System.out.println("이메일 : "+email);
 		String confirm = emailService.sendSimpleMessage(email);
@@ -98,43 +101,56 @@ public class UserController {
     })
 	public ResponseEntity getUserCheckEmail(
 			@PathVariable("email") @ApiParam(value="회원가입 정보", required = true) String email) {
-		boolean flag = userService.checkEmail(email);
-		System.out.println(flag);
-		if(flag) { //중복된 아이디 있음
+		User user = userService.checkEmail(email);
+		if(user!=null) { //중복된 아이디 있음
 			return ResponseEntity.status(409).body(BaseResponseBody.of(409,"이미 존재하는 사용자 ID 입니다." ));
 		}
-		else return ResponseEntity.status(200).body(BaseResponseBody.of(409,"사용가능한 ID 입니다." ));
+		else return ResponseEntity.status(200).body(BaseResponseBody.of(200,"사용가능한 ID 입니다." ));
 
 	}
 //
-//	@Transactional
-//	@PatchMapping("/{id}")
-//	@ApiOperation(value = "유저 정보 수정", notes = "회원 정보 수정하기")
-//    @ApiResponses({
-//        @ApiResponse(code = 200, message = "성공"),
-//        @ApiResponse(code = 401, message = "인증 실패"),
-//        @ApiResponse(code = 404, message = "사용자 없음"),
-//        @ApiResponse(code = 500, message = "서버 오류")
-//    })
-//	public ResponseEntity UpdateUserInfo(
-//			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserUpdatePatchReq updateInfo) {
-//		System.out.println("내가 수정해볼게~");
-//		userService.updateUser(updateInfo);
-//		return new ResponseEntity<>("success", HttpStatus.OK);
-//	}
+	@Transactional
+	@PatchMapping("/updatePicture")
+	@ApiOperation(value = "유저 프로필사진 변경", notes = "프로필 변경하기")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "성공"),
+        @ApiResponse(code = 401, message = "인증 실패"),
+        @ApiResponse(code = 404, message = "사용자 없음"),
+        @ApiResponse(code = 500, message = "서버 오류")
+    })
+	public ResponseEntity updatePicture(
+			@RequestBody @ApiParam(value="이메일", required = true) UserUpdatePictureReq userInfo) {
+		userService.updatePicture(userInfo);
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
+
+	@Transactional
+	@PatchMapping("/updatePassword")
+	@ApiOperation(value = "유저 비밀번호 변경", notes = "비밀번호 변경하기")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity updatePassword(
+			@RequestBody @ApiParam(value="이메일", required = true) UserUpdatePasswordReq userInfo) {
+		userService.updatePassword(userInfo);
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
 //
-//	@Transactional
-//	@DeleteMapping("/{id}")
-//	@ApiOperation(value = "유저 정보 삭제", notes = "회원 정보 삭제하기")
-//    @ApiResponses({
-//        @ApiResponse(code = 200, message = "성공"),
-//        @ApiResponse(code = 401, message = "인증 실패"),
-//        @ApiResponse(code = 404, message = "사용자 없음"),
-//        @ApiResponse(code = 500, message = "서버 오류")
-//    })
-//	public ResponseEntity deleteUser(@PathVariable("id") @ApiParam(value="회원 정보", required = true) String id) {
-//		System.out.println("일단여기들어온건맞지");
-//		userService.deleteUser(id);
-//		return new ResponseEntity<>("success", HttpStatus.OK);
-//	}
+	@Transactional
+	@DeleteMapping("/{email}")
+	@ApiOperation(value = "유저 정보 삭제", notes = "회원 정보 삭제하기")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "성공"),
+        @ApiResponse(code = 401, message = "인증 실패"),
+        @ApiResponse(code = 404, message = "사용자 없음"),
+        @ApiResponse(code = 500, message = "서버 오류")
+    })
+	public ResponseEntity deleteUser(@PathVariable("email") @ApiParam(value="회원 정보", required = true) String email) {
+		System.out.println("여기는들와?");
+		userService.deleteUser(email);
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
 }

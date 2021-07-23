@@ -26,7 +26,7 @@ export function getInfo({state}, payload) {
   })
 }
 
-export function requestCheckId({ state }, payload) {
+export function requestCheckEmail({ state }, payload) {
   console.log('requestCheckId', state, payload)
   const url = '/users/'
   let body = payload;

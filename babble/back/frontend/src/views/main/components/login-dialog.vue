@@ -137,7 +137,7 @@ export default {
           .then(function (result) {
             localStorage.setItem("jwt",result.data.accessToken)
             alert("로그인성공이염!")
-            console.log(result)
+            console.log("!!!!!!!!!!!!s",result)
             emit('closeLoginDialog')
 
             //router.go(); //페이지 새로고침
@@ -146,6 +146,7 @@ export default {
             state.form.email = ''
             state.form.password = ''
             state.isCheck = true;
+            console.log(err)
           })
         } else {
           alert('Validate error!')

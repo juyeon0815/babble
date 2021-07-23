@@ -1,7 +1,6 @@
 package com.babble.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.babble.api.request.UserUpdatePatchReq;
 import com.babble.db.entity.QUser;
 import com.babble.db.entity.User;
 
@@ -26,22 +25,8 @@ public class UserRepositorySupport {
         return Optional.ofNullable(user);
     }
 
-    public boolean checkEmail(String email) {
-    	User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.email.eq(email)).fetchOne();
-
-    	if(user==null) return false;
-    	return true;
+    public void deleteUser(String email) {
+    	jpaQueryFactory.delete(qUser).where(qUser.email.eq(email)).execute();
     }
-//
-//    public void deleteUser(String userId) {
-//    	//jpaQueryFactory.delete(qUser).where(qUser.userId.eq(userId)).execute();
-//    }
-//
-//    public void updateUser(UserUpdatePatchReq userUpdateInfo) {
-//    	jpaQueryFactory.update(qUser).set(qUser.department, userUpdateInfo.getPosition())
-//    	.set(qUser.position, userUpdateInfo.getPosition())
-//    	.set(qUser.name, userUpdateInfo.getName())
-//    	.where(qUser.userId.eq(userUpdateInfo.getId())).execute();
-//    }
+
 }
