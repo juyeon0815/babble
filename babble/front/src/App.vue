@@ -1,6 +1,5 @@
 <template>
   <!-- main 으로 시작 -->
-  <h1>app.vue</h1>
   <Main/>
 </template>
 
