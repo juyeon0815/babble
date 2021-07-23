@@ -47,10 +47,11 @@ public class JwtTokenUtil {
                 .build();
     }
     
-    public static String getToken(String userId) { //토큰생성
+    public static String getToken(String email) { //토큰생성
     		Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
+    		System.out.println(expires);
         return JWT.create()
-                .withSubject(userId)
+                .withSubject(email)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))

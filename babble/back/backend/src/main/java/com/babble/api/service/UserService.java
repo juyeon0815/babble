@@ -9,7 +9,7 @@ import com.babble.db.entity.User;
  */
 public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
-	User getUserByUserId(String userId);
+	User getUserByUserEmail(String email);
 //	boolean checkId(String userId);
 //	void deleteUser(String userId);
 //	void updateUser(UserUpdatePatchReq userUpdateInfo);

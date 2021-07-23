@@ -1,16 +1,19 @@
 // API
 import $axios from 'axios'
 
-export function requestLogin ({ state }, payload) {
+export function requestLogin ({ state }, payload) { //로그인 //payload에 이메일, 비밀번호 // 백엔드에서 성공, 실패 값 반환
   console.log('requestLogin', state, payload)
-  const url = '/auth/login'
-  let body = payload
-  return $axios.post(url, body)
+  return $axios.post('/auth/login', payload)
 }
 
-export function requestJoin ({ state }, payload) { //회원가입
+export function requestJoin ({ state }, payload) { //회원가입 //payload에 이메일, 비밀번호 //백엔드에서 성공 실패 값 반환
   console.log('requestJoin', state, payload)
   return $axios.post('/users/join', payload)
+}
+
+export function emailConfirm({state},payload){ //이메일 인증 //payload에 이메일 // 백엔드에서 이메일 인증번호 반환
+  console.log('emailConfirm',state,payload)
+  return $axios.post('/users/emailConfirm',payload)
 }
 
 export function getInfo({state}, payload) {
@@ -30,7 +33,4 @@ export function requestCheckId({ state }, payload) {
   return $axios.get(url+body)
 }
 
-export function emailConfirm({state},payload){ //이메일 인증
-  console.log('emailConfirm',state,payload)
-  return $axios.post('/users/emailConfirm',payload)
-}
+

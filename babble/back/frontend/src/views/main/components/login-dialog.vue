@@ -1,14 +1,14 @@
 <template>
   <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
     <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
-      <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth" >
-        <el-input v-model="state.form.id" autocomplete="off"></el-input>
+      <el-form-item prop="email" label="이메일" :label-width="state.formLabelWidth" >
+        <el-input v-model="state.form.email" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
     </el-form>
-    <div class="text" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
+    <div class="text" v-if="state.isCheck">이메일, 비밀번호를 다시확인해주세요</div>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="clickLogin" :disabled="state.isDisabled">로그인</el-button>
@@ -92,22 +92,19 @@ export default {
       //
     */
     const state = reactive({
-      isLoading : false,
-      isLoading : false,
       isDisabled : true,
       isDisabled: computed(()=>{ //false 버튼활성화, true 버튼비활성화
-      if(state.form.id.length!=0 && state.form.password.length!=0) return state.isDisabled=false;
+      if(state.form.email.length!=0 && state.form.password.length!=0) return state.isDisabled=false;
       else return state.isDisabled=true;
     }),
       form: {
-        id: '',
+        email: '',
         password: '',
         align: 'left'
       },
       rules: {
-        id: [
+        email: [
           { required: true, message: '필수 입력 항목입니다', trigger: 'blur' },
-          {message : '최대 16자까지 입력 가능합니다.',max:16, trigger:'blur'}
         ],
         password: [
           { required: true, message: '필수 입력 항목입니다.', trigger: 'blur' },
@@ -136,26 +133,19 @@ export default {
       loginForm.value.validate((valid) => {
         if (valid) {
           console.log('submit')
-          console.log(state.isLoading)
-          state.isLoading = true;
-          console.log(state.isLoading)
-          store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
+          store.dispatch('root/requestLogin', { email: state.form.email, password: state.form.password })
           .then(function (result) {
             localStorage.setItem("jwt",result.data.accessToken)
+            alert("로그인성공이염!")
             console.log(result)
-            state.isLoading = false;
-            //alert("로그인성공");
             emit('closeLoginDialog')
 
-            router.go(); //페이지 새로고침
+            //router.go(); //페이지 새로고침
           })
           .catch(function (err) {
-            setTimeout(()=>{
-              state.isLoading=false;
-              state.isCheck = true;
-            },1000)
-            state.form.id = ''
+            state.form.email = ''
             state.form.password = ''
+            state.isCheck = true;
           })
         } else {
           alert('Validate error!')
@@ -164,7 +154,7 @@ export default {
     }
 
     const handleClose = function () {
-      state.form.id = ''
+      state.form.email = ''
       state.form.password = ''
       emit('closeLoginDialog')
     }
