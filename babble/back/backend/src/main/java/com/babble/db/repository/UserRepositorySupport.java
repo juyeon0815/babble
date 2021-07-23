@@ -26,13 +26,13 @@ public class UserRepositorySupport {
         return Optional.ofNullable(user);
     }
 
-//    public boolean checkId(String userId) {
-////    	User user = jpaQueryFactory.select(qUser).from(qUser)
-////                .where(qUser.userId.eq(userId)).fetchOne();
-////
-////    	if(user==null) return false;
-//    	return true;
-//    }
+    public boolean checkEmail(String email) {
+    	User user = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.email.eq(email)).fetchOne();
+
+    	if(user==null) return false;
+    	return true;
+    }
 //
 //    public void deleteUser(String userId) {
 //    	//jpaQueryFactory.delete(qUser).where(qUser.userId.eq(userId)).execute();

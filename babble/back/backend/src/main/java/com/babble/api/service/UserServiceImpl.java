@@ -42,12 +42,12 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-//	@Override
-//	public boolean checkId(String userId) {
-//		// TODO Auto-generated method stub
-//		boolean flag = userRepositorySupport.checkId(userId);
-//		return flag;
-//	}
+	@Override
+	public boolean checkEmail(String email) {
+		// TODO Auto-generated method stub
+		boolean flag = userRepositorySupport.checkEmail(email);
+		return flag;
+	}
 //
 //	@Override
 //	public void deleteUser(String userId) {
