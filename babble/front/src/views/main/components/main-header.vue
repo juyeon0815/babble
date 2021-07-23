@@ -4,7 +4,7 @@
     <el-input prefix-icon="el-icon-search" class="search-bar"></el-input>
     <el-button type="info" plain @click="clickCategory">카테고리</el-button>
     <div>
-      <el-button type="primary" plain @click="clickSignup">회원가입</el-button>
+      <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
       <el-button type="info" plain @click="clickLogin">로그인</el-button>
     </div>
   </el-row>
@@ -28,12 +28,20 @@
 <script>
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-
+import { reactive, computed, onMounted } from 'vue'
 
 export default {
-  setup() {
+  name: 'main-header',
+
+  setup(props, { emit }) {
     const router = useRouter()
     const store = useStore()
+
+    const state = reactive({
+      isLoggedin: computed(() => {
+        return store.getters['root/getToken']
+      })
+    })
 
     const clickLogo = () => {
       store.commit('root/setMenuActive', 0)
@@ -44,12 +52,14 @@ export default {
       })
     }
 
-    const clickSignup = function () {
-      console.log('clickSignup')
+    const clickJoin = function () {
+      // console.log('clickJoin')
+      emit('openJoinDialog')
     }
 
     const clickLogin = function () {
-      console.log('clickLogin')
+      // console.log('clickLogin')
+      emit('openLoginDialog')
     }
 
     const clickCategory = function () {
@@ -61,7 +71,7 @@ export default {
       })
     }
 
-    return { clickLogo, clickSignup, clickLogin, clickCategory }
+    return { clickLogo, clickJoin, clickLogin, clickCategory }
   }
 }
 </script>
