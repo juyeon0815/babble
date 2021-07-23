@@ -1,5 +1,7 @@
 <template>
-
+  <MainHeader />
+  <router-view></router-view>
+  <MainFooter />
 </template>
 
 <style>
@@ -9,12 +11,14 @@
 </style>
 
 <script>
-//import문 자리
+import MainHeader from './components/main-header'
+import MainFooter from './components/main-footer'
 
 export default {
   name: 'Main',
   components: {
-
+    MainHeader,
+    MainFooter
   },
   data () {
     return {
