@@ -1,11 +1,15 @@
 <template>
   <MainHeader
-    @openLoginDialog="onOpenLoginDialog"/>
+    @openLoginDialog="onOpenLoginDialog"
+    @openJoinDialog="onOpenJoinDialog"/>
   <router-view></router-view>
   <MainFooter />
   <LoginDialog
     :open="loginDialogOpen"
     @closeLoginDialog="onCloseLoginDialog"/>
+  <JoinDialog
+    :open="joinDialogOpen"
+    @closeJoinDialog="onCloseJoinDialog"/>
 
 </template>
 
@@ -19,6 +23,7 @@
 import MainHeader from './components/main-header'
 import MainFooter from './components/main-footer'
 import LoginDialog from './components/login-dialog'
+import JoinDialog from './components/join-dialog'
 
 export default {
   name: 'Main',
@@ -26,10 +31,12 @@ export default {
     MainHeader,
     MainFooter,
     LoginDialog,
+    JoinDialog,
   },
   data () {
     return {
       loginDialogOpen: false,
+      joinDialogOpen: false,
     }
   },
 
@@ -39,6 +46,12 @@ export default {
     },
     onCloseLoginDialog () {
       this.loginDialogOpen = false
+    },
+    onOpenJoinDialog () {
+      this.joinDialogOpen = true
+    },
+    onCloseJoinDialog () {
+      this.joinDialogOpen = false
     },
 
   }

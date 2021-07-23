@@ -10,14 +10,14 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin" :disabled="state.isVal" >로그인</el-button>
+        <el-button type="primary" @click="clickLogin" :disabled="state.isVal">로그인</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { reactive, computed, ref, onMounted } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
@@ -72,7 +72,7 @@ export default {
       loginForm.value.validate((valid) => {
         if (valid) {
           console.log('submit')
-          store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
+          store.dispatch('root/requestLogin', { email: state.form.email, password: state.form.password })
           .then(function (result) {
             localStorage.setItem('jwt', result.data.accessToken)
             alert('로그인 성공')

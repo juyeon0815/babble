@@ -47,7 +47,8 @@ export default {
     })
 
     const clickJoin = function () {
-      console.log('clickJoin')
+      // console.log('clickJoin')
+      emit('openJoinDialog')
     }
 
     const clickLogin = function () {
