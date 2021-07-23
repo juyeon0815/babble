@@ -20,24 +20,13 @@ import javax.persistence.OneToMany;
 @Getter
 @Setter
 public class User extends BaseEntity{
-    String position;
-    String department;
-    String name;
-    String userId;
+    String email;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
-    
-	@OneToMany(mappedBy="user" ,cascade = CascadeType.REMOVE)
-	List<UserConference> userConference = new ArrayList<>();
-	
-	@OneToMany(mappedBy="user", cascade = CascadeType.REMOVE)
-	List<ConferenceHistory> conferenceHistory = new ArrayList<>();
-	
-	@OneToMany(mappedBy="user")
-	List<Conference> conference = new ArrayList<>();
+    String picture;
     
     
 }

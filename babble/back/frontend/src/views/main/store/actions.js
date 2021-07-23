@@ -10,9 +10,7 @@ export function requestLogin ({ state }, payload) {
 
 export function requestJoin ({ state }, payload) { //회원가입
   console.log('requestJoin', state, payload)
-  const url = '/users/join'
-  let body = payload
-  return $axios.post(url, body)
+  return $axios.post('/users/join', payload)
 }
 
 export function getInfo({state}, payload) {
@@ -30,4 +28,9 @@ export function requestCheckId({ state }, payload) {
   const url = '/users/'
   let body = payload;
   return $axios.get(url+body)
+}
+
+export function emailConfirm({state},payload){ //이메일 인증
+  console.log('emailConfirm',state,payload)
+  return $axios.post('/users/emailConfirm',payload)
 }

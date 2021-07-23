@@ -19,29 +19,29 @@ public class UserRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
 
-    public Optional<User> findUserByUserId(String userId) {
+    public Optional<User> findUserByUserId(String email) {
         User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userId.eq(userId)).fetchOne();
+                .where(qUser.email.eq(email)).fetchOne();
         if(user == null) return Optional.empty();
         return Optional.ofNullable(user);
     }
-    
-    public boolean checkId(String userId) {
-    	User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userId.eq(userId)).fetchOne();
-    	
-    	if(user==null) return false;
-    	return true;
-    }
-    
-    public void deleteUser(String userId) {
-    	jpaQueryFactory.delete(qUser).where(qUser.userId.eq(userId)).execute();
-    }
-    
-    public void updateUser(UserUpdatePatchReq userUpdateInfo) {
-    	jpaQueryFactory.update(qUser).set(qUser.department, userUpdateInfo.getPosition())
-    	.set(qUser.position, userUpdateInfo.getPosition())
-    	.set(qUser.name, userUpdateInfo.getName())
-    	.where(qUser.userId.eq(userUpdateInfo.getId())).execute();
-    }
+
+//    public boolean checkId(String userId) {
+////    	User user = jpaQueryFactory.select(qUser).from(qUser)
+////                .where(qUser.userId.eq(userId)).fetchOne();
+////
+////    	if(user==null) return false;
+//    	return true;
+//    }
+//
+//    public void deleteUser(String userId) {
+//    	//jpaQueryFactory.delete(qUser).where(qUser.userId.eq(userId)).execute();
+//    }
+//
+//    public void updateUser(UserUpdatePatchReq userUpdateInfo) {
+//    	jpaQueryFactory.update(qUser).set(qUser.department, userUpdateInfo.getPosition())
+//    	.set(qUser.position, userUpdateInfo.getPosition())
+//    	.set(qUser.name, userUpdateInfo.getName())
+//    	.where(qUser.userId.eq(userUpdateInfo.getId())).execute();
+//    }
 }

@@ -47,7 +47,7 @@ public class JwtTokenUtil {
                 .build();
     }
     
-    public static String getToken(String userId) {
+    public static String getToken(String userId) { //토큰생성
     		Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
                 .withSubject(userId)
@@ -66,7 +66,7 @@ public class JwtTokenUtil {
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
     
-    public static Date getTokenExpiration(int expirationTime) {
+    public static Date getTokenExpiration(int expirationTime) { //토큰 만료일자
     		Date now = new Date();
     		return new Date(now.getTime() + expirationTime);
     }

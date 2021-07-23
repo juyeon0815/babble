@@ -27,13 +27,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
-		
-		user.setDepartment(userRegisterInfo.getDepartment());
-		user.setPosition(userRegisterInfo.getPosition());
-		user.setName(userRegisterInfo.getName());
-		user.setUserId(userRegisterInfo.getId());
+		user.setEmail(userRegisterInfo.getEmail());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
+
+		user.setPicture("default"); //default 사진
 		return userRepository.save(user);
 	}
 
@@ -44,21 +42,21 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	@Override
-	public boolean checkId(String userId) {
-		// TODO Auto-generated method stub
-		boolean flag = userRepositorySupport.checkId(userId);
-		return flag;
-	}
-
-	@Override
-	public void deleteUser(String userId) {
-		userRepositorySupport.deleteUser(userId);
-		
-	}
-
-	@Override
-	public void updateUser(UserUpdatePatchReq userUpdateInfo) {
-		userRepositorySupport.updateUser(userUpdateInfo);
-	}
+//	@Override
+//	public boolean checkId(String userId) {
+//		// TODO Auto-generated method stub
+//		boolean flag = userRepositorySupport.checkId(userId);
+//		return flag;
+//	}
+//
+//	@Override
+//	public void deleteUser(String userId) {
+//		userRepositorySupport.deleteUser(userId);
+//
+//	}
+//
+//	@Override
+//	public void updateUser(UserUpdatePatchReq userUpdateInfo) {
+//		userRepositorySupport.updateUser(userUpdateInfo);
+//	}
 }

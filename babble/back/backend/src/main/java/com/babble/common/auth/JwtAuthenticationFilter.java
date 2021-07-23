@@ -35,6 +35,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+
+        System.out.println("여기들어와?");
 		// Read the Authorization header, where the JWT Token should be
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING); //jwt 헤더 토큰
 
@@ -43,7 +45,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
             filterChain.doFilter(request, response);
             return;
         }
-        
+
         try {
             // If header is present, try grab user principal from database and perform authorization
             Authentication authentication = getAuthentication(request);
@@ -53,7 +55,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
             ResponseBodyWriteUtil.sendError(request, response, ex);
             return;
         }
-        
+
         filterChain.doFilter(request, response);
 	}
 	

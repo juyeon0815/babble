@@ -37,7 +37,7 @@ public class BabbleUserDetails implements UserDetails {
 	}
 	@Override
 	public String getUsername() {
-		return this.user.getUserId();
+		return this.user.getEmail();
 	}
 	@Override
 	public boolean isAccountNonExpired() {
