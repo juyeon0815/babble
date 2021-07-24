@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserHashtagPostRequest")
-public class UserHashtagPostReq {
+public class UserHashtagReq {
 
     @ApiModelProperty(name="유저 Email", example="your_email")
     String email;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.babble.api.request.UserLoginPostReq;
+import com.babble.api.request.UserLoginReq;
 import com.babble.api.response.UserLoginPostRes;
 import com.babble.api.service.UserService;
 import com.babble.common.model.response.BaseResponseBody;
@@ -42,7 +42,7 @@ public class AuthController {
         @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
         @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-	public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
+	public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq loginInfo) {
 		String email = loginInfo.getEmail();
 		String password = loginInfo.getPassword();
 

@@ -6,4 +6,5 @@ import com.babble.db.entity.UserHashtag;
 
 public interface UserHashtagService {
     UserHashtag createUserHashtag(User user, Hashtag hashtag);
+    void deleteHashtag(User user, Hashtag hashtag);
 }

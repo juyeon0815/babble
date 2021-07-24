@@ -1,12 +1,12 @@
 package com.babble.api.service;
 
+import com.babble.api.request.UserRegisterReq;
 import com.babble.api.request.UserUpdatePasswordReq;
 import com.babble.api.request.UserUpdatePictureReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.babble.api.request.UserRegisterPostReq;
 import com.babble.db.entity.User;
 import com.babble.db.repository.UserRepository;
 import com.babble.db.repository.UserRepositorySupport;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 	PasswordEncoder passwordEncoder;
 	
 	@Override
-	public User createUser(UserRegisterPostReq userRegisterInfo) {
+	public User createUser(UserRegisterReq userRegisterInfo) {
 		User user = new User();
 		user.setEmail(userRegisterInfo.getEmail());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
@@ -57,6 +57,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void updateAlarm(String email) {
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!"+email+"~~~~~~~~~~~~~");
+		User user = userRepositorySupport.findUserByUserEmail(email);
+		System.out.println(user);
+//		System.out.println(user.getEmail());
+		boolean flag = !user.isAlarm();
+		System.out.println(flag);
+		user.setAlarm(flag);
+		userRepository.save(user);
+	}
+
+	@Override
 	public void updatePicture(UserUpdatePictureReq userInfo) {
 		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail());
 
@@ -66,7 +78,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void updatePassword(UserUpdatePasswordReq userInfo) {
-		System.out.println("여기는?");
 		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail());
 		user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
 		userRepository.save(user);
