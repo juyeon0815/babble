@@ -33,31 +33,32 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 
 		user.setPicture("default"); //default 사진
+		user.setAlarm(false);
 		return userRepository.save(user);
 	}
 
 	@Override
 	public User getUserByUserEmail(String email) {
 		// 디비에 유저 정보 조회 (email 를 통한 조회).
-		User user = userRepositorySupport.findUserByUserEmail(email).get();
+		User user = userRepositorySupport.findUserByUserEmail(email);
 		return user;
 	}
 
 	@Override
 	public User checkEmail(String email) {
-		User user = userRepositorySupport.findUserByUserEmail(email).get();
+		User user = userRepositorySupport.findUserByUserEmail(email);
 		return  user;
 	}
 
 	@Override
 	public void deleteUser(String email) {
-		User user = userRepositorySupport.findUserByUserEmail(email).get();
+		User user = userRepositorySupport.findUserByUserEmail(email);
 		userRepository.delete(user);
 	}
 
 	@Override
 	public void updatePicture(UserUpdatePictureReq userInfo) {
-		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail()).get();
+		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail());
 
 		user.setPicture(userInfo.getPicture());
 		userRepository.save(user);
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updatePassword(UserUpdatePasswordReq userInfo) {
 		System.out.println("여기는?");
-		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail()).get();
+		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail());
 		user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
 		userRepository.save(user);
 	}

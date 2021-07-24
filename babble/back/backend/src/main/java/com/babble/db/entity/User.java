@@ -27,6 +27,9 @@ public class User extends BaseEntity{
     String password;
 
     String picture;
-    
-    
+
+    boolean alarm;
+
+    @OneToMany (mappedBy ="user")
+    List<UserHashtag> userHashtag = new ArrayList<>();
 }

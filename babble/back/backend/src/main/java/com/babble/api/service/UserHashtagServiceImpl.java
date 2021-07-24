@@ -1,0 +1,29 @@
+package com.babble.api.service;
+
+import com.babble.db.entity.Hashtag;
+import com.babble.db.entity.User;
+import com.babble.db.entity.UserHashtag;
+import com.babble.db.repository.UserHashtagRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+/**
+ *	유저해시태그 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
+ */
+@Service("userHashtagService")
+public class UserHashtagServiceImpl implements UserHashtagService {
+
+    @Autowired
+    UserHashtagRepository userHashtagRepository;
+
+    @Override
+    public UserHashtag createUserHashtag(User user, Hashtag hashtag) {
+        UserHashtag userHashtag = new UserHashtag();
+        userHashtag.setUser(user);
+        userHashtag.setHashtag(hashtag);
+        userHashtagRepository.save(userHashtag);
+
+        return userHashtag;
+    }
+}
