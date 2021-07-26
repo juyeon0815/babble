@@ -1,9 +1,5 @@
 <template>
-  <h1>???</h1>
-  <div class="switch-order">
-    <el-radio v-model="state.radio" label="popular">인기순 정렬</el-radio>
-    <el-radio v-model="state.radio" label="new">최신순 정렬</el-radio>
-  </div>
+  <h2>Category Results!!!!!!!</h2>
 </template>
 
 <script>
@@ -13,7 +9,7 @@ export default {
   name: 'CategoryResult',
   setup () {
     const state = reactive({
-      radio: 'popular',
+      
     })
 
     return { state }
@@ -22,8 +18,4 @@ export default {
 </script>
 
 <style>
-  .switch-order {
-    text-align: end;
-    margin-right: 50px;
-  }
 </style>

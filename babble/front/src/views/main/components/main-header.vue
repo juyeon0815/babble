@@ -68,10 +68,8 @@ export default {
 
     const clickCategory = function () {
       store.commit('root/setMenuActive', 1)
-      const MenuItems = store.getters['root/getMenus']
-      let keys = Object.keys(MenuItems)
       router.push({
-        name: keys[1]
+        path: '/category/all/best'
       })
     }
 

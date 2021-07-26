@@ -1,27 +1,19 @@
 <template>
   <div class="head-label">Category</div>
-  <router-view></router-view>
-
-  <hr>
-
-  <el-tabs class="tab" v-model="state.activeName" @tab-click="handleClick">
-    <el-tab-pane label="All" name="all">전체보기
-      <el-row class="conference-row">
-        <Conference v-for="i in 10" :key="i" :num="i" v-cloak
-        @click="clickConference(i)"/>
-      </el-row>
-    </el-tab-pane>
-    <el-tab-pane label="Sports" name="sports">스포츠</el-tab-pane>
-    <el-tab-pane label="Cooking" name="cooking">요리</el-tab-pane>
-    <el-tab-pane label="Handcraft" name="handcraft">수공예</el-tab-pane>
-    <el-tab-pane label="Music" name="music">음악</el-tab-pane>
-    <el-tab-pane label="Finance" name="finance">금융</el-tab-pane>
-    <el-tab-pane label="Game" name="game">게임</el-tab-pane>
-    <el-tab-pane label="Movie" name="movie">영화</el-tab-pane>
-    <el-tab-pane label="Drawing" name="drawing">그림</el-tab-pane>
-    <el-tab-pane label="Book" name="book">독서</el-tab-pane>
-    <el-tab-pane label="Pet" name="pet">반려동물</el-tab-pane>
+  <el-tabs v-model="activeName" @tab-click="handleClick" class="tab">
+    <el-tab-pane label="전체보기" name="all"></el-tab-pane>
+    <el-tab-pane label="스포츠" name="sports"></el-tab-pane>
+    <el-tab-pane label="요리" name="cooking"></el-tab-pane>
+    <el-tab-pane label="수공예" name="handcraft"></el-tab-pane>
+    <el-tab-pane label="음악" name="music"></el-tab-pane>
+    <el-tab-pane label="금융" name="finance"></el-tab-pane>
+    <el-tab-pane label="게임" name="game"></el-tab-pane>
+    <el-tab-pane label="영화" name="movie"></el-tab-pane>
+    <el-tab-pane label="그림" name="drawing"></el-tab-pane>
+    <el-tab-pane label="독서" name="book"></el-tab-pane>
+    <el-tab-pane label="반려동물" name="pet"></el-tab-pane>
   </el-tabs>
+  <router-view></router-view>
 </template>
 
 <style scoped>
@@ -44,13 +36,11 @@ import { reactive, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import Conference from '../home/components/conference'
-import CategoryResult from './components/category-result'
 
 export default {
   name: 'Category',
   components: {
-    Conference,
-    CategoryResult
+    Conference
   },
   setup () {
     const store = useStore()
@@ -61,10 +51,13 @@ export default {
       radio: 'popular',
     })
 
-    const handleClick = (tab, event) => {
-      console.log(tab, event);
-      // activeName 값 변경
-      // axios 처리
+    const handleClick = function (tab) {
+      router.push({
+        name: `${tab.index}best`,
+        params: {
+          categoryIndex: tab.index
+        }
+      })
     }
 
     const clickConference = function (id) {
