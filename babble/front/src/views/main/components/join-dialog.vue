@@ -50,6 +50,7 @@ export default {
       form: {
         email: '',
         emailConfirm: '',
+        authNum:'',
         password: '',
         passwordConfirm: '',
         align: 'left'
@@ -63,7 +64,7 @@ export default {
           {
             trigger: 'blur',
             validator (rule, value, callback) {
-              if (value === state.authNum) {
+              if (value === state.form.authNum) {
                 callback()
               } else {
                 callback(new Error('인증번호가 일치하지 않습니다.'))
@@ -114,8 +115,6 @@ export default {
       },
       isVal: false,
       isOnlyEmail: false,
-      authNum: '',
-      isEmailConfirm: false,
       dialogVisible: computed(() => props.open),
       formLabelWidth: '120px'
     })
@@ -146,16 +145,12 @@ export default {
     }
 
     const checkConfirm = function () {
+      alert('인증번호가 해당 메일로 전송되었습니다.')
       store.dispatch('root/requestEmailConfirm', state.form.email)
       .then(function (result) {
+        console.log(result)
         console.log(result.data.message)
-        if (result.data.message == state.form.emailConfirm) {
-          alert('이메일 인증에 성공했습니다.')
-          state.isEmailConfirm = true
-        } else {
-          alert('인증번호를 다시 확인해주세요.')
-          state.isEmailConfirm = false
-        }
+        state.form.authNum = result.data.message
       }).catch(function (err) {
         alert(err)
       })
