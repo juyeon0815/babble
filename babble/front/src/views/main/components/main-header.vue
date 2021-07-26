@@ -3,9 +3,13 @@
     <h2 @click="clickLogo">Babble</h2>
     <el-input prefix-icon="el-icon-search" class="search-bar"></el-input>
     <el-button type="info" plain @click="clickCategory">카테고리</el-button>
-    <div>
+    <div v-show="!state.isLoggedin">
       <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
       <el-button type="info" plain @click="clickLogin">로그인</el-button>
+    </div>
+    <div v-show="state.isLoggedin">
+      <el-button type="primary" plain @click="clickMyPage">마이페이지</el-button>
+      <el-button type="info" plain @click="clickLogout">로그아웃</el-button>
     </div>
   </el-row>
 </template>
@@ -71,7 +75,26 @@ export default {
       })
     }
 
-    return { clickLogo, clickJoin, clickLogin, clickCategory }
+    const clickMyPage = function () {
+      store.commit('root/setMenuActive', 2)
+      const MenuItems = store.getters['root/getMenus']
+      console.log(MenuItems)
+      let keys = Object.keys(MenuItems)
+      console.log(keys)
+      router.push({
+        name: keys[2]
+      })
+    }
+
+    const clickLogout = function () {
+      console.log('clickLogout')
+      store.dispatch('root/requestLogout')
+      .then(()=> store.commit('root/setLogout'))
+      .then(()=> router.push('/'))
+      console.log(state.isLoggedin)
+    }
+
+    return { state, clickLogo, clickJoin, clickLogin, clickCategory, clickMyPage, clickLogout }
   }
 }
 </script>

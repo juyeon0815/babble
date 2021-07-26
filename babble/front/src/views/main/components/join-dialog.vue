@@ -18,7 +18,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickJoin" :disabled="state.isVal">회원가입</el-button>
+        <el-button type="primary" @click="clickJoin" :disabled="!state.isVal">회원가입</el-button>
       </span>
     </template>
   </el-dialog>
@@ -50,6 +50,7 @@ export default {
       form: {
         email: '',
         emailConfirm: '',
+        authNum:'',
         password: '',
         passwordConfirm: '',
         align: 'left'
@@ -63,7 +64,7 @@ export default {
           {
             trigger: 'blur',
             validator (rule, value, callback) {
-              if (value === state.isEmailConfirm) {
+              if (value === state.form.authNum) {
                 callback()
               } else {
                 callback(new Error('인증번호가 일치하지 않습니다.'))
@@ -112,9 +113,8 @@ export default {
           }
         ]
       },
-      isVal: true,
+      isVal: false,
       isOnlyEmail: false,
-      isEmailConfirm: false,
       dialogVisible: computed(() => props.open),
       formLabelWidth: '120px'
     })
@@ -122,9 +122,9 @@ export default {
     const isValid = function () {
       joinForm.value.validate((valid) => {
         if (valid) {
-          state.isVal = false
-        } else {
           state.isVal = true
+        } else {
+          state.isVal = false
         }
       })
     }
@@ -136,24 +136,21 @@ export default {
           alert('사용가능한 이메일입니다.')
           state.isOnlyEmail = true
         } else {
-          alert('이미 존재하는 이메일입니다.')
-          state.isOnlyEmail = false
+          alert('alert')
         }
       }).catch(function (err) {
         alert(err)
+        state.isOnlyEmail = false
       })
     }
 
     const checkConfirm = function () {
-      store.dispatch('root/emailConfirm', state.form.email)
+      alert('인증번호가 해당 메일로 전송되었습니다.')
+      store.dispatch('root/requestEmailConfirm', state.form.email)
       .then(function (result) {
-        if (result == state.form.emailConfirm) {
-          alert('이메일 인증에 성공했습니다.')
-          state.isEmailConfirm = true
-        } else {
-          alert('인증번호를 다시 확인해주세요.')
-          state.isEmailConfirm = false
-        }
+        console.log(result)
+        console.log(result.data.message)
+        state.form.authNum = result.data.message
       }).catch(function (err) {
         alert(err)
       })

@@ -10,7 +10,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin" :disabled="state.isVal">로그인</el-button>
+        <el-button type="primary" @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
       </span>
     </template>
   </el-dialog>
@@ -51,7 +51,7 @@ export default {
           { required: true, message: '필수 입력 항목입니다.', trigger: 'blur' },
         ]
       },
-      isVal: true,
+      isVal: false,
       dialogVisible: computed(() => props.open),
       formLabelWidth: '120px'
     })
@@ -59,9 +59,9 @@ export default {
     const isValid = function () {
       loginForm.value.validate((valid) => {
         if (valid) {
-          state.isVal = false
-        } else {
           state.isVal = true
+        } else {
+          state.isVal = false
         }
       })
     }
@@ -80,6 +80,9 @@ export default {
             window.location.reload()
           })
           .catch(function (err) {
+            console.log(err)
+            state.form.email = ''
+            state.form.password = ''
             alert(err)
           })
         } else {

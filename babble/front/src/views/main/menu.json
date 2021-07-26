@@ -7,5 +7,10 @@
   "category" : {
     "name" : "카테고리",
     "path" : "/category"
+  },
+  "mypage" : {
+    "name" : "마이페이지",
+    "hidden" : false,
+    "path" : "/mypage"
   }
 }

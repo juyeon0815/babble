@@ -12,9 +12,9 @@ export function setMenuActiveMenuName (state, menuName) {
 	state.activeMenu = menuName
 }
 
+export function setLogout (state) {
+  console.log('토큰 없앤다!')
+	state.token = null
+}
 
-//확인 후 지우자
-// export function setLogout (state) {
-// 	state.token = false
-// }
 

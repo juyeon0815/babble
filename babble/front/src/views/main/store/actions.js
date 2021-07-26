@@ -19,12 +19,18 @@ export function requestCheckEmail ({ state }, payload) {
   return $axios.get(url+body)
 }
 
-export function emailConfirm ({ state }, payload) {
-  console.log('emailConfirm', state, payload)
+export function requestEmailConfirm ({ state }, payload) {
+  console.log('requestEmailConfirm', state, payload)
   return $axios.post('/users/emailConfirm', payload)
 }
 
 export function requestHome ({ state }) {
   console.log('requestHome', state)
   return $axios.get('/')
+}
+export function requestLogout ({ state }) {
+  console.log('requestLogout', state)
+  $axios.defaults.headers.common['Authorization'] = undefined
+  localStorage.removeItem('jwt')
+  return
 }
