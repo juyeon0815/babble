@@ -1,12 +1,11 @@
 {
   "home" : {
-    "name" : "홈",
-    "hidden" : false,
-    "path" : "/"
+    "name" : "홈",       
+    "path" : "/",
+    "children" : []
   },
   "category" : {
     "name" : "카테고리",
-    "hidden" : false,
     "path" : "/category"
   },
   "mypage" : {

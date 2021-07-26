@@ -24,6 +24,10 @@ export function requestEmailConfirm ({ state }, payload) {
   return $axios.post('/users/emailConfirm', payload)
 }
 
+export function requestHome ({ state }) {
+  console.log('requestHome', state)
+  return $axios.get('/')
+}
 export function requestLogout ({ state }) {
   console.log('requestLogout', state)
   $axios.defaults.headers.common['Authorization'] = undefined

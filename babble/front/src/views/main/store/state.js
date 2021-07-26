@@ -43,10 +43,12 @@ function getJwt() {
 
 const token = getJwt()
 
+const radioStatus = 'best'
 
 export default {
   isDesktopPlatform: IsDesktop,
   activeMenu: 'home',
   menus: menuData,
-  token: token
+  token: token,
+  radioStatus: radioStatus
 }

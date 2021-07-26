@@ -49,8 +49,13 @@ export default {
     const router = useRouter()
     const store = useStore()
 
-    const state = reactive({
-      
+    store.dispatch('root/requestHome')
+    .then(function (result) {
+      // 10개씩 분리해서 각각 인기순, 최신순으로 저장
+      console.log(result)
+    })
+    .catch(function (err) {
+      alert(err)
     })
 
     const clickConference = function (id) {
@@ -62,7 +67,7 @@ export default {
       })
     }
 
-    return { state, clickConference }
+    return { clickConference }
   }
 }
 </script>

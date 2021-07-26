@@ -1,17 +1,19 @@
 <template>
   <div class="head-label">Category</div>
-  <!-- active name 처리해주기!! -->
-  <el-tabs class="tab" v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="All" name="first">전체보기
-      <el-row class="conference-row">
-        <Conference v-for="i in 10" :key="i" :num="i" v-cloak
-        @click="clickConference(i)"/>
-      </el-row>
-    </el-tab-pane>
-    <el-tab-pane label="Sports" name="second">스포츠</el-tab-pane>
-    <el-tab-pane label="Cooking" name="third">요리</el-tab-pane>
-    <el-tab-pane label="Handmade" name="fourth">수공예</el-tab-pane>
+  <el-tabs v-model="activeName" @tab-click="handleClick" class="tab">
+    <el-tab-pane label="전체보기" name="all"></el-tab-pane>
+    <el-tab-pane label="스포츠" name="sports"></el-tab-pane>
+    <el-tab-pane label="요리" name="cooking"></el-tab-pane>
+    <el-tab-pane label="수공예" name="handcraft"></el-tab-pane>
+    <el-tab-pane label="음악" name="music"></el-tab-pane>
+    <el-tab-pane label="금융" name="finance"></el-tab-pane>
+    <el-tab-pane label="게임" name="game"></el-tab-pane>
+    <el-tab-pane label="영화" name="movie"></el-tab-pane>
+    <el-tab-pane label="그림" name="drawing"></el-tab-pane>
+    <el-tab-pane label="독서" name="book"></el-tab-pane>
+    <el-tab-pane label="반려동물" name="pet"></el-tab-pane>
   </el-tabs>
+  <router-view></router-view>
 </template>
 
 <style scoped>
@@ -30,8 +32,9 @@
 </style>
 
 <script>
-import { onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import Conference from '../home/components/conference'
 
 export default {
@@ -41,16 +44,39 @@ export default {
   },
   setup () {
     const store = useStore()
-    const handleClick = (tab, event) => {
-        console.log(tab, event);
-      }
+    const router = useRouter()
+
+    const state = reactive({
+      activeName: 'all',
+      radio: 'popular',
+    })
+
+    const handleClick = function (tab) {
+      store.commit('root/setRadioState', 'best')
+      console.log(store.getters['root/getRadioStatus'])
+      router.push({
+        name: `${tab.index}best`,
+        params: {
+          categoryIndex: tab.index,
+        }
+      })
+    }
+
+    const clickConference = function (id) {
+      router.push({
+        name: 'conference-detail',
+        params: {
+          conferenceId: id
+        }
+      })
+    }
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'category')
     })
 
-    return { handleClick }
+    return { state, handleClick, clickConference }
   }
 }
 </script>
