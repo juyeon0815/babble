@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
 import Category from '@/views/categories/category'
+import CategoryResult from '@/views/categories/components/category-result'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 
 const fullMenu = require('@/views/main/menu.json')
@@ -9,7 +10,17 @@ function makeRoutesFromMenu () {
     if (key === 'home') {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'category') {
-      return { path: fullMenu[key].path, name: key, component: Category }
+      return { path: fullMenu[key].path, name: key, component: Category,
+        children: [
+        {
+          path: 'all',
+          component: CategoryResult
+        },
+        {
+          path: 'sports',
+          component: CategoryResult
+        }
+      ]}
     } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }

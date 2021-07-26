@@ -23,3 +23,8 @@ export function emailConfirm ({ state }, payload) {
   console.log('emailConfirm', state, payload)
   return $axios.post('/users/emailConfirm', payload)
 }
+
+export function requestHome ({ state }) {
+  console.log('requestHome', state)
+  return $axios.get('/')
+}
