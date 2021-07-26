@@ -28,6 +28,8 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final StringPath content = createString("content");
 
+    public final DateTimePath<java.util.Date> createTime = createDateTime("createTime", java.util.Date.class);
+
     //inherited
     public final NumberPath<Long> id = _super.id;
 

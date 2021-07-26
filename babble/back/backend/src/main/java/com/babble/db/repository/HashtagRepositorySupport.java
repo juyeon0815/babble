@@ -19,6 +19,5 @@ public class HashtagRepositorySupport {
 
         if(tag==null) return null;
         return tag;
-
     }
 }

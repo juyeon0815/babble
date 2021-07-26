@@ -8,7 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import java.util.ArrayList;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +32,8 @@ public class Room extends BaseEntity{
     boolean isActivate;
     String thumbnailUrl;
     boolean speak;
+
+    Date createTime;
 
     @OneToOne
     @JoinColumn(name ="categoryId")
