@@ -8,7 +8,12 @@
       <el-button type="info" plain @click="clickLogin">로그인</el-button>
     </div>
     <div v-show="state.isLoggedin">
-      <el-button type="primary" plain @click="clickMyPage">마이페이지</el-button>
+      <el-button type="primary" class="circle" @click="clickMyPage">
+        <img
+          class="profile"
+          src="https://picsum.photos/30">
+      </el-button>
+      <el-button type="primary" plain @click="clickRoomCreate">방 생성</el-button>
       <el-button type="info" plain @click="clickLogout">로그아웃</el-button>
     </div>
   </el-row>
@@ -26,6 +31,17 @@
     width: 400px;
     display: inline;
     margin: 20px;
+  }
+  .circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 70%;
+    overflow: hidden;
+  }
+  .profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>
 

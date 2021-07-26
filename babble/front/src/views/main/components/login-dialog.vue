@@ -74,6 +74,7 @@ export default {
           console.log('submit')
           store.dispatch('root/requestLogin', { email: state.form.email, password: state.form.password })
           .then(function (result) {
+            console.log(result)
             localStorage.setItem('jwt', result.data.accessToken)
             alert('로그인 성공')
             emit('closeLoginDialog')
