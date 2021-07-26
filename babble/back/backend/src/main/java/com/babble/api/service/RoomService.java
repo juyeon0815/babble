@@ -16,4 +16,6 @@ public interface RoomService {
     List<Tuple> getRoomInfo();
     List<Tuple> getBestRoomInfo();
     List<Tuple> getRecentRoomInfo();
+    List<Tuple> getCategoryBestRoomInfo(String categoryName);
+    List<Tuple> getCategoryRecentRoomInfo(String categoryName);
 }

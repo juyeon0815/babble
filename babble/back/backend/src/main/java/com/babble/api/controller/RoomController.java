@@ -147,6 +147,42 @@ public class RoomController {
         return ResponseEntity.status(200).body(recentList);
     }
 
+    @GetMapping("/{categoryName}/best")
+    @ApiOperation(value = "카테고리별 인기 방 정보", notes = "카테고리별 인기순으로 방의 정보를 보여준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity categoryBestList(@PathVariable("categoryName") @ApiParam(value="카테고리명", required = true)String categoryName) {
+
+        List<Tuple> categoryRoomInfo = roomService.getCategoryBestRoomInfo(categoryName);
+        System.out.println(categoryRoomInfo.size());
+        List<RoomRes> categoryList = list(categoryRoomInfo);
+
+
+        return ResponseEntity.status(200).body(categoryList);
+    }
+
+    @GetMapping("/{categoryName}/recent")
+    @ApiOperation(value = "카테고리별 최신 방 정보", notes = "카테고리별 최신순으로 방의 정보를 보여준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity categoryRecentList(@PathVariable("categoryName") @ApiParam(value="카테고리명", required = true)String categoryName) {
+
+        List<Tuple> categoryRoomInfo = roomService.getCategoryRecentRoomInfo(categoryName);
+        System.out.println(categoryRoomInfo.size());
+        List<RoomRes> categoryList = list(categoryRoomInfo);
+
+
+        return ResponseEntity.status(200).body(categoryList);
+    }
+
     public List<RoomRes> list(List<Tuple> roomInfo){
 
         List<RoomRes> result = new ArrayList<>();
