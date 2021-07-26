@@ -41,6 +41,10 @@ public class RoomController {
     @Autowired
     UserRoomService userRoomService;
 
+    QRoom qRoom =QRoom.room;
+    QCategory qCategory = QCategory.category;
+    QUserRoom qUserRoom = QUserRoom.userRoom;
+
     @PostMapping("/create")
     @ApiOperation(value = "방 생성", notes = "방에 대한 정보를 입력한다.")
     @ApiResponses({
@@ -106,14 +110,46 @@ public class RoomController {
     })
     public ResponseEntity roomList() {
 
-        List<RoomRes> result = new ArrayList<>();
-        // 방이름, 썸네일 이미지, 카테고리, 태그, 시청자수
-        // 먼저 방이름, 썸네일, 카테고리, 시청자수 가져오기
-
-        QRoom qRoom =QRoom.room;
-        QCategory qCategory = QCategory.category;
-        QUserRoom qUserRoom = QUserRoom.userRoom;
         List<Tuple> roomInfo = roomService.getRoomInfo();
+        List<RoomRes> roomList = list(roomInfo);
+        return ResponseEntity.status(200).body(roomList);
+    }
+
+    @GetMapping("/all/best")
+    @ApiOperation(value = "인기있는 방 정보", notes = "인기있는 방의 정보를 보여준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity roomBestList() {
+
+        List<Tuple> roomInfo = roomService.getBestRoomInfo();
+        List<RoomRes> bestList = list(roomInfo);
+
+        return ResponseEntity.status(200).body(bestList);
+    }
+
+    @GetMapping("/all/recent")
+    @ApiOperation(value = "최신 방 정보", notes = "새로생긴 방의 정보를 보여준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity roomRecentList() {
+
+        List<Tuple> roomInfo = roomService.getRecentRoomInfo();
+        List<RoomRes> recentList = list(roomInfo);
+
+        return ResponseEntity.status(200).body(recentList);
+    }
+
+    public List<RoomRes> list(List<Tuple> roomInfo){
+
+        List<RoomRes> result = new ArrayList<>();
         for(int i=0;i<roomInfo.size();i++){
 
             String title = roomInfo.get(i).get(qRoom.title);
@@ -136,6 +172,6 @@ public class RoomController {
 
             result.add(roomRes);
         }
-        return ResponseEntity.status(200).body(result);
+        return result;
     }
 }

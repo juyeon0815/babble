@@ -14,4 +14,6 @@ public interface RoomService {
     Room createRoom(RoomCreateReq roomCreateReq, User user, Category category);
     Room getRoomByRoomTitle(String title);
     List<Tuple> getRoomInfo();
+    List<Tuple> getBestRoomInfo();
+    List<Tuple> getRecentRoomInfo();
 }
