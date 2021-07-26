@@ -27,6 +27,8 @@ public class QHashtag extends EntityPathBase<Hashtag> {
 
     public final StringPath name = createString("name");
 
+    public final ListPath<RoomHashtag, QRoomHashtag> roomHashtags = this.<RoomHashtag, QRoomHashtag>createList("roomHashtags", RoomHashtag.class, QRoomHashtag.class, PathInits.DIRECT2);
+
     public final ListPath<UserHashtag, QUserHashtag> userHashtags = this.<UserHashtag, QUserHashtag>createList("userHashtags", UserHashtag.class, QUserHashtag.class, PathInits.DIRECT2);
 
     public QHashtag(String variable) {

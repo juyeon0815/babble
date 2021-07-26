@@ -20,4 +20,7 @@ public class Hashtag extends BaseEntity {
 
     @OneToMany(mappedBy ="hashtag")
     List<UserHashtag> userHashtags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "hashtag")
+    List<RoomHashtag> roomHashtags = new ArrayList<>();
 }

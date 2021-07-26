@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.babble.api.request.UserLoginReq;
+import com.babble.api.request.user.UserLoginReq;
 import com.babble.api.response.UserLoginPostRes;
 import com.babble.api.service.UserService;
 import com.babble.common.model.response.BaseResponseBody;

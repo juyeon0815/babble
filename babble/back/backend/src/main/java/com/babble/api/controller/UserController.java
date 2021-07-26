@@ -1,6 +1,9 @@
 package com.babble.api.controller;
 
-import com.babble.api.request.*;
+import com.babble.api.request.user.UserHashtagReq;
+import com.babble.api.request.user.UserRegisterReq;
+import com.babble.api.request.user.UserUpdatePasswordReq;
+import com.babble.api.request.user.UserUpdatePictureReq;
 import com.babble.api.response.UserRes;
 import com.babble.api.service.EmailService;
 import com.babble.api.service.HashtagService;
@@ -24,7 +27,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import retrofit2.http.PATCH;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -73,8 +75,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> emailConfirm(
-			@RequestParam @ApiParam(value="이메일정보 정보", required = true) String email) throws Exception {
-
+			@RequestBody @ApiParam(value="이메일정보 정보", required = true) String email) throws Exception {
 		System.out.println("이메일 : "+email);
 		String confirm = emailService.sendSimpleMessage(email);
 
@@ -215,7 +216,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity updateAlarm(
-			@RequestParam @ApiParam(value="이메일정보 정보", required = true) String email) {
+			@RequestBody @ApiParam(value="이메일정보 정보", required = true) String email) {
 		System.out.println(email);
 		userService.updateAlarm(email);
 		return new ResponseEntity<>("success", HttpStatus.OK);

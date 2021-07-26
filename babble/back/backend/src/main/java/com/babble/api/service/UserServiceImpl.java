@@ -1,8 +1,8 @@
 package com.babble.api.service;
 
-import com.babble.api.request.UserRegisterReq;
-import com.babble.api.request.UserUpdatePasswordReq;
-import com.babble.api.request.UserUpdatePictureReq;
+import com.babble.api.request.user.UserRegisterReq;
+import com.babble.api.request.user.UserUpdatePasswordReq;
+import com.babble.api.request.user.UserUpdatePictureReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -33,6 +33,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath picture = createString("picture");
 
+    public final ListPath<RoomHistory, QRoomHistory> roomHistory = this.<RoomHistory, QRoomHistory>createList("roomHistory", RoomHistory.class, QRoomHistory.class, PathInits.DIRECT2);
+
     public final ListPath<UserHashtag, QUserHashtag> userHashtag = this.<UserHashtag, QUserHashtag>createList("userHashtag", UserHashtag.class, QUserHashtag.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
