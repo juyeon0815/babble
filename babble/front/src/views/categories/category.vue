@@ -52,10 +52,12 @@ export default {
     })
 
     const handleClick = function (tab) {
+      store.commit('root/setRadioState', 'best')
+      console.log(store.getters['root/getRadioStatus'])
       router.push({
         name: `${tab.index}best`,
         params: {
-          categoryIndex: tab.index
+          categoryIndex: tab.index,
         }
       })
     }

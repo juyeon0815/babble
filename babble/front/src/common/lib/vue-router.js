@@ -12,16 +12,19 @@ for (let index = 0; index < categories_list.length; index++) {
   categoryChildren.push({
     name: `${categories_list[index]}`,
     path: `${categories_list[index]}`,
+    props: true,
     component: CategoryOrder,
     children: [
       {
         path: 'best',
         component: CategoryResult,
+        props: true,
         name: `${index}best`
       },
       {
         path: 'recent',
         component: CategoryResult,
+        props: true,
         name: `${index}recent`
       }
     ]
@@ -33,7 +36,7 @@ function makeRoutesFromMenu () {
     if (key === 'home') {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'category') {
-      return { path: fullMenu[key].path, name: key, component: Category, children: categoryChildren}
+      return { path: fullMenu[key].path, name: key, props: true, component: Category, children: categoryChildren}
     } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }

@@ -7,21 +7,25 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'CategoryOrder',
   setup () {
     const route = useRoute()
     const router = useRouter()
+    const store = useStore()
 
     const state = reactive({
-      activeName: 'all',
-      radio: 'best',
+      radio: store.getters['root/getRadioStatus']
     })
 
     const changetoBest = function () {
+      store.commit('root/setRadioState', 'best')
+      console.log(store.getters['root/getRadioStatus'])
+
       router.push({
         name: `${route.params.categoryIndex}best`,
         params: {
@@ -31,6 +35,7 @@ export default {
     }
 
     const changetoRecent = function () {
+      store.commit('root/setRadioState', 'recent')
       router.push({
         name: `${route.params.categoryIndex}recent`,
         params: {
@@ -38,6 +43,7 @@ export default {
         }
       })
     }
+    
 
     return { state, changetoBest, changetoRecent }
   }

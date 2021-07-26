@@ -12,7 +12,10 @@ export function getActiveMenuIndex (state) {
 	return keys.findIndex(item => item === state.activeMenu)
 }
 
-
 export function getToken (state) {
 	return state.token
+}
+
+export function getRadioStatus (state) {
+	return state.radioStatus
 }
