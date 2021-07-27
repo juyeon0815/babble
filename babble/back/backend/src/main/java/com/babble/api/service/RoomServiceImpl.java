@@ -42,6 +42,7 @@ public class RoomServiceImpl implements RoomService {
         room.setSpeak(roomCreateReq.isSpeak());
         room.setUser(user);
         room.setCreateTime(now);
+        room.setMaxView(0L);
         return roomRepository.save(room);
     }
 

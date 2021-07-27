@@ -35,6 +35,8 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final BooleanPath isActivate = createBoolean("isActivate");
 
+    public final NumberPath<Long> maxView = createNumber("maxView", Long.class);
+
     public final ListPath<RoomHashtag, QRoomHashtag> roomHashtag = this.<RoomHashtag, QRoomHashtag>createList("roomHashtag", RoomHashtag.class, QRoomHashtag.class, PathInits.DIRECT2);
 
     public final ListPath<RoomHistory, QRoomHistory> roomHistories = this.<RoomHistory, QRoomHistory>createList("roomHistories", RoomHistory.class, QRoomHistory.class, PathInits.DIRECT2);

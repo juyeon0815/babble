@@ -11,10 +11,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@ApiModel("RoomPostRequest")
+@ApiModel("RoomRequest")
 public class RoomRelationReq {
     @ApiModelProperty(name="유저 Email", example="your_email")
     String email;
-    @ApiModelProperty(name="String", example="String")
-    String content;
+    @ApiModelProperty(name="title", example="title")
+    String title;
 }

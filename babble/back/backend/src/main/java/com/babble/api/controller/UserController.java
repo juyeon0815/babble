@@ -4,23 +4,22 @@ import com.babble.api.request.user.UserHashtagReq;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
+import com.babble.api.response.UserHistoryRes;
 import com.babble.api.response.UserRes;
-import com.babble.api.service.EmailService;
-import com.babble.api.service.HashtagService;
-import com.babble.api.service.UserHashtagService;
+import com.babble.api.service.*;
 import com.babble.common.auth.BabbleUserDetails;
-import com.babble.db.entity.Hashtag;
-import com.babble.db.entity.UserHashtag;
+import com.babble.db.entity.*;
+import com.querydsl.core.Tuple;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.TransactionUsageException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import com.babble.api.service.UserService;
 import com.babble.common.model.response.BaseResponseBody;
-import com.babble.db.entity.User;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +27,10 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -48,6 +51,9 @@ public class UserController {
 
 	@Autowired
 	UserHashtagService userHashtagService;
+
+	@Autowired
+	RoomHistoryService roomHistoryService;
 	
 	@PostMapping("/join")
 	@ApiOperation(value = "회원 가입", notes = "<strong>이메일과 패스워드</strong>를 통해 회원가입 한다.")
@@ -100,7 +106,7 @@ public class UserController {
 		User user = userService.getUserByUserEmail(email);
 		return ResponseEntity.status(200).body(UserRes.of(user));
 	}
-//
+
 	@GetMapping("/{email}")
 	@ApiOperation(value = "이메일 중복 체크", notes = "회원가입시 사용가능한 이메일인지 중복 체크를 한다.")
     @ApiResponses({
@@ -118,7 +124,7 @@ public class UserController {
 		else return ResponseEntity.status(200).body(BaseResponseBody.of(200,"사용가능한 ID 입니다." ));
 
 	}
-//
+
 	@Transactional
 	@PatchMapping("/updatePicture")
 	@ApiOperation(value = "유저 프로필사진 변경", notes = "프로필 변경하기")
@@ -220,5 +226,89 @@ public class UserController {
 		System.out.println(email);
 		userService.updateAlarm(email);
 		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
+
+	@GetMapping("/viewHistory/{email}")
+	@ApiOperation(value = "유저 시청이력 확인", notes = "해당 유저의 시청이력을 확인한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity getUserViewHistory(
+			@PathVariable("email") @ApiParam(value="유저이메일", required = true) String email) {
+
+		QRoom qRoom = QRoom.room;
+		QCategory qCategory = QCategory.category;
+		QRoomHistory qRoomHistory = QRoomHistory.roomHistory;
+
+		User user = userService.getUserByUserEmail(email);
+		System.out.println(user.getId());
+		List<Tuple> result = roomHistoryService.getUserViewHistory(user);
+		List<UserHistoryRes> list = new ArrayList<>();
+
+		for(int i=0;i<result.size();i++){
+			String title = result.get(i).get(qRoom.title);
+			String category = result.get(i).get(qCategory.name);
+			Date create = result.get(i).get(qRoom.createTime);
+			Date start = result.get(i).get(qRoomHistory.startTime);
+			Date end = result.get(i).get(qRoomHistory.endTime);
+			Long maxView = result.get(i).get(qRoom.maxView);
+			System.out.println(start);
+
+			UserHistoryRes userHistoryRes = new UserHistoryRes();
+			userHistoryRes.setTitle(title);
+			userHistoryRes.setCategory(category);
+			userHistoryRes.setViewDate(create);
+			userHistoryRes.setViewStart(start);
+			userHistoryRes.setViewEnd(end);
+			userHistoryRes.setMaxView(maxView);
+
+			list.add(userHistoryRes);
+		}
+
+		return ResponseEntity.status(200).body(list);
+
+	}
+
+	@GetMapping("/createRoomHistory/{email}")
+	@ApiOperation(value = "유저 방생성이력 확인", notes = "해당 유저의 방생성이력을 확인한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity getUserCreateRoomHistory(
+			@PathVariable("email") @ApiParam(value="유저이메일", required = true) String email) {
+
+		QRoom qRoom = QRoom.room;
+		QCategory qCategory = QCategory.category;
+
+		User user = userService.getUserByUserEmail(email);
+		System.out.println(user.getId());
+		List<Tuple> result = roomHistoryService.getUserCreateRoomHistory(user);
+		List<UserHistoryRes> list = new ArrayList<>();
+
+		for(int i=0;i<result.size();i++){
+			String title = result.get(i).get(qRoom.title);
+			String category = result.get(i).get(qCategory.name);
+			Date create = result.get(i).get(qRoom.createTime);
+
+			Long maxView = result.get(i).get(qRoom.maxView);
+
+
+			UserHistoryRes userHistoryRes = new UserHistoryRes();
+			userHistoryRes.setTitle(title);
+			userHistoryRes.setCategory(category);
+			userHistoryRes.setViewDate(create);
+			userHistoryRes.setMaxView(maxView);
+
+			list.add(userHistoryRes);
+		}
+
+		return ResponseEntity.status(200).body(list);
+
 	}
 }

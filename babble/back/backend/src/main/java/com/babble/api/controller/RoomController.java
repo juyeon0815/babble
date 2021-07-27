@@ -3,13 +3,11 @@ package com.babble.api.controller;
 
 import com.babble.api.request.room.RoomCreateReq;
 import com.babble.api.request.room.RoomRelationReq;
-import com.babble.api.request.user.UserLoginReq;
 import com.babble.api.response.RoomRes;
 import com.babble.api.service.*;
 import com.babble.common.model.response.BaseResponseBody;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,16 +28,16 @@ public class RoomController {
     CategoryService categoryService;
     @Autowired
     HashtagService hashtagService;
-
     @Autowired
     UserService userService;
     @Autowired
     RoomHashtagService roomHashtagService;
     @Autowired
     RoomService roomService;
-
     @Autowired
     UserRoomService userRoomService;
+    @Autowired
+    RoomHistoryService roomHistoryService;
 
     QRoom qRoom =QRoom.room;
     QCategory qCategory = QCategory.category;
@@ -94,9 +92,25 @@ public class RoomController {
             @RequestBody @ApiParam(value="입장", required = true)RoomRelationReq roomRelationReq) {
 
             User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
-            Room room = roomService.getRoomByRoomTitle(roomRelationReq.getContent());
+            Room room = roomService.getRoomByRoomTitle(roomRelationReq.getTitle());
             UserRoom userRoom = userRoomService.createUserRoom(user, room);
+            RoomHistory roomHistory = roomHistoryService.createRoomHistory(user, room);
 
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @PatchMapping("/exit")
+    @ApiOperation(value = "방 나가기", notes = "현재참여하고있는 방에서 퇴장.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> roomExit(@RequestBody @ApiParam(value="퇴장", required = true)RoomRelationReq roomRelationReq) {
+            User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
+            Room room = roomService.getRoomByRoomTitle(roomRelationReq.getTitle());
+            roomHistoryService.roomExit(user,room);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 

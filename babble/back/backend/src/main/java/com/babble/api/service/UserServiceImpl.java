@@ -3,6 +3,7 @@ package com.babble.api.service;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.babble.db.entity.User;
 import com.babble.db.repository.UserRepository;
 import com.babble.db.repository.UserRepositorySupport;
+
+import java.util.List;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -58,15 +61,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void updateAlarm(String email) {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!"+email+"~~~~~~~~~~~~~");
 		User user = userRepositorySupport.findUserByUserEmail(email);
-		System.out.println(user);
-//		System.out.println(user.getEmail());
 		boolean flag = !user.isAlarm();
 		System.out.println(flag);
 		user.setAlarm(flag);
 		userRepository.save(user);
 	}
+
 
 	@Override
 	public void updatePicture(UserUpdatePictureReq userInfo) {

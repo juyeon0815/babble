@@ -1,6 +1,7 @@
 package com.babble.db.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +35,8 @@ public class Room extends BaseEntity{
     boolean speak;
 
     Date createTime;
+
+    Long maxView;
 
     @OneToOne
     @JoinColumn(name ="categoryId")

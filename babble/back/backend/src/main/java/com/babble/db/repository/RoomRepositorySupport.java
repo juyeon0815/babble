@@ -6,7 +6,6 @@ import com.babble.db.entity.QRoom;
 import com.babble.db.entity.QUserRoom;
 import com.babble.db.entity.Room;
 import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
