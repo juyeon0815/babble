@@ -35,3 +35,20 @@ export function requestLogout ({ state }) {
   localStorage.removeItem('jwt')
   return
 }
+
+export function requestUserInfo ({ state }, payload) {
+  console.log('requestUserInfo', state)
+  console.log('payload:', payload)
+  const url = '/users/me'
+  return $axios.get(url, {
+    headers: {
+        Authorization: `Bearer ${payload}`
+    }
+  })
+}
+
+
+export function requestPasswordCheck ({ state }, payload) {
+  console.log('requestPasswordCheck', state, payload)
+  return $axios.post('/users/passwordCheck', payload)
+}

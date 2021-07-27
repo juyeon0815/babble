@@ -77,9 +77,18 @@ export default {
             console.log(result)
             localStorage.setItem('jwt', result.data.accessToken)
             alert('로그인 성공')
+
+
             emit('closeLoginDialog')
             window.location.reload()
           })
+          // .then(function (result ){
+          //   store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
+
+          //     console.log(res)})
+
+          // })
+
           .catch(function (err) {
             console.log(err)
             state.form.email = ''

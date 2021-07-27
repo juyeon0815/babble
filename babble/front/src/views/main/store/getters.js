@@ -19,3 +19,11 @@ export function getToken (state) {
 export function getRadioStatus (state) {
 	return state.radioStatus
 }
+
+export function getEmail (state) {
+	return state.email
+}
+
+export function getProfile (state) {
+	return state.profile
+}
