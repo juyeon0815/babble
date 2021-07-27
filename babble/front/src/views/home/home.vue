@@ -2,9 +2,10 @@
   <div class="header-space"></div>
   <div class="head-label">베스트 라이브</div>
   <el-carousel trigger="click" height="400px">
-    <el-carousel-item v-for="item in 2" :key="item">
+    <el-carousel-item v-for="item in state.carouselCount" :key="item">
       <el-row class="conference-row">
-        <Conference v-for="i in 5" :key="i" :num="i+5*(item-1)" v-cloak
+        <Conference v-for="i in 5" :key="i" v-cloak
+        :roomInfo="state.bestRoomList[i+5*(item-1)-1]"
         @click="clickConference(i+5*(item-1))"/>
       </el-row>
     </el-carousel-item>
@@ -12,7 +13,8 @@
   
   <div class="head-label">최신 라이브</div>
   <el-row class="conference-row">
-    <Conference v-for="i in 10" :key="i" :num="i" v-cloak
+    <Conference v-for="i in state.count" :key="i" v-cloak
+    :roomInfo="state.recentRoomList[i-1]"
     @click="clickConference(i)"/>
   </el-row>
 </template>
@@ -48,11 +50,29 @@ export default {
   setup () {
     const router = useRouter()
     const store = useStore()
+    const state = reactive({
+      bestRoomList: [],
+      recentRoomList: [],
+      count: 0,
+      carouselCount: 1,
+    })
 
-    store.dispatch('root/requestHome')
+    store.dispatch('root/requestRoomAllBest')
     .then(function (result) {
-      // 10개씩 분리해서 각각 인기순, 최신순으로 저장
-      console.log(result)
+      state.bestRoomList = result.data
+      state.count = result.data.length
+      if (state.count > 5) {
+        state.carouselCount = 2
+      }
+    })
+    .catch(function (err) {
+      alert(err)
+    })
+
+    store.dispatch('root/requestRoomAllRecent')
+    .then(function (result) {
+      state.recentRoomList = result.data
+      console.log(result.data)
     })
     .catch(function (err) {
       alert(err)
@@ -67,7 +87,7 @@ export default {
       })
     }
 
-    return { clickConference }
+    return { state, clickConference }
   }
 }
 </script>

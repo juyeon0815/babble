@@ -15,7 +15,3 @@ export function getActiveMenuIndex (state) {
 export function getToken (state) {
 	return state.token
 }
-
-export function getRadioStatus (state) {
-	return state.radioStatus
-}

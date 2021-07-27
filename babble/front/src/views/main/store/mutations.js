@@ -17,7 +17,3 @@ export function setLogout (state) {
 	state.token = null
 }
 
-export function setRadioState (state, changedState) {
-	state.radioStatus = changedState
-}
-

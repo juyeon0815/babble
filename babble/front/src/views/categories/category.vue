@@ -1,18 +1,18 @@
 <template>
   <div class="head-label">Category</div>
-  <el-tabs v-model="activeName" @tab-click="handleClick" class="tab">
-    <el-tab-pane label="전체보기" name="all"></el-tab-pane>
-    <el-tab-pane label="스포츠" name="sports"></el-tab-pane>
-    <el-tab-pane label="요리" name="cooking"></el-tab-pane>
-    <el-tab-pane label="수공예" name="handcraft"></el-tab-pane>
-    <el-tab-pane label="음악" name="music"></el-tab-pane>
-    <el-tab-pane label="금융" name="finance"></el-tab-pane>
-    <el-tab-pane label="게임" name="game"></el-tab-pane>
-    <el-tab-pane label="영화" name="movie"></el-tab-pane>
-    <el-tab-pane label="그림" name="drawing"></el-tab-pane>
-    <el-tab-pane label="독서" name="book"></el-tab-pane>
-    <el-tab-pane label="반려동물" name="pet"></el-tab-pane>
-  </el-tabs>
+  <el-button-group class="tab">
+    <router-link to="all"><el-button type="primary" plain>전체보기</el-button></router-link>
+    <router-link to="sports"><el-button type="primary" plain>스포츠</el-button></router-link>
+    <router-link to="cooking"><el-button type="primary" plain>요리</el-button></router-link>
+    <router-link to="handcraft"><el-button type="primary" plain>수공예</el-button></router-link>
+    <router-link to="music"><el-button type="primary" plain>음악</el-button></router-link>
+    <router-link to="finance"><el-button type="primary" plain>금융</el-button></router-link>
+    <router-link to="game"><el-button type="primary" plain>게임</el-button></router-link>
+    <router-link to="movie"><el-button type="primary" plain>영화</el-button></router-link>
+    <router-link to="drawing"><el-button type="primary" plain>그림</el-button></router-link>
+    <router-link to="book"><el-button type="primary" plain>독서</el-button></router-link>
+    <router-link to="pet"><el-button type="primary" plain>반려동물</el-button></router-link>
+  </el-button-group>
   <router-view></router-view>
 </template>
 
@@ -48,35 +48,14 @@ export default {
 
     const state = reactive({
       activeName: 'all',
-      radio: 'popular',
     })
-
-    const handleClick = function (tab) {
-      store.commit('root/setRadioState', 'best')
-      console.log(store.getters['root/getRadioStatus'])
-      router.push({
-        name: `${tab.index}best`,
-        params: {
-          categoryIndex: tab.index,
-        }
-      })
-    }
-
-    const clickConference = function (id) {
-      router.push({
-        name: 'conference-detail',
-        params: {
-          conferenceId: id
-        }
-      })
-    }
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'category')
     })
 
-    return { state, handleClick, clickConference }
+    return { state }
   }
 }
 </script>
