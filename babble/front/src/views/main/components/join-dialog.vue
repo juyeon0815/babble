@@ -50,7 +50,6 @@ export default {
       form: {
         email: '',
         emailConfirm: '',
-        authNum:'',
         password: '',
         passwordConfirm: '',
         align: 'left'
@@ -64,7 +63,7 @@ export default {
           {
             trigger: 'blur',
             validator (rule, value, callback) {
-              if (value === state.form.authNum) {
+              if (value === state.authNum) {
                 callback()
               } else {
                 callback(new Error('인증번호가 일치하지 않습니다.'))
@@ -114,6 +113,7 @@ export default {
         ]
       },
       isVal: false,
+      authNum: '',
       isOnlyEmail: false,
       dialogVisible: computed(() => props.open),
       formLabelWidth: '120px'
@@ -150,7 +150,7 @@ export default {
       .then(function (result) {
         console.log(result)
         console.log(result.data.message)
-        state.form.authNum = result.data.message
+        state.authNum = result.data.message
       }).catch(function (err) {
         alert(err)
       })

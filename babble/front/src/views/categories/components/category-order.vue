@@ -43,7 +43,7 @@ export default {
         }
       })
     }
-    
+
 
     return { state, changetoBest, changetoRecent }
   }

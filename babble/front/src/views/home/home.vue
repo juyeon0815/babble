@@ -9,7 +9,7 @@
       </el-row>
     </el-carousel-item>
   </el-carousel>
-  
+
   <div class="head-label">최신 라이브</div>
   <el-row class="conference-row">
     <Conference v-for="i in 10" :key="i" :num="i" v-cloak
@@ -49,14 +49,14 @@ export default {
     const router = useRouter()
     const store = useStore()
 
-    store.dispatch('root/requestHome')
-    .then(function (result) {
-      // 10개씩 분리해서 각각 인기순, 최신순으로 저장
-      console.log(result)
-    })
-    .catch(function (err) {
-      alert(err)
-    })
+    // store.dispatch('root/requestHome')
+    // .then(function (result) {
+    //   // 10개씩 분리해서 각각 인기순, 최신순으로 저장
+    //   console.log(result)
+    // })
+    // .catch(function (err) {
+    //   alert(err)
+    // })
 
     const clickConference = function (id) {
       router.push({

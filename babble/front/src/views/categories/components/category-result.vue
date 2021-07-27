@@ -14,7 +14,7 @@ export default {
   },
   setup () {
     const state = reactive({
-      
+
     })
 
     return { state }

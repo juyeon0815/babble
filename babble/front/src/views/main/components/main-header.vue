@@ -85,19 +85,22 @@ export default {
     const clickCategory = function () {
       store.commit('root/setMenuActive', 1)
       router.push({
-        path: '/category/all/best'
+        name: '0best',
+        path: '/category/all/best',
+        params: {
+          categoryIndex: '0'
+        }
       })
     }
 
     const clickMyPage = function () {
-      store.commit('root/setMenuActive', 2)
-      const MenuItems = store.getters['root/getMenus']
-      console.log(MenuItems)
-      let keys = Object.keys(MenuItems)
-      console.log(keys)
-      router.push({
-        name: keys[2]
-      })
+      let nowIndex = store.getters['root/getActiveMenuIndex']
+      if (nowIndex != 2) {
+        store.commit('root/setMenuActive', 2)
+        router.push({
+          path: '/mypage/keyword'
+        })
+      }
     }
 
     const clickLogout = function () {

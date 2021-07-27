@@ -1,7 +1,7 @@
 <template>
   <div class="head-label">Category</div>
-  <el-tabs v-model="activeName" @tab-click="handleClick" class="tab">
-    <el-tab-pane label="전체보기" name="all"></el-tab-pane>
+  <el-tabs v-model="state.activeName" @tab-click="handleClick" class="tab">
+    <el-tab-pane label="전체보기" name="all">ddddd</el-tab-pane>
     <el-tab-pane label="스포츠" name="sports"></el-tab-pane>
     <el-tab-pane label="요리" name="cooking"></el-tab-pane>
     <el-tab-pane label="수공예" name="handcraft"></el-tab-pane>
@@ -48,7 +48,7 @@ export default {
 
     const state = reactive({
       activeName: 'all',
-      radio: 'popular',
+      // radio: 'popular',
     })
 
     const handleClick = function (tab) {
