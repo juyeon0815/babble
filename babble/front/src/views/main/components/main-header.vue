@@ -85,11 +85,7 @@ export default {
     const clickCategory = function () {
       store.commit('root/setMenuActive', 1)
       router.push({
-        name: '0best',
-        path: '/category/all/best',
-        params: {
-          categoryIndex: '0'
-        }
+        path: '/category/all'
       })
     }
 

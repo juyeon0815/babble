@@ -24,10 +24,17 @@ export function requestEmailConfirm ({ state }, payload) {
   return $axios.post('/users/emailConfirm', payload)
 }
 
-// export function requestHome ({ state }) {
-//   console.log('requestHome', state)
-//   return $axios.get('/')
-// }
+export function requestRoomAllBest ({ state }) {
+  return $axios.get('/room/all/best')
+}
+
+export function requestRoomAllRecent ({ state }) {
+  return $axios.get('/room/all/recent')
+}
+
+export function requestRoomCategoryOrder ({ state}, payload) {
+  return $axios.get(`/room/${payload.linkName}/${payload.orderName}`)
+}
 
 export function requestLogout ({ state }) {
   console.log('requestLogout', state)

@@ -36,9 +36,6 @@ export default {
     })
 
     const handleClick = (tab, event) => {
-      console.log('이건 탭')
-      console.log(tab)
-      console.log(tab.props.name)
       router.push({
         // path: '/mypage/user-info'
         path: `/mypage/${tab.props.name}`

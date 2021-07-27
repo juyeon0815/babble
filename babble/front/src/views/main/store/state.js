@@ -43,8 +43,6 @@ function getJwt() {
 
 const token = getJwt()
 
-const radioStatus = 'best'
-
 const email = 'ddd'
 
 const profile = ''
@@ -54,7 +52,6 @@ export default {
   activeMenu: 'home',
   menus: menuData,
   token: token,
-  radioStatus: radioStatus,
   email: email,
   profile: profile,
 }

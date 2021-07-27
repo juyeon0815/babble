@@ -17,10 +17,6 @@ export function setLogout (state) {
 	state.token = null
 }
 
-export function setRadioState (state, changedState) {
-	state.radioStatus = changedState
-}
-
 export function setEmail (state, email) {
   console.log('이메일 저장한다!')
 	state.email = email

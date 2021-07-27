@@ -1,23 +1,26 @@
 <template>
   <el-card class="conference-card">
-      <img src="https://picsum.photos/200" class="image">
-      <div>
-        <div class="card-bottom">
-          <div>{{ num }} Room Name</div>
-          <el-tag class="category-tag" @click="clickCategory">Category</el-tag>
-          <el-tag class="keyword-tag" type="warning">Keyword1</el-tag>
-          <el-tag class="keyword-tag" type="warning">Keyword2</el-tag>
-          <div><i class="el-icon-user"></i> 389 Watching</div>
+    <img src="https://picsum.photos/200" class="image">
+    <div v-if="roomInfo">
+      <div class="card-bottom">
+        <div class="name-area">
+          <div class="tag">{{ roomInfo. title }}</div>
+          <el-tag class="tag" @click="clickCategory">{{ roomInfo.category }}</el-tag>
         </div>
+        <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
+          <el-tag type="warning">{{ roomInfo.hashtag[i-1] }}</el-tag>
+        </div>
+        <div><i class="el-icon-user"></i> {{ roomInfo.viewers }} Watching</div>
       </div>
-    </el-card>
+    </div>
+  </el-card>
 </template>
 
 <script>
 export default {
   props: {
-    num: {
-      type: Number
+    roomInfo : {
+      type: Object
     }
   },
 
@@ -49,11 +52,12 @@ export default {
     display: block;
   }
 
-  .card-bottom .category-tag {
+  .card-bottom .name-area {
+    justify-content: end;
     display: block;
   }
 
-  .card-bottom .keyword-tag {
+  .card-bottom .tag {
     display: inline;
   }
 </style>

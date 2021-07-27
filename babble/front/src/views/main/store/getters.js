@@ -16,10 +16,6 @@ export function getToken (state) {
 	return state.token
 }
 
-export function getRadioStatus (state) {
-	return state.radioStatus
-}
-
 export function getEmail (state) {
 	return state.email
 }
