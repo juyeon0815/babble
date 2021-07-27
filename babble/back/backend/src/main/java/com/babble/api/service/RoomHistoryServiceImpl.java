@@ -54,4 +54,13 @@ public class RoomHistoryServiceImpl implements RoomHistoryService {
         List<Tuple> createRoomHistory = roomHistoryRepositorySupport.getCreateRoomHistory(user);
         return createRoomHistory;
     }
+
+    @Override
+    public void updateEndTime(Long roomId) {
+        List<RoomHistory> roomHistories = roomHistoryRepositorySupport.findRoomHistoryByRoomId(roomId);
+        for(int i=0;i<roomHistories.size();i++){
+            roomHistories.get(i).setEndTime(date);
+            roomHistoryRepository.save(roomHistories.get(i));
+        }
+    }
 }

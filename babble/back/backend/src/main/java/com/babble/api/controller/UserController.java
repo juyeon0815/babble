@@ -9,16 +9,13 @@ import com.babble.api.response.UserLoginPostRes;
 import com.babble.api.response.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.auth.BabbleUserDetails;
-import com.babble.common.util.JwtTokenUtil;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.TransactionUsageException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +27,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,19 +39,14 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
-
 	@Autowired
 	EmailService emailService;
-
 	@Autowired
 	HashtagService hashtagService;
-
 	@Autowired
 	UserHashtagService userHashtagService;
-
 	@Autowired
 	RoomHistoryService roomHistoryService;
-
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
@@ -88,9 +77,8 @@ public class UserController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> emailConfirm(
 			@RequestBody @ApiParam(value="이메일정보 정보", required = true) String email) throws Exception {
-		System.out.println("이메일 : "+email);
-		String confirm = emailService.sendSimpleMessage(email);
 
+		String confirm = emailService.sendSimpleMessage(email);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, confirm));
 	}
 	
@@ -189,6 +177,7 @@ public class UserController {
         @ApiResponse(code = 500, message = "서버 오류")
     })
 	public ResponseEntity deleteUser(@PathVariable("email") @ApiParam(value="회원 정보", required = true) String email) {
+		// 유저 삭제시 관련된 user_hashtag , user_history삭제
 		userService.deleteUser(email);
 		return ResponseEntity.status(200).body("success");
 	}
@@ -247,7 +236,6 @@ public class UserController {
 	})
 	public ResponseEntity updateAlarm(
 			@RequestBody @ApiParam(value="이메일정보 정보", required = true) String email) {
-		System.out.println(email);
 		userService.updateAlarm(email);
 		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
@@ -263,34 +251,9 @@ public class UserController {
 	public ResponseEntity getUserViewHistory(
 			@PathVariable("email") @ApiParam(value="유저이메일", required = true) String email) {
 
-		QRoom qRoom = QRoom.room;
-		QCategory qCategory = QCategory.category;
-		QRoomHistory qRoomHistory = QRoomHistory.roomHistory;
-
 		User user = userService.getUserByUserEmail(email);
-		System.out.println(user.getId());
-		List<Tuple> result = roomHistoryService.getUserViewHistory(user);
-		List<UserHistoryRes> list = new ArrayList<>();
-
-		for(int i=0;i<result.size();i++){
-			String title = result.get(i).get(qRoom.title);
-			String category = result.get(i).get(qCategory.name);
-			Date create = result.get(i).get(qRoom.createTime);
-			Date start = result.get(i).get(qRoomHistory.startTime);
-			Date end = result.get(i).get(qRoomHistory.endTime);
-			Long maxView = result.get(i).get(qRoom.maxView);
-			System.out.println(start);
-
-			UserHistoryRes userHistoryRes = new UserHistoryRes();
-			userHistoryRes.setTitle(title);
-			userHistoryRes.setCategory(category);
-			userHistoryRes.setViewDate(create);
-			userHistoryRes.setViewStart(start);
-			userHistoryRes.setViewEnd(end);
-			userHistoryRes.setMaxView(maxView);
-
-			list.add(userHistoryRes);
-		}
+		List<Tuple> historyInfo = roomHistoryService.getUserViewHistory(user);
+		List<UserHistoryRes> list = userService.historyList(historyInfo, "view");
 
 		return ResponseEntity.status(200).body(list);
 
@@ -307,32 +270,9 @@ public class UserController {
 	public ResponseEntity getUserCreateRoomHistory(
 			@PathVariable("email") @ApiParam(value="유저이메일", required = true) String email) {
 
-		QRoom qRoom = QRoom.room;
-		QCategory qCategory = QCategory.category;
-
 		User user = userService.getUserByUserEmail(email);
-		System.out.println(user.getId());
-		List<Tuple> result = roomHistoryService.getUserCreateRoomHistory(user);
-		List<UserHistoryRes> list = new ArrayList<>();
-
-		for(int i=0;i<result.size();i++){
-			String title = result.get(i).get(qRoom.title);
-			String category = result.get(i).get(qCategory.name);
-			Date create = result.get(i).get(qRoom.createTime);
-
-			Long maxView = result.get(i).get(qRoom.maxView);
-
-
-			UserHistoryRes userHistoryRes = new UserHistoryRes();
-			userHistoryRes.setTitle(title);
-			userHistoryRes.setCategory(category);
-			userHistoryRes.setViewDate(create);
-			userHistoryRes.setMaxView(maxView);
-
-			list.add(userHistoryRes);
-		}
-
+		List<Tuple> historyInfo = roomHistoryService.getUserCreateRoomHistory(user);
+		List<UserHistoryRes> list = userService.historyList(historyInfo, "");
 		return ResponseEntity.status(200).body(list);
-
 	}
 }

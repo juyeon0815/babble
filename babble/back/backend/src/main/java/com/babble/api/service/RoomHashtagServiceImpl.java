@@ -35,7 +35,15 @@ public class RoomHashtagServiceImpl implements RoomHashtagService {
 
     @Override
     public List<Hashtag> findHashtagByRoomHashtagRoomId(Long roomId) {
-       List<Hashtag> list = roomHashtagRepositorySupport.findHashtagByRoomHashtagRoomId(roomId);
-       return list;
+       List<Hashtag> Hashtag = roomHashtagRepositorySupport.findHashtagByRoomId(roomId);
+       return Hashtag;
+    }
+
+    @Override
+    public void deleteRoomHashtag(Long roomId) {
+        List<RoomHashtag> roomHashtag = roomHashtagRepositorySupport.findRoomHashtagByRoomId(roomId);
+        for(int i=0;i<roomHashtag.size();i++){
+            roomHashtagRepository.delete(roomHashtag.get(i));
+        }
     }
 }

@@ -6,4 +6,6 @@ import com.babble.db.entity.UserRoom;
 
 public interface UserRoomService {
     UserRoom createUserRoom(User user, Room room);
+    void deleteUserRoom(User user);
+    void deleteUserRoom(Long roomId);
 }

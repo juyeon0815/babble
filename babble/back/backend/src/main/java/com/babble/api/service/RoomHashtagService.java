@@ -10,4 +10,5 @@ import java.util.List;
 public interface RoomHashtagService {
     RoomHashtag createRoomHashtag(Hashtag hashtag, Room room);
     List<Hashtag> findHashtagByRoomHashtagRoomId(Long roomId);
+    void deleteRoomHashtag(Long roomId);
 }

@@ -3,10 +3,6 @@ package com.babble.db.repository;
 
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.ConstantImpl;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,7 +35,6 @@ public class RoomHistoryRepositorySupport {
 //                "DATE_FORMAT({0}, {1})"
 //                , qRoom.createTime
 //                , ConstantImpl.create("%Y-%m-%d"));
-
         List<Tuple> userHistory = jpaQueryFactory.select(qRoom.title,qCategory.name, qRoom.createTime,
                 qRoomHistory.startTime,qRoomHistory.endTime,qRoom.maxView)
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
@@ -54,12 +49,21 @@ public class RoomHistoryRepositorySupport {
     public List<Tuple> getCreateRoomHistory(User user){
 
         List<Tuple> userHistory = jpaQueryFactory.select(qRoom.title,qCategory.name, qRoom.createTime,qRoom.maxView)
-                .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
+                .from(qRoom).leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .where(qRoom.user.id.eq(user.getId()))
                 .where(qRoom.isActivate.eq(false))
                 .fetch();
 
         return userHistory;
+    }
+
+    public List<RoomHistory> findRoomHistoryByRoomId(Long roomId){
+        List<RoomHistory> roomHistories = jpaQueryFactory.select(qRoomHistory)
+                .from(qRoomHistory)
+                .where(qRoomHistory.room.id.eq(roomId))
+                .where(qRoomHistory.endTime.isNull()).fetch();
+
+        return roomHistories;
     }
 
 

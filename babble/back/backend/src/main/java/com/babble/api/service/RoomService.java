@@ -19,6 +19,6 @@ public interface RoomService {
     List<Tuple> getRecentRoomInfo();
     List<Tuple> getCategoryBestRoomInfo(String categoryName);
     List<Tuple> getCategoryRecentRoomInfo(String categoryName);
-    void deleteRoom(Long roomId);
+    void roomClose(Long roomId);
     List<RoomRes> roomList(List<Tuple> roomInfo);
 }

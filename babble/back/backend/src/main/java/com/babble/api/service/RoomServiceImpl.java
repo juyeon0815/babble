@@ -86,7 +86,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void deleteRoom(Long roomId) {
+    public void roomClose(Long roomId) {
         Room room = roomRepositorySupport.findRoomByRoomId(roomId);
         room.setActivate(false);
         roomRepository.save(room);

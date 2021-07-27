@@ -32,10 +32,10 @@ public class User extends BaseEntity{
 
     boolean alarm;
 
-    @OneToMany (mappedBy ="user")
-    //@OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany (mappedBy ="user", cascade = CascadeType.REMOVE)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     List<UserHashtag> userHashtag = new ArrayList<>();
 
-    @OneToMany (mappedBy = "user")
+    @OneToMany (mappedBy = "user" ,cascade = CascadeType.REMOVE)
     List<RoomHistory> roomHistory = new ArrayList<>();
 }

@@ -3,6 +3,10 @@ package com.babble.api.service;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
+import com.babble.api.response.UserHistoryRes;
+import com.babble.db.entity.QCategory;
+import com.babble.db.entity.QRoom;
+import com.babble.db.entity.QRoomHistory;
 import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +16,8 @@ import com.babble.db.entity.User;
 import com.babble.db.repository.UserRepository;
 import com.babble.db.repository.UserRepositorySupport;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,6 +72,38 @@ public class UserServiceImpl implements UserService {
 		System.out.println(flag);
 		user.setAlarm(flag);
 		userRepository.save(user);
+	}
+
+	@Override
+	public List<UserHistoryRes> historyList(List<Tuple> historyInfo, String command) {
+		QRoom qRoom = QRoom.room;
+		QCategory qCategory = QCategory.category;
+		QRoomHistory qRoomHistory = QRoomHistory.roomHistory;
+
+		List<UserHistoryRes> list = new ArrayList<>();
+
+		for(int i=0;i<historyInfo.size();i++){
+			String title = historyInfo.get(i).get(qRoom.title);
+			String category = historyInfo.get(i).get(qCategory.name);
+			Date create = historyInfo.get(i).get(qRoom.createTime);
+			Long maxView = historyInfo.get(i).get(qRoom.maxView);
+
+			UserHistoryRes userHistoryRes = new UserHistoryRes();
+			userHistoryRes.setTitle(title);
+			userHistoryRes.setCategory(category);
+			userHistoryRes.setViewDate(create);
+			userHistoryRes.setMaxView(maxView);
+
+			if(command.equals("view")){
+				Date start = historyInfo.get(i).get(qRoomHistory.startTime);
+				Date end = historyInfo.get(i).get(qRoomHistory.endTime);
+				userHistoryRes.setViewStart(start);
+				userHistoryRes.setViewEnd(end);
+			}
+
+			list.add(userHistoryRes);
+		}
+		return list;
 	}
 
 

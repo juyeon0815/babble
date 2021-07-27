@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,9 +40,6 @@ public class RoomController {
     @Autowired
     RoomHistoryService roomHistoryService;
 
-    QRoom qRoom =QRoom.room;
-    QCategory qCategory = QCategory.category;
-    QUserRoom qUserRoom = QUserRoom.userRoom;
 
     @PostMapping("/create")
     @ApiOperation(value = "방 생성", notes = "방에 대한 정보를 입력한다.")
@@ -113,6 +109,9 @@ public class RoomController {
             User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
             Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
             roomHistoryService.roomExit(user,room);
+
+            //방나기면 user_room 데이터 삭제
+            userRoomService.deleteUserRoom(user);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -192,18 +191,20 @@ public class RoomController {
     }
 
 
-
     @Transactional
     @DeleteMapping("/{roomId}")
-    @ApiOperation(value = "방 삭제", notes = "화상회의 방 삭제하기")
+    @ApiOperation(value = "방 종료", notes = "화상회의 방 종료하기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity deleteRoom(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
-        roomService.deleteRoom(roomId);
+    public ResponseEntity roomClose(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
+        roomService.roomClose(roomId);
+        userRoomService.deleteUserRoom(roomId);
+        roomHashtagService.deleteRoomHashtag(roomId);
+        roomHistoryService.updateEndTime(roomId);
         return ResponseEntity.status(200).body("success");
     }
 }

@@ -12,4 +12,5 @@ public interface RoomHistoryService {
     void roomExit(User user, Room room);
     List<Tuple> getUserViewHistory(User user);
     List<Tuple> getUserCreateRoomHistory(User user);
+    void updateEndTime(Long roomId);
 }
