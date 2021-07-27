@@ -16,11 +16,14 @@ import lombok.Setter;
 public class UserRes{
 	@ApiModelProperty(name="User Email")
 	String email;
+	@ApiModelProperty(name="User Picture")
+	String picture;
 
 	
 	public static UserRes of(User user) {
 		UserRes res = new UserRes();
 		res.setEmail(user.getEmail());
+		res.setPicture(user.getPicture());
 
 		return res;
 	}

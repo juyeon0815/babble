@@ -5,9 +5,11 @@ import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
 import com.babble.api.response.UserHistoryRes;
+import com.babble.api.response.UserLoginPostRes;
 import com.babble.api.response.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.auth.BabbleUserDetails;
+import com.babble.common.util.JwtTokenUtil;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import org.checkerframework.checker.units.qual.A;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.TransactionUsageException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +57,9 @@ public class UserController {
 
 	@Autowired
 	RoomHistoryService roomHistoryService;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@PostMapping("/join")
 	@ApiOperation(value = "회원 가입", notes = "<strong>이메일과 패스워드</strong>를 통해 회원가입 한다.")
@@ -123,6 +129,24 @@ public class UserController {
 		}
 		else return ResponseEntity.status(200).body(BaseResponseBody.of(200,"사용가능한 ID 입니다." ));
 
+	}
+
+	@PostMapping("/passwordCheck")
+	@ApiOperation(value = "유저 비밀번호 변경 시 현재 비밀번호 일치여부 확인", notes = "비밀번호 변경 시 현재 비밀번호가 일치한지 확인한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> passwordCheck(
+			@RequestBody @ApiParam(value="이메일정보 정보", required = true) UserUpdatePasswordReq userInfo) throws Exception {
+
+		User user = userService.getUserByUserEmail(userInfo.getEmail());
+		if(passwordEncoder.matches(userInfo.getPassword(), user.getPassword())){ //비밀번호 일치
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success"));
+		}
+		else return ResponseEntity.status(200).body(BaseResponseBody.of(401, "fail"));
 	}
 
 	@Transactional
