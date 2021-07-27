@@ -23,9 +23,17 @@ public class RoomRepositorySupport {
     QCategory qCategory = QCategory.category;
     QUserRoom qUserRoom = QUserRoom.userRoom;
 
-    public Room findRoomByRoomTitle(String title){
+//    public Room findRoomByRoomTitle(String title){
+//        Room room = jpaQueryFactory.select(qRoom).from(qRoom)
+//                .where(qRoom.title.eq(title)).fetchOne();
+//
+//        if(room==null) return null;
+//        return room;
+//    }
+
+    public Room findRoomByRoomId(Long roomId){
         Room room = jpaQueryFactory.select(qRoom).from(qRoom)
-                .where(qRoom.title.eq(title)).fetchOne();
+                .where(qRoom.id.eq(roomId)).fetchOne();
 
         if(room==null) return null;
         return room;
@@ -43,8 +51,8 @@ public class RoomRepositorySupport {
 
     public List<Tuple> bestRoomInfo(){
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
-                .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
-                .join(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
+                .from(qRoom).leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
+                .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
                 .where(qRoom.isActivate.eq(true)).limit(10)
                 .groupBy(qUserRoom.room.id)
                 .orderBy(qUserRoom.room.id.count().desc())
@@ -55,7 +63,7 @@ public class RoomRepositorySupport {
     public List<Tuple> recentRoomInfo(){
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
-                .join(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
+                .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
                 .where(qRoom.isActivate.eq(true)).limit(10)
                 .groupBy(qUserRoom.room.id)
                 .orderBy(qRoom.createTime.desc())
@@ -67,7 +75,7 @@ public class RoomRepositorySupport {
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true))
+                .where(qRoom.isActivate.eq(true)).limit(10)
                 .where(qCategory.name.eq(categoryName))
                 .groupBy(qUserRoom.room.id)
                 .orderBy(qUserRoom.room.id.count().desc())
@@ -79,8 +87,8 @@ public class RoomRepositorySupport {
     public List<Tuple> categoryRecentRoomInfo(String categoryName){
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
-                .join(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true))
+                .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
+                .where(qRoom.isActivate.eq(true)).limit(10)
                 .where(qCategory.name.eq(categoryName))
                 .groupBy(qUserRoom.room.id)
                 .orderBy(qRoom.createTime.desc())

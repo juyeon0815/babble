@@ -190,7 +190,7 @@ public class UserController {
     })
 	public ResponseEntity deleteUser(@PathVariable("email") @ApiParam(value="회원 정보", required = true) String email) {
 		userService.deleteUser(email);
-		return new ResponseEntity<>("success", HttpStatus.OK);
+		return ResponseEntity.status(200).body("success");
 	}
 
 	@PostMapping("/hashtag")

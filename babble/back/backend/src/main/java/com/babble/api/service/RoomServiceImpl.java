@@ -1,9 +1,8 @@
 package com.babble.api.service;
 
 import com.babble.api.request.room.RoomCreateReq;
-import com.babble.db.entity.Category;
-import com.babble.db.entity.Room;
-import com.babble.db.entity.User;
+import com.babble.api.response.RoomRes;
+import com.babble.db.entity.*;
 import com.babble.db.repository.RoomRepository;
 import com.babble.db.repository.RoomRepositorySupport;
 import com.querydsl.core.Tuple;
@@ -11,6 +10,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +26,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     RoomRepositorySupport roomRepositorySupport;
+
+    @Autowired
+    RoomHashtagService roomHashtagService;
 
 
     @Override
@@ -47,8 +50,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room getRoomByRoomTitle(String title) {
-        Room room = roomRepositorySupport.findRoomByRoomTitle(title);
+    public Room getRoomByRoomId(Long roomId) {
+        Room room = roomRepositorySupport.findRoomByRoomId(roomId);
         return room;
     }
 
@@ -67,7 +70,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<Tuple> getRecentRoomInfo() {
         List<Tuple> roomRes = roomRepositorySupport.recentRoomInfo();
-        return  roomRes;
+        return roomRes;
     }
 
     @Override
@@ -81,4 +84,45 @@ public class RoomServiceImpl implements RoomService {
         List<Tuple> roomRes = roomRepositorySupport.categoryRecentRoomInfo(categoryName);
         return roomRes;
     }
+
+    @Override
+    public void deleteRoom(Long roomId) {
+        Room room = roomRepositorySupport.findRoomByRoomId(roomId);
+        room.setActivate(false);
+        roomRepository.save(room);
+    }
+
+    @Override
+    public List<RoomRes> roomList(List<Tuple> roomInfo) {
+
+        QRoom qRoom = QRoom.room;
+        QCategory qCategory = QCategory.category;
+        QUserRoom qUserRoom = QUserRoom.userRoom;
+
+        List<RoomRes> result = new ArrayList<>();
+        for(int i=0;i<roomInfo.size();i++){
+            Long id = roomInfo.get(i).get(qRoom.id);
+            String title = roomInfo.get(i).get(qRoom.title);
+            String thumbnail = roomInfo.get(i).get(qRoom.thumbnailUrl);
+            String category = roomInfo.get(i).get(qCategory.name);
+            Long count = roomInfo.get(i).get(qUserRoom.room.id.count());
+
+            List<String> hashtags = new ArrayList<>();
+            List<Hashtag> list = roomHashtagService.findHashtagByRoomHashtagRoomId(roomInfo.get(i).get(qRoom.id));
+            for(int j=0;j<list.size();j++){
+                hashtags.add(list.get(j).getName());
+            }
+            RoomRes roomRes = new RoomRes();
+            roomRes.setId(id);
+            roomRes.setTitle(title);
+            roomRes.setThumbnailUrl(thumbnail);
+            roomRes.setCategory(category);
+            roomRes.setViewers(count);
+            roomRes.setHashtag(hashtags);
+
+            result.add(roomRes);
+        }
+        return result;
+    }
+
 }

@@ -10,7 +10,9 @@ import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -92,7 +94,7 @@ public class RoomController {
             @RequestBody @ApiParam(value="입장", required = true)RoomRelationReq roomRelationReq) {
 
             User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
-            Room room = roomService.getRoomByRoomTitle(roomRelationReq.getTitle());
+            Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
             UserRoom userRoom = userRoomService.createUserRoom(user, room);
             RoomHistory roomHistory = roomHistoryService.createRoomHistory(user, room);
 
@@ -109,7 +111,7 @@ public class RoomController {
     })
     public ResponseEntity<? extends BaseResponseBody> roomExit(@RequestBody @ApiParam(value="퇴장", required = true)RoomRelationReq roomRelationReq) {
             User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
-            Room room = roomService.getRoomByRoomTitle(roomRelationReq.getTitle());
+            Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
             roomHistoryService.roomExit(user,room);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -125,7 +127,7 @@ public class RoomController {
     public ResponseEntity roomList() {
 
         List<Tuple> roomInfo = roomService.getRoomInfo();
-        List<RoomRes> roomList = list(roomInfo);
+        List<RoomRes> roomList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(roomList);
     }
 
@@ -140,8 +142,7 @@ public class RoomController {
     public ResponseEntity roomBestList() {
 
         List<Tuple> roomInfo = roomService.getBestRoomInfo();
-        List<RoomRes> bestList = list(roomInfo);
-
+        List<RoomRes> bestList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(bestList);
     }
 
@@ -156,8 +157,7 @@ public class RoomController {
     public ResponseEntity roomRecentList() {
 
         List<Tuple> roomInfo = roomService.getRecentRoomInfo();
-        List<RoomRes> recentList = list(roomInfo);
-
+        List<RoomRes> recentList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(recentList);
     }
 
@@ -171,11 +171,8 @@ public class RoomController {
     })
     public ResponseEntity categoryBestList(@PathVariable("categoryName") @ApiParam(value="카테고리명", required = true)String categoryName) {
 
-        List<Tuple> categoryRoomInfo = roomService.getCategoryBestRoomInfo(categoryName);
-        System.out.println(categoryRoomInfo.size());
-        List<RoomRes> categoryList = list(categoryRoomInfo);
-
-
+        List<Tuple> roomInfo = roomService.getCategoryBestRoomInfo(categoryName);
+        List<RoomRes> categoryList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(categoryList);
     }
 
@@ -189,39 +186,24 @@ public class RoomController {
     })
     public ResponseEntity categoryRecentList(@PathVariable("categoryName") @ApiParam(value="카테고리명", required = true)String categoryName) {
 
-        List<Tuple> categoryRoomInfo = roomService.getCategoryRecentRoomInfo(categoryName);
-        System.out.println(categoryRoomInfo.size());
-        List<RoomRes> categoryList = list(categoryRoomInfo);
-
-
+        List<Tuple> roomInfo = roomService.getCategoryRecentRoomInfo(categoryName);
+        List<RoomRes> categoryList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(categoryList);
     }
 
-    public List<RoomRes> list(List<Tuple> roomInfo){
 
-        List<RoomRes> result = new ArrayList<>();
-        for(int i=0;i<roomInfo.size();i++){
 
-            String title = roomInfo.get(i).get(qRoom.title);
-            String thumbnail = roomInfo.get(i).get(qRoom.thumbnailUrl);
-            String category = roomInfo.get(i).get(qCategory.name);
-            Long count = roomInfo.get(i).get(qUserRoom.room.id.count());
-
-            List<String> hashtags = new ArrayList<>();
-            List<Hashtag> list = roomHashtagService.findHashtagByRoomHashtagRoomId(roomInfo.get(i).get(qRoom.id));
-            for(int j=0;j<list.size();j++){
-                hashtags.add(list.get(j).getName());
-            }
-
-            RoomRes roomRes = new RoomRes();
-            roomRes.setTitle(title);
-            roomRes.setThumbnailUrl(thumbnail);
-            roomRes.setCategory(category);
-            roomRes.setViewers(count);
-            roomRes.setHashtag(hashtags);
-
-            result.add(roomRes);
-        }
-        return result;
+    @Transactional
+    @DeleteMapping("/{roomId}")
+    @ApiOperation(value = "방 삭제", notes = "화상회의 방 삭제하기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity deleteRoom(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
+        roomService.deleteRoom(roomId);
+        return ResponseEntity.status(200).body("success");
     }
 }

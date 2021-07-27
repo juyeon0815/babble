@@ -15,6 +15,6 @@ import lombok.Setter;
 public class RoomRelationReq {
     @ApiModelProperty(name="유저 Email", example="your_email")
     String email;
-    @ApiModelProperty(name="title", example="title")
-    String title;
+    @ApiModelProperty(name="roomId", example="roomId")
+    Long roomId;
 }
