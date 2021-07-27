@@ -45,6 +45,7 @@ public class RoomHistoryRepositorySupport {
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .join(qRoomHistory).on(qRoom.id.eq(qRoomHistory.room.id))
                 .where(qRoomHistory.user.id.eq(user.getId()))
+                .where(qRoom.isActivate.eq(false))
                 .fetch();
 
         return userHistory;
@@ -55,6 +56,7 @@ public class RoomHistoryRepositorySupport {
         List<Tuple> userHistory = jpaQueryFactory.select(qRoom.title,qCategory.name, qRoom.createTime,qRoom.maxView)
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .where(qRoom.user.id.eq(user.getId()))
+                .where(qRoom.isActivate.eq(false))
                 .fetch();
 
         return userHistory;

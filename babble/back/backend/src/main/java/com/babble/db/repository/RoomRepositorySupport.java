@@ -45,7 +45,7 @@ public class RoomRepositorySupport {
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .join(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true))
+                .where(qRoom.isActivate.eq(true)).limit(10)
                 .groupBy(qUserRoom.room.id)
                 .orderBy(qUserRoom.room.id.count().desc())
                 .fetch();
@@ -56,7 +56,7 @@ public class RoomRepositorySupport {
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .join(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true))
+                .where(qRoom.isActivate.eq(true)).limit(10)
                 .groupBy(qUserRoom.room.id)
                 .orderBy(qRoom.createTime.desc())
                 .fetch();
