@@ -23,3 +23,7 @@ export function getEmail (state) {
 export function getProfile (state) {
 	return state.profile
 }
+
+export function getLoadingStatus (state) {
+	return state.loadingStatus;
+}

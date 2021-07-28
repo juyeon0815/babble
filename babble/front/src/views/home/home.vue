@@ -56,7 +56,8 @@ export default {
       count: 0,
       carouselCount: 1,
     })
-
+    
+    store.commit('root/startSpinner')
     store.dispatch('root/requestRoomAllBest')
     .then(function (result) {
       state.bestRoomList = result.data
@@ -73,8 +74,10 @@ export default {
     .then(function (result) {
       state.recentRoomList = result.data
       console.log(result.data)
+      store.commit('root/endSpinner')
     })
     .catch(function (err) {
+      store.commit('root/endSpinner')
       alert(err)
     })
 

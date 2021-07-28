@@ -22,3 +22,10 @@ export function setEmail (state, email) {
 	state.email = email
 }
 
+export function startSpinner (state) {
+	state.loadingStatus = true;
+}
+
+export function endSpinner (state) {
+	state.loadingStatus = false;
+}

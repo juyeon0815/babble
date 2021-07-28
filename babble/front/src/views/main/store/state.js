@@ -54,4 +54,5 @@ export default {
   token: token,
   email: email,
   profile: profile,
+  loadingStatus : false,
 }

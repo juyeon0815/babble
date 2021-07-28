@@ -32,9 +32,9 @@
 </style>
 
 <script>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import Conference from '../home/components/conference'
 
 export default {
@@ -45,9 +45,20 @@ export default {
   setup () {
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
 
     const state = reactive({
       activeName: 'all',
+    })
+
+    // onBeforeRouteUpdate ((to, from) => {
+    //   console.log('!!!!!!!!!!!!')
+    //   console.log(to.name)
+    //   console.log(from.name)
+    // })
+
+    router.afterEach((to) => {
+      router.go()
     })
 
     // 페이지 진입시 불리는 훅
@@ -56,6 +67,6 @@ export default {
     })
 
     return { state }
-  }
+  },
 }
 </script>
