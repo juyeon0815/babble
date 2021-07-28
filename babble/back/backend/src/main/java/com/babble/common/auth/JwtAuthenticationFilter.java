@@ -35,8 +35,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-        System.out.println("여기들어와?");
 		// Read the Authorization header, where the JWT Token should be
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING); //jwt 헤더 토큰
 

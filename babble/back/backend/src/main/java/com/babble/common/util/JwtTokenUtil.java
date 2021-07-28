@@ -18,6 +18,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * jwt 토큰 유틸 정의.
+ * 유저 정보로 jwt 토큰을 만들거나 토큰을 바탕으로 유저 정보를 가져옴
  */
 @Component
 public class JwtTokenUtil {

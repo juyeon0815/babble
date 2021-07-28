@@ -15,10 +15,10 @@ public interface RoomService {
     Room createRoom(RoomCreateReq roomCreateReq, User user, Category category);
     Room getRoomByRoomId(Long roomId);
     List<Tuple> getRoomInfo();
-    List<Tuple> getBestRoomInfo();
-    List<Tuple> getRecentRoomInfo();
-    List<Tuple> getCategoryBestRoomInfo(String categoryName);
-    List<Tuple> getCategoryRecentRoomInfo(String categoryName);
+    List<Tuple> getBestRoomInfo(int pageNum);
+    List<Tuple> getRecentRoomInfo(int pageNum);
+    List<Tuple> getCategoryBestRoomInfo(String categoryName,int pageNum);
+    List<Tuple> getCategoryRecentRoomInfo(String categoryName, int pageNum);
     void roomClose(Long roomId);
     List<RoomRes> roomList(List<Tuple> roomInfo);
 }

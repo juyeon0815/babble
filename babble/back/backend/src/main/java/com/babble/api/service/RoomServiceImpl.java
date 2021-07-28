@@ -62,26 +62,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Tuple> getBestRoomInfo() {
-        List<Tuple> roomRes = roomRepositorySupport.bestRoomInfo();
+    public List<Tuple> getBestRoomInfo(int pageNum) {
+        List<Tuple> roomRes = roomRepositorySupport.bestRoomInfo(pageNum);
+        return roomRes;
+    }
+
+
+    @Override
+    public List<Tuple> getRecentRoomInfo(int pageNum) {
+        List<Tuple> roomRes = roomRepositorySupport.recentRoomInfo(pageNum);
         return roomRes;
     }
 
     @Override
-    public List<Tuple> getRecentRoomInfo() {
-        List<Tuple> roomRes = roomRepositorySupport.recentRoomInfo();
+    public List<Tuple> getCategoryBestRoomInfo(String categoryName, int pageNum) {
+        List<Tuple> roomRes = roomRepositorySupport.categoryBestRoomInfo(categoryName,pageNum);
         return roomRes;
     }
 
     @Override
-    public List<Tuple> getCategoryBestRoomInfo(String categoryName) {
-        List<Tuple> roomRes = roomRepositorySupport.categoryBestRoomInfo(categoryName);
-        return roomRes;
-    }
-
-    @Override
-    public List<Tuple> getCategoryRecentRoomInfo(String categoryName) {
-        List<Tuple> roomRes = roomRepositorySupport.categoryRecentRoomInfo(categoryName);
+    public List<Tuple> getCategoryRecentRoomInfo(String categoryName, int pageNum) {
+        List<Tuple> roomRes = roomRepositorySupport.categoryRecentRoomInfo(categoryName,pageNum);
         return roomRes;
     }
 
