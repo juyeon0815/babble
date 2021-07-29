@@ -218,7 +218,6 @@ public class UserController {
 	})
 	public ResponseEntity deleteUser(@RequestBody @ApiParam(value="해시태그", required = true) UserHashtagReq userHashtag) {
 		//userhashtag 테이블에 있는 데이터를 지워야하니까 userId와 hashtagId를 알아야한다.
-		System.out.println(userHashtag.getEmail()+" "+userHashtag.getName());
 		User user = userService.getUserByUserEmail(userHashtag.getEmail());
 		Hashtag hashtag = hashtagService.getHashtagByHashtagName(userHashtag.getName());
 		userHashtagService.deleteHashtag(user,hashtag);

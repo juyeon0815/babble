@@ -177,6 +177,22 @@ public class RoomController {
         return ResponseEntity.status(200).body(categoryList);
     }
 
+    @GetMapping("/{searchName}/{pageNum}")
+    @ApiOperation(value = "검색한 방 정보", notes = "검색어가 포함된 방의 정보를 보여준다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity searchList(@PathVariable("searchName") @ApiParam(value="검색할 단어", required = true)String searchName,
+                                             @PathVariable("pageNum") @ApiParam(value="페이지번호", required = true)int pageNum) {
+        pageNum= (pageNum-1)*10;
+        List<Tuple> roomInfo = roomService.searchRoomList(searchName, pageNum);
+        List<RoomRes> searchRoomList = roomService.roomList(roomInfo);
+        return ResponseEntity.status(200).body(searchRoomList);
+    }
+
     @GetMapping("/{categoryName}/recent/{pageNum}")
     @ApiOperation(value = "카테고리별 최신 방 정보", notes = "카테고리별 최신순으로 방의 정보를 보여준다.")
     @ApiResponses({

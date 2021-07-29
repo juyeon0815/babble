@@ -21,4 +21,5 @@ public interface RoomService {
     List<Tuple> getCategoryRecentRoomInfo(String categoryName, int pageNum);
     void roomClose(Long roomId);
     List<RoomRes> roomList(List<Tuple> roomInfo);
+    List<Tuple> searchRoomList(String searchName, int pageNum);
 }

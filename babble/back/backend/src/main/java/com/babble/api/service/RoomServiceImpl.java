@@ -30,6 +30,10 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     RoomHashtagService roomHashtagService;
 
+    QRoom qRoom = QRoom.room;
+    QCategory qCategory = QCategory.category;
+    QUserRoom qUserRoom = QUserRoom.userRoom;
+
 
     @Override
     public Room createRoom(RoomCreateReq roomCreateReq, User user, Category category) {
@@ -96,10 +100,6 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<RoomRes> roomList(List<Tuple> roomInfo) {
 
-        QRoom qRoom = QRoom.room;
-        QCategory qCategory = QCategory.category;
-        QUserRoom qUserRoom = QUserRoom.userRoom;
-
         List<RoomRes> result = new ArrayList<>();
         for(int i=0;i<roomInfo.size();i++){
             Long id = roomInfo.get(i).get(qRoom.id);
@@ -124,6 +124,12 @@ public class RoomServiceImpl implements RoomService {
             result.add(roomRes);
         }
         return result;
+    }
+
+    @Override
+    public List<Tuple> searchRoomList(String searchName, int pageNum) {
+        List<Tuple> searchRoomList = roomRepositorySupport.searchRoomList(searchName,pageNum);
+        return searchRoomList;
     }
 
 }

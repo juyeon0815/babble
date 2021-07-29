@@ -1,10 +1,7 @@
 package com.babble.db.repository;
 
 import com.babble.api.response.RoomRes;
-import com.babble.db.entity.QCategory;
-import com.babble.db.entity.QRoom;
-import com.babble.db.entity.QUserRoom;
-import com.babble.db.entity.Room;
+import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +19,8 @@ public class RoomRepositorySupport {
     QRoom qRoom = QRoom.room;
     QCategory qCategory = QCategory.category;
     QUserRoom qUserRoom = QUserRoom.userRoom;
+    QRoomHashtag qRoomHashtag = QRoomHashtag.roomHashtag;
+    QHashtag qHashtag = QHashtag.hashtag;
 
 //    public Room findRoomByRoomTitle(String title){
 //        Room room = jpaQueryFactory.select(qRoom).from(qRoom)
@@ -76,8 +75,8 @@ public class RoomRepositorySupport {
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true)).limit(10).offset(pageNum)
-                .where(qCategory.name.eq(categoryName))
+                .where(qRoom.isActivate.eq(true))
+                .where(qCategory.name.eq(categoryName)).limit(10).offset(pageNum)
                 .groupBy(qRoom.id)
                 .orderBy(qUserRoom.room.id.count().desc())
                 .fetch();
@@ -89,10 +88,24 @@ public class RoomRepositorySupport {
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
                 .from(qRoom).leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
                 .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true)).limit(10).offset(pageNum)
-                .where(qCategory.name.eq(categoryName))
+                .where(qRoom.isActivate.eq(true))
+                .where(qCategory.name.eq(categoryName)).limit(10).offset(pageNum)
                 .groupBy(qRoom.id)
                 .orderBy(qRoom.createTime.desc())
+                .fetch();
+
+        return list;
+    }
+
+    public List<Tuple> searchRoomList(String searchName, int pageNum){
+        List<Tuple>  list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name,qUserRoom.room.id.count())
+                .from(qRoom).leftJoin(qRoomHashtag).on(qRoom.id.eq(qRoomHashtag.room.id))
+                .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
+                .leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
+                .leftJoin(qHashtag).on(qRoomHashtag.hashtag.id.eq(qHashtag.id))
+                .where(qRoom.title.contains(searchName).or(qHashtag.name.contains(searchName)))
+                .where(qRoom.isActivate.eq(true)).limit(10).offset(pageNum)
+                .groupBy(qRoom.id)
                 .fetch();
 
         return list;

@@ -30,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
     
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
+    // 암호화에 필요한 passwordEncoder bean등록
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -49,12 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // DAO 기반의 Authentication Provider가 적용되도록 설정
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
+    protected void configure(AuthenticationManagerBuilder auth) { //111111111111
         auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception { //22222222222
         http
                 .httpBasic().disable()//rest api만을 고려해 기본 설정 해제
                 .csrf().disable() //csrf 보안 토큰 disable처리
@@ -62,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests() // 요청에 대한 사용권한 체크
-                .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .antMatchers("/api/v1/users/me").authenticated()       // api/v1/uesrs/me 요청은 인증되어야함
     	        	    .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
                 .and().cors();
     }
