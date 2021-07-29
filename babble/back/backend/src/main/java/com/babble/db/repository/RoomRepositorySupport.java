@@ -106,6 +106,7 @@ public class RoomRepositorySupport {
                 .where(qRoom.title.contains(searchName).or(qHashtag.name.contains(searchName)))
                 .where(qRoom.isActivate.eq(true)).limit(10).offset(pageNum)
                 .groupBy(qRoom.id)
+                .orderBy(qUserRoom.room.id.count().desc())
                 .fetch();
 
         return list;
