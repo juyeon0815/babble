@@ -16,7 +16,7 @@ public interface UserService {
 	User createUser(UserRegisterReq userRegisterInfo);
 	User getUserByUserEmail(String email);
 	User checkEmail(String email);
-	void updatePicture(UserUpdatePictureReq userInfo);
+	void updatePicture(String email, String fileName);
 	void updatePassword(UserUpdatePasswordReq userInfo);
 	void deleteUser(String email);
 	void updateAlarm(String email);

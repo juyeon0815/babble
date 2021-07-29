@@ -1,6 +1,7 @@
 package com.babble.api.service;
 
 import com.babble.api.request.room.RoomCreateReq;
+import com.babble.api.request.room.RoomReq;
 import com.babble.api.response.RoomRes;
 import com.babble.db.entity.*;
 import com.babble.db.repository.RoomRepository;
@@ -10,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,23 +32,27 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     RoomHashtagService roomHashtagService;
 
+    @Autowired
+    ImageService imageService;
+
+
+
     QRoom qRoom = QRoom.room;
     QCategory qCategory = QCategory.category;
     QUserRoom qUserRoom = QUserRoom.userRoom;
 
 
     @Override
-    public Room createRoom(RoomCreateReq roomCreateReq, User user, Category category) {
+    public Room createRoom(RoomReq roomReq, User user, Category category, String thumbnail) {
 
         Date now = new Date();
-
         Room room = new Room();
-        room.setTitle(roomCreateReq.getTitle());
-        room.setContent(roomCreateReq.getContent());
-        room.setThumbnailUrl(roomCreateReq.getThumbnailUrl());
+        room.setTitle(roomReq.getRoomCreateReq().getTitle());
+        room.setContent(roomReq.getRoomCreateReq().getContent());
+        room.setThumbnailUrl(thumbnail);
         room.setCategory(category);
         room.setActivate(true);
-        room.setSpeak(roomCreateReq.isSpeak());
+        room.setSpeak(roomReq.getRoomCreateReq().isSpeak());
         room.setUser(user);
         room.setCreateTime(now);
         room.setMaxView(0L);
@@ -98,7 +104,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomRes> roomList(List<Tuple> roomInfo) {
+    public List<RoomRes> roomList(List<Tuple> roomInfo){
 
         List<RoomRes> result = new ArrayList<>();
         for(int i=0;i<roomInfo.size();i++){
@@ -108,6 +114,7 @@ public class RoomServiceImpl implements RoomService {
             String category = roomInfo.get(i).get(qCategory.name);
             Long count = roomInfo.get(i).get(qUserRoom.room.id.count());
 
+
             List<String> hashtags = new ArrayList<>();
             List<Hashtag> list = roomHashtagService.findHashtagByRoomHashtagRoomId(roomInfo.get(i).get(qRoom.id));
             for(int j=0;j<list.size();j++){
@@ -116,7 +123,7 @@ public class RoomServiceImpl implements RoomService {
             RoomRes roomRes = new RoomRes();
             roomRes.setId(id);
             roomRes.setTitle(title);
-            roomRes.setThumbnailUrl(thumbnail);
+            roomRes.setThumbnailUrl("d://images/room/"+thumbnail);
             roomRes.setCategory(category);
             roomRes.setViewers(count);
             roomRes.setHashtag(hashtags);

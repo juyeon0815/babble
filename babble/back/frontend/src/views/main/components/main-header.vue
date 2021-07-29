@@ -162,7 +162,7 @@ export default {
 
     return { state, menuSelect, clickLogo, clickLogin, changeCollapse,clickJoin, clickLoout}
 
-    
+
   }
 }
 </script>
@@ -177,7 +177,7 @@ export default {
     position: relative;
     top: 14px;
   }
-  
+
   .main-header .hide-on-big .logo-wrapper {
     display: inline-block;
     margin: 0 calc(50% - 51px)

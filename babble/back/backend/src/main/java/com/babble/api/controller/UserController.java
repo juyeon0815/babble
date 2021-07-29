@@ -13,6 +13,7 @@ import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
@@ -49,6 +51,8 @@ public class UserController {
 	RoomHistoryService roomHistoryService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	ImageService imageService;
 	
 	@PostMapping("/join")
 	@ApiOperation(value = "회원 가입", notes = "<strong>이메일과 패스워드</strong>를 통해 회원가입 한다.")
@@ -135,21 +139,6 @@ public class UserController {
 			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success"));
 		}
 		else return ResponseEntity.status(200).body(BaseResponseBody.of(401, "fail"));
-	}
-
-	@Transactional
-	@PatchMapping("/updatePicture")
-	@ApiOperation(value = "유저 프로필사진 변경", notes = "프로필 변경하기")
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "성공"),
-        @ApiResponse(code = 401, message = "인증 실패"),
-        @ApiResponse(code = 404, message = "사용자 없음"),
-        @ApiResponse(code = 500, message = "서버 오류")
-    })
-	public ResponseEntity updatePicture(
-			@RequestBody @ApiParam(value="이메일", required = true) UserUpdatePictureReq userInfo) {
-		userService.updatePicture(userInfo);
-		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
 
 	@Transactional
@@ -287,5 +276,39 @@ public class UserController {
 		User user = userService.getUserByUserEmail(email);
 		List<String> list = userHashtagService.getUserHashtag(user.getId());
 		return ResponseEntity.status(200).body(list);
+	}
+
+	@PostMapping("/upload")
+	@ApiOperation(value = "유저 프로필 사진 업로드", notes = "유저 프로필 사진을 업로드한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> userImageUpload(
+			@RequestParam("file") @ApiParam(value="이미지 정보", required = true) MultipartFile file,
+			@RequestParam("email") @ApiParam(value="유저 이메일 정보", required = true) String email) throws Exception {
+
+		boolean flag = imageService.userImageUpload(email,file);
+		if(flag) return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success"));
+		else return ResponseEntity.status(400).body(BaseResponseBody.of(400, "fail"));
+	}
+
+	@GetMapping(value = "/image/{email}")
+	@ApiOperation(value = "회원 사진 정보 조회", notes = "로그인한 회원 본인의 사진정보를 응답한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity getUserImage(
+			@PathVariable("email") @ApiParam(value="유저 이메일", required = true) String email){
+//		byte[] imageByteArray = imageService.getUserImage(email);
+//		System.out.println(imageByteArray);
+//		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
+		User user = userService.getUserByUserEmail(email);
+		return ResponseEntity.status(200).body("d://images/room/"+user.getPicture());
 	}
 }

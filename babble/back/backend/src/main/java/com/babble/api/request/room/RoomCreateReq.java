@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,17 @@ import java.util.List;
 @ApiModel("RoomCreatePostRequest")
 public class RoomCreateReq {
 
-    @ApiModelProperty(name="유저 Email", example="your_email")
+    //@ApiModelProperty(name="유저 Email", example="your_email")
     String email;
-    @ApiModelProperty(name="room title", example="room_title")
+    //@ApiModelProperty(name="room title", example="room_title")
     String title;
-    @ApiModelProperty(name="room content", example="room_content")
+//    @ApiModelProperty(name="room content", example="room_content")
     String content;
-    @ApiModelProperty(name="room thumbnailUrl", example="room_thumbnailUrl")
-    String thumbnailUrl;
-    @ApiModelProperty(name="category", example="room_category")
-    String name;
-    @ApiModelProperty(name="hashtag", example="room_hashtag")
+//    @ApiModelProperty(name="category", example="room_category")
+    String category;
+//    @ApiModelProperty(name="hashtag", example="room_hashtag")
     String hashtag;
-    @ApiModelProperty(name="room speakOption", example="room_speakOption")
+//    @ApiModelProperty(name="room speakOption", example="room_speakOption")
     boolean speak;
 
 }

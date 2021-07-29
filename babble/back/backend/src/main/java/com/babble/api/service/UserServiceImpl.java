@@ -108,10 +108,10 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void updatePicture(UserUpdatePictureReq userInfo) {
-		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail());
+	public void updatePicture(String email, String fileName) {
+		User user = userRepositorySupport.findUserByUserEmail(email);
 
-		user.setPicture(userInfo.getPicture());
+		user.setPicture(fileName);
 		userRepository.save(user);
 	}
 

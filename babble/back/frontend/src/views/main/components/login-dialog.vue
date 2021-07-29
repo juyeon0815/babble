@@ -107,19 +107,19 @@ export default {
           { required: true, message: '필수 입력 항목입니다', trigger: 'blur' },
         ],
         password: [
-          { required: true, message: '필수 입력 항목입니다.', trigger: 'blur' },
-          {message : '최대 16자까지 입력 가능합니다.',max:16, trigger:'blur'},
-          {message : '최소 9자를 입력해야 합니다.',min:9, trigger:'blur'},
-          {
-            trigger: 'blur',
-            validator (rule, value, callback) {
-              if (/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{9,16}$/.test(value)) {
-                callback();
-              } else {
-                callback(new Error('비밀번호는 영문, 숫자, 특수문자가 조합되어야 합니다.'));
-              }
-            }
-          }
+          { required: true, message: '필수 입력 항목입니다.', trigger: 'blur' }
+          // {message : '최대 16자까지 입력 가능합니다.',max:16, trigger:'blur'},
+          // {message : '최소 9자를 입력해야 합니다.',min:9, trigger:'blur'},
+          // {
+          //   trigger: 'blur',
+          //   validator (rule, value, callback) {
+          //     if (/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{9,16}$/.test(value)) {
+          //       callback();
+          //     } else {
+          //       callback(new Error('비밀번호는 영문, 숫자, 특수문자가 조합되어야 합니다.'));
+          //     }
+          //   }
+          // }
         ]
       },
       dialogVisible: computed(() => props.open),
@@ -137,7 +137,7 @@ export default {
           .then(function (result) {
             localStorage.setItem("jwt",result.data.accessToken)
             alert("로그인성공이염!")
-            console.log("!!!!!!!!!!!!s",result)
+            console.log("!!!!!!!!!!!!s",result.data)
             emit('closeLoginDialog')
 
             //router.go(); //페이지 새로고침

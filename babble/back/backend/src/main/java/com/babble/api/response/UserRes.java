@@ -18,13 +18,15 @@ public class UserRes{
 	String email;
 	@ApiModelProperty(name="User Picture")
 	String picture;
+	@ApiModelProperty(name="User Alarm")
+	boolean alarm;
 
 	
 	public static UserRes of(User user) {
 		UserRes res = new UserRes();
 		res.setEmail(user.getEmail());
 		res.setPicture(user.getPicture());
-
+		res.setAlarm(user.isAlarm());
 		return res;
 	}
 }
