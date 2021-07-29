@@ -1,16 +1,17 @@
 <template>
-  <MainHeader
-    @openLoginDialog="onOpenLoginDialog"
-    @openJoinDialog="onOpenJoinDialog"/>
-  <router-view></router-view>
-  <MainFooter />
-  <LoginDialog
-    :open="loginDialogOpen"
-    @closeLoginDialog="onCloseLoginDialog"/>
-  <JoinDialog
-    :open="joinDialogOpen"
-    @closeJoinDialog="onCloseJoinDialog"/>
-
+  <div v-loading="loading">
+    <MainHeader
+      @openLoginDialog="onOpenLoginDialog"
+      @openJoinDialog="onOpenJoinDialog"/>
+    <router-view></router-view>
+    <MainFooter />
+    <LoginDialog
+      :open="loginDialogOpen"
+      @closeLoginDialog="onCloseLoginDialog"/>
+    <JoinDialog
+      :open="joinDialogOpen"
+      @closeJoinDialog="onCloseJoinDialog"/>
+  </div>
 </template>
 
 <style>
@@ -34,10 +35,15 @@ export default {
     LoginDialog,
     JoinDialog,
   },
-  data () {
+  data() {
     return {
       loginDialogOpen: false,
-      joinDialogOpen: false,
+      signUpDialogOpen: false
+    };
+  },
+  computed: {
+    loading: function() {
+      return this.$store.state.root.loadingStatus;
     }
   },
 

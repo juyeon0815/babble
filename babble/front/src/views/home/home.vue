@@ -6,7 +6,7 @@
       <el-row class="conference-row">
         <Conference v-for="i in 5" :key="i" v-cloak
         :roomInfo="state.bestRoomList[i+5*(item-1)-1]"
-        @click="clickConference(i+5*(item-1))"/>
+        @click="clickConference(state.bestRoomList[i+5*(item-1)-1].id)"/>
       </el-row>
     </el-carousel-item>
   </el-carousel>
@@ -15,7 +15,7 @@
   <el-row class="conference-row">
     <Conference v-for="i in state.count" :key="i" v-cloak
     :roomInfo="state.recentRoomList[i-1]"
-    @click="clickConference(i)"/>
+    @click="clickConference(state.recentRoomList[i-1].id)"/>
   </el-row>
 </template>
 
@@ -56,7 +56,8 @@ export default {
       count: 0,
       carouselCount: 1,
     })
-
+    
+    store.commit('root/startSpinner')
     store.dispatch('root/requestRoomAllBest')
     .then(function (result) {
       state.bestRoomList = result.data
@@ -72,9 +73,10 @@ export default {
     store.dispatch('root/requestRoomAllRecent')
     .then(function (result) {
       state.recentRoomList = result.data
-      console.log(result.data)
+      store.commit('root/endSpinner')
     })
     .catch(function (err) {
+      store.commit('root/endSpinner')
       alert(err)
     })
 
@@ -86,6 +88,7 @@ export default {
         }
       })
     }
+
 
     return { state, clickConference }
   }

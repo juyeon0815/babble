@@ -1,6 +1,5 @@
 // API
 import $axios from 'axios'
-import { storeKey } from 'vuex'
 
 export function requestLogin ({ state }, payload) {
   console.log('requestLogin', state, payload)
@@ -25,15 +24,19 @@ export function requestEmailConfirm ({ state }, payload) {
 }
 
 export function requestRoomAllBest ({ state }) {
-  return $axios.get('/room/all/best')
+  return $axios.get('/room/all/best/1')
 }
 
 export function requestRoomAllRecent ({ state }) {
-  return $axios.get('/room/all/recent')
+  return $axios.get('/room/all/recent/1')
 }
 
-export function requestRoomCategoryOrder ({ state}, payload) {
-  return $axios.get(`/room/${payload.linkName}/${payload.orderName}`)
+export function requestRoomCategoryOrder ({ state }, payload) {
+  return $axios.get(`/room/${payload.linkName}/${payload.orderName}/${payload.pageNum}`)
+}
+
+export function requestRoomSearch ({ state }, payload) {
+  return $axios.get(`/room/${payload.searchName}/${payload.pageNum}`)
 }
 
 export function requestLogout ({ state }) {

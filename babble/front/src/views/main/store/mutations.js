@@ -1,3 +1,5 @@
+// import { search } from "core-js/fn/symbol"
+
 export function setPlatform (state, isDesktop) {
   state.isDesktopPlatform = isDesktop
 }
@@ -58,3 +60,18 @@ export function setAlarm (state, input) {
   console.log(state.alarmValue)
 }
 
+export function startSpinner (state) {
+	state.loadingStatus = true;
+}
+
+export function endSpinner (state) {
+	state.loadingStatus = false;
+}
+
+export function setActiveCategory (state, categoryName) {
+	state.activeCategory = categoryName
+}
+
+export function setSearchWord(state, searchWord) {
+	state.searchWord = searchWord
+}

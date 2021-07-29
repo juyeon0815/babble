@@ -36,3 +36,14 @@ export function getUserHashtagLength (state) {
   // console.log(state.userHashtag.length)
 	return state.userHashtag.length
 }
+export function getLoadingStatus (state) {
+	return state.loadingStatus;
+}
+
+export function getActiveCategory (state) {
+	return state.activeCategory
+}
+
+export function getSearchWord (state) {
+	return state.searchWord
+}
