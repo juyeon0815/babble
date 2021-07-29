@@ -17,8 +17,9 @@
 </template>
 
 <script>
-import { reactive, computed, ref } from 'vue'
+import { reactive, computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'login-dialog',
@@ -32,10 +33,11 @@ export default {
 
   setup(props, { emit }) {
     const store = useStore()
+    const router = useRouter()
     // 마운트 이후 바인딩
     const loginForm = ref(null)
 
-    // Element UI Validator
+    // Element UI Validators
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
     const state = reactive({
       form: {
@@ -53,7 +55,14 @@ export default {
       },
       isVal: false,
       dialogVisible: computed(() => props.open),
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      // setMyInfo: 0,
+      setEmail: computed(() => {
+        return store.getters['root/getEmail']
+      }),
+      setToken: computed(() => {
+        return store.getters['root/getToken']
+      }),
     })
 
     const isValid = function () {
@@ -76,10 +85,21 @@ export default {
           .then(function (result) {
             console.log(result)
             localStorage.setItem('jwt', result.data.accessToken)
+            // state.setMyInfo += 1
+            // console.log(state.setMyInfo)
+            console.log('바꾸기 전', state.setEmail)
+            console.log('폼 이메일은', state.form.email)
+            // state.setEmail = state.form.email
+            store.commit('root/setEmail', state.form.email)
+            console.log('바꾼 후', state.setEmail)
+            console.log('바꾸기 전', state.setToken)
+            store.commit('root/setToken', result.data.accessToken)
+            console.log('바꾼 후', state.setToken)
             alert('로그인 성공')
 
 
             emit('closeLoginDialog')
+            // router.go()
             window.location.reload()
           })
           // .then(function (result ){
@@ -100,6 +120,13 @@ export default {
         }
       })
     }
+
+    // watch(() => state.setMyInfo, (newValue, oldValue) => {
+    //   console.log('새로운 값', newValue, '예전 값', oldValue)
+    //   store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
+    //   .then((res)=> store.commit('root/setEmail', res.data.email))
+    // })
+
 
     const handleClose = function () {
       state.form.email = ''

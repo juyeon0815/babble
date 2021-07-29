@@ -32,20 +32,23 @@ const IsDesktop = getIsDesktop()
 
 
 
-function getJwt() {
-  const jwt = localStorage.getItem('jwt')
-  if (jwt) {
-    return jwt
-  } else {
-    return null
-  }
-}
+// function getJwt() {
+//   const jwt = localStorage.getItem('jwt')
+//   if (jwt) {
+//     return jwt
+//   } else {
+//     return null
+//   }
+// }
 
-const token = getJwt()
+// const token = getJwt()
+const token = null
 
 const email = 'ddd'
 
 const profile = ''
+
+const userHashtag = []
 
 export default {
   isDesktopPlatform: IsDesktop,
@@ -54,4 +57,6 @@ export default {
   token: token,
   email: email,
   profile: profile,
+  userHashtag: userHashtag,
+  alarmValue: false,
 }
