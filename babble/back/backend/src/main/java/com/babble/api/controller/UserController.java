@@ -274,4 +274,18 @@ public class UserController {
 		List<UserHistoryRes> list = userService.historyList(historyInfo, "");
 		return ResponseEntity.status(200).body(list);
 	}
+
+	@GetMapping("/hashtag/{email}")
+	@ApiOperation(value = "유저가 설정한 해시태크 확인", notes = "해당 유저의 해시태그를 확인한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity getUserHashtag(@PathVariable("email") @ApiParam(value="유저이메일", required = true) String email) {
+		User user = userService.getUserByUserEmail(email);
+		List<String> list = userHashtagService.getUserHashtag(user.getId());
+		return ResponseEntity.status(200).body(list);
+	}
 }

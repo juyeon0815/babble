@@ -8,6 +8,8 @@ import com.babble.db.repository.UserHashtagRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  *	유저해시태그 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -34,5 +36,11 @@ public class UserHashtagServiceImpl implements UserHashtagService {
     @Override
     public void deleteHashtag(User user, Hashtag hashtag) {
         userHashtagRepositorySupport.deleteUserHashtag(user,hashtag);
+    }
+
+    @Override
+    public List<String> getUserHashtag(Long userId) {
+        List<String> list = userHashtagRepositorySupport.getUserHashtag(userId);
+        return list;
     }
 }
