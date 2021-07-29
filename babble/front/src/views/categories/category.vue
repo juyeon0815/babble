@@ -47,18 +47,8 @@ export default {
     const router = useRouter()
     const route = useRoute()
 
-    const state = reactive({
-      activeName: 'all',
-    })
-
-    // onBeforeRouteUpdate ((to, from) => {
-    //   console.log('!!!!!!!!!!!!')
-    //   console.log(to.name)
-    //   console.log(from.name)
-    // })
-
-    router.afterEach((to) => {
-      router.go()
+    onBeforeRouteUpdate ((to, from) => {
+      store.commit('root/setActiveCategory', to.name)
     })
 
     // 페이지 진입시 불리는 훅
@@ -66,7 +56,7 @@ export default {
       store.commit('root/setMenuActiveMenuName', 'category')
     })
 
-    return { state }
+    return {  }
   },
 }
 </script>

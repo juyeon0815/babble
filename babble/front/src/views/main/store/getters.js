@@ -27,3 +27,11 @@ export function getProfile (state) {
 export function getLoadingStatus (state) {
 	return state.loadingStatus;
 }
+
+export function getActiveCategory (state) {
+	return state.activeCategory
+}
+
+export function getSearchWord (state) {
+	return state.searchWord
+}

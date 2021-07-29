@@ -20,7 +20,6 @@ export default {
   components: {
     Chats
   },
-
   setup () {
     const route = useRoute()
     const store = useStore()

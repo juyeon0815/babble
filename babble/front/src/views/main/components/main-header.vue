@@ -1,7 +1,7 @@
 <template>
   <el-row class="navbar">
     <h2 @click="clickLogo">Babble</h2>
-    <el-input prefix-icon="el-icon-search" class="search-bar"></el-input>
+    <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
     <el-button type="info" plain @click="clickCategory">카테고리</el-button>
     <div v-show="!state.isLoggedin">
       <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
@@ -60,10 +60,12 @@ export default {
     const state = reactive({
       isLoggedin: computed(() => {
         return store.getters['root/getToken']
-      })
+      }),
+      searchWord: ''
     })
 
     const clickLogo = () => {
+      store.commit('root/setActiveCategory', null)
       store.commit('root/setMenuActive', 0)
       const MenuItems = store.getters['root/getMenus']
       let keys = Object.keys(MenuItems)
@@ -84,6 +86,7 @@ export default {
 
     const clickCategory = function () {
       store.commit('root/setMenuActive', 1)
+      store.commit('root/setActiveCategory', 'all')
       router.push({
         path: '/category/all'
       })
@@ -107,7 +110,18 @@ export default {
       console.log(state.isLoggedin)
     }
 
-    return { state, clickLogo, clickJoin, clickLogin, clickCategory, clickMyPage, clickLogout }
+    const enterSearch = function () {
+      store.commit('root/setSearchWord', state.searchWord)
+      router.push({
+        name: 'search-result',
+        params: {
+          searchWord: state.searchWord
+        }
+      })
+      state.searchWord = ''
+    }
+
+    return { state, clickLogo, clickJoin, clickLogin, clickCategory, clickMyPage, clickLogout, enterSearch }
   }
 }
 </script>

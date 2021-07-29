@@ -8,6 +8,7 @@ import History2 from '@/views/mypage/components/history2'
 import UserInfo from '@/views/mypage/components/user-info'
 import CategoryResult from '@/views/categories/components/category-result'
 import ConferencesDetail from '@/views/conferences/conference-detail'
+import SearchResult from '@/views/search/search-result'
 
 const fullMenu = require('@/views/main/menu.json')
 const categories_list = ['all', 'sports', 'cooking', 'handcraft', 'music', 'finance', 'game', 'movie', 'drawing', 'book', 'pet']
@@ -62,6 +63,12 @@ function makeRoutesFromMenu () {
     path: '/conferences/:conferenceId',
     name: 'conference-detail',
     component: ConferencesDetail
+  })
+  // 검색
+  routes.push({
+    path: '/search/:searchWord',
+    name: 'search-result',
+    component: SearchResult
   })
   return routes
 }

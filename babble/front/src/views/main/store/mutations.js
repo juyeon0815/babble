@@ -1,3 +1,5 @@
+// import { search } from "core-js/fn/symbol"
+
 export function setPlatform (state, isDesktop) {
   state.isDesktopPlatform = isDesktop
 }
@@ -28,4 +30,12 @@ export function startSpinner (state) {
 
 export function endSpinner (state) {
 	state.loadingStatus = false;
+}
+
+export function setActiveCategory (state, categoryName) {
+	state.activeCategory = categoryName
+}
+
+export function setSearchWord(state, searchWord) {
+	state.searchWord = searchWord
 }

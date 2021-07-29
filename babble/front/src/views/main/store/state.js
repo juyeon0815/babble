@@ -30,8 +30,6 @@ function getIsDesktop() {
 
 const IsDesktop = getIsDesktop()
 
-
-
 function getJwt() {
   const jwt = localStorage.getItem('jwt')
   if (jwt) {
@@ -43,16 +41,14 @@ function getJwt() {
 
 const token = getJwt()
 
-const email = 'ddd'
-
-const profile = ''
-
 export default {
   isDesktopPlatform: IsDesktop,
   activeMenu: 'home',
   menus: menuData,
   token: token,
-  email: email,
-  profile: profile,
+  email: 'ddd',
+  profile: '',
   loadingStatus : false,
+  activeCategory: null,
+  searchWord: ''
 }
