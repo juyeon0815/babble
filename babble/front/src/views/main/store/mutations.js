@@ -17,7 +17,7 @@ export function setMenuActiveMenuName (state, menuName) {
 export function setLogout (state) {
   console.log('토큰 없앤다!')
 	state.token = null
-  state.email = 'ddd'
+  state.email = ''
   state.activeMenu = 'home'
   state.userHashtag = []
   state.alarmValue = false
@@ -53,10 +53,17 @@ export function setUserHashtagDelete (state, input) {
   console.log(state.userHashtag)
 }
 
-export function setAlarm (state, input) {
+export function setAlarm (state) {
   console.log('사용자 알림설정 변경!')
   console.log(state.alarmValue)
   state.alarmValue = !state.alarmValue
+  console.log(state.alarmValue)
+}
+
+export function setDefaultAlarm (state, payload) {
+  console.log('사용자 알림설정 db에서 가져오기!')
+  console.log(state.alarmValue)
+  state.alarmValue = payload
   console.log(state.alarmValue)
 }
 
@@ -74,4 +81,18 @@ export function setActiveCategory (state, categoryName) {
 
 export function setSearchWord(state, searchWord) {
 	state.searchWord = searchWord
+}
+
+export function setUserProfile (state, profile) {
+  console.log('사용자 프로필 저장!')
+  console.log(state.profile)
+  state.profile = profile
+  console.log(state.profile)
+}
+
+export function setUserHashtag (state, hashtag) {
+  console.log('사용자 해시태그 db에서 가져와 store에 저장!')
+  console.log(state.userHashtag)
+  state.userHashtag = hashtag
+  console.log(state.userHashtag)
 }

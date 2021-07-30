@@ -52,6 +52,21 @@ export default {
       inputValue: '',
     })
 
+    store.dispatch('root/requestUserHashtag', {email: state.email})
+    .then(function (result) {
+      console.log('해시태그를 가져올거야')
+      console.log(result.data[0])
+      if (result.data[0] !== null) {
+        store.commit('root/setUserHashtag', result.data)
+      }
+    })
+
+    store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
+    .then(function (result) {
+      console.log(result.data.alarm)
+      store.commit('root/setDefaultAlarm', result.data.alarm)
+    })
+
     const handleClose = function (tag) {
       let hashtagIndex = state.userHashtags.indexOf(tag)
       store.commit('root/setUserHashtagDelete', hashtagIndex)
@@ -78,7 +93,7 @@ export default {
     }
 
     const clickAlarm = function () {
-      store.commit('root/setAlarm', state.alarmValue)
+      store.commit('root/setAlarm')
       store.dispatch('root/requestChangeAlarm', {email: state.email})
       .then(function (result) {
         console.log(result, '알림 설정 상태가 바뀌었다!')

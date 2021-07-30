@@ -97,3 +97,25 @@ export function requestViewHistory2 ({ state }, payload) {
   console.log('requestViewHistory2', state, payload)
   return $axios.get(`/users/createRoomHistory/${payload.email}`)
 }
+
+//수정 필요
+export function requestUserProfile ({ state }, payload) {
+  console.log('requestUserProfile', state, payload)
+  return $axios.get(`/users/${payload.email}`)
+}
+
+export function requestUserHashtag ({ state }, payload) {
+  console.log('requestUserHashtag', state, payload)
+  return $axios.get(`/users/hashtag/${payload.email}`)
+}
+
+export function requestUpdateProfile ({ state }, payload) {
+  console.log('requestUpdateProfile', state)
+  console.log('payload:', payload)
+  const url = '/users/upload'
+  return $axios.post(url, payload, {
+    headers: {
+      'Content-Type' : 'multipart/form-data'
+    }
+  })
+}
