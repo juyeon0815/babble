@@ -17,6 +17,11 @@
     :roomInfo="state.recentRoomList[i-1]"
     @click="clickConference(state.recentRoomList[i-1].id)"/>
   </el-row>
+
+  <ConferenceDialog 
+    :open="state.conferenceDialogOpen"
+    :roomId="state.conferenceDialogNum"
+    @closeConferenceDialog="onCloseConferenceDialog"/>
 </template>
 
 <style>
@@ -39,12 +44,14 @@ import { reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import Conference from './components/conference'
+import ConferenceDialog from './components/conference-dialog'
 
 export default {
   name: 'Home',
 
   components: {
-    Conference
+    Conference,
+    ConferenceDialog
   },
 
   setup () {
@@ -55,6 +62,8 @@ export default {
       recentRoomList: [],
       count: 0,
       carouselCount: 1,
+      conferenceDialogOpen: false,
+      conferenceDialogNum: 0,
     })
     
     store.commit('root/startSpinner')
@@ -81,16 +90,15 @@ export default {
     })
 
     const clickConference = function (id) {
-      router.push({
-        name: 'conference-detail',
-        params: {
-          conferenceId: id
-        }
-      })
+      state.conferenceDialogOpen = true
+      state.conferenceDialogNum = id
     }
 
+    const onCloseConferenceDialog = function () {
+      state.conferenceDialogOpen = false
+    }
 
-    return { state, clickConference }
+    return { state, clickConference, onCloseConferenceDialog }
   }
 }
 </script>

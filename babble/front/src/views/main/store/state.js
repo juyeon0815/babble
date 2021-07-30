@@ -36,7 +36,7 @@ export default {
   activeMenu: 'home',
   menus: menuData,
   token: null,
-  userHashtag = [],
+  userHashtag: [],
   alarmValue: false,
   email: 'ddd',
   profile: '',

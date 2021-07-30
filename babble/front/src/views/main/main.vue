@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       loginDialogOpen: false,
-      signUpDialogOpen: false
+      signUpDialogOpen: false,
     };
   },
   computed: {
@@ -60,7 +60,6 @@ export default {
     onCloseJoinDialog () {
       this.joinDialogOpen = false
     },
-
   }
 }
 </script>

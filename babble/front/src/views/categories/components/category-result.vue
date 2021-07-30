@@ -22,19 +22,24 @@
     </el-col>
     <el-col :offset="20"><el-button type="success" plain @click="clickMore">더보기</el-button></el-col>
   </el-row> 
-  
+  <ConferenceDialog 
+    :open="state.conferenceDialogOpen"
+    :roomId="state.conferenceDialogNum"
+    @closeConferenceDialog="onCloseConferenceDialog"/>
 </template>
 
 <script>
 import { reactive, computed, watch } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Conference from '@/views/home/components/conference'
+import ConferenceDialog from '@/views/home/components/conference-dialog'
 
 export default {
   name: 'CategoryResult',
   components: {
-    Conference
+    Conference,
+    ConferenceDialog
   },
   setup () {
     const store = useStore()
@@ -48,6 +53,8 @@ export default {
       count: 0,
       pageNum: 1,
       activeCategory: computed(() => store.getters['root/getActiveCategory']),
+      conferenceDialogOpen: false,
+      conferenceDialogNum: 0,
     })
 
     const changetoBest = function () {
@@ -121,12 +128,12 @@ export default {
     }
 
     const clickConference = function (id) {
-      router.push({
-        name: 'conference-detail',
-        params: {
-          conferenceId: id
-        }
-      })
+      state.conferenceDialogOpen = true
+      state.conferenceDialogNum = id
+    }
+
+    const onCloseConferenceDialog = function () {
+      state.conferenceDialogOpen = false
     }
 
     watch(
@@ -137,7 +144,7 @@ export default {
       }
     )
 
-    return { state, changetoBest, changetoRecent, clickMore, clickConference }
+    return { state, changetoBest, changetoRecent, clickMore, clickConference, onCloseConferenceDialog }
   },
   
 }
