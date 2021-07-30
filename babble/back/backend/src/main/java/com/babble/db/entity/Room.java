@@ -2,6 +2,7 @@ package com.babble.db.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +36,15 @@ public class Room extends BaseEntity{
 
     Long maxView;
 
+    @Builder
+    public Room(String title, String content, Date createTime){
+        this.title = title;
+        this.content=content;
+        this.createTime = createTime;
+    }
+
+    public Room(){}
+
     @OneToOne
     @JoinColumn(name ="categoryId")
     Category category;
@@ -44,4 +54,5 @@ public class Room extends BaseEntity{
 
     @OneToMany(mappedBy = "room")
     List<RoomHistory> roomHistories = new ArrayList<>();
+
 }

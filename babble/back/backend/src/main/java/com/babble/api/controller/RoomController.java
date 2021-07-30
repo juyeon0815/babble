@@ -4,6 +4,7 @@ package com.babble.api.controller;
 import com.babble.api.request.room.RoomReq;
 import com.babble.api.request.room.RoomRelationReq;
 import com.babble.api.response.RoomRes;
+import com.babble.api.response.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.model.response.BaseResponseBody;
 import com.babble.db.entity.*;
@@ -234,5 +235,19 @@ public class RoomController {
         roomHashtagService.deleteRoomHashtag(roomId);
         roomHistoryService.updateEndTime(roomId);
         return ResponseEntity.status(200).body("success");
+    }
+
+    @GetMapping("/{roomId}")
+    @ApiOperation(value = "대기실 방정보", notes = "대기실 방 정보 보여주기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity roomInfo(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
+        Room room = roomService.getRoomByRoomId(roomId);
+        System.out.println(room.getTitle());
+        return ResponseEntity.status(200).body(RoomRes.of(room));
     }
 }

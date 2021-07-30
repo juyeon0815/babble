@@ -1,11 +1,14 @@
 package com.babble.api.response;
 
 
+import com.babble.db.entity.Room;
+import com.babble.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,5 +31,17 @@ public class RoomRes {
     List<String> hashtag;
     @ApiModelProperty(name="viewers")
     Long viewers;
+    @ApiModelProperty(name="content")
+    String content;
+    @ApiModelProperty(name="createTime")
+    Date createTime;
+//
+    public static RoomRes of(Room room) {
+        RoomRes res = new RoomRes();
+        res.setTitle(room.getTitle());
+        res.setContent(room.getContent());
+        res.setCreateTime(room.getCreateTime());
+        return res;
+    }
 
 }
