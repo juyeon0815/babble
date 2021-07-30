@@ -39,6 +39,10 @@ export function requestRoomSearch ({ state }, payload) {
   return $axios.get(`/room/${payload.searchName}/${payload.pageNum}`)
 }
 
+export function requestRoomDialog ({ state }, payload) {
+  return $axios.get(`/room/${payload.roomId}`)
+}
+
 export function requestLogout ({ state }) {
   console.log('requestLogout', state)
   $axios.defaults.headers.common['Authorization'] = undefined
