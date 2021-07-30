@@ -45,18 +45,16 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room createRoom(RoomReq roomReq, User user, Category category, String thumbnail) {
 
-        Date now = new Date();
-        Room room = new Room();
-        room.setTitle(roomReq.getRoomCreateReq().getTitle());
-        room.setContent(roomReq.getRoomCreateReq().getContent());
-        room.setThumbnailUrl(thumbnail);
-        room.setCategory(category);
-        room.setActivate(true);
-        room.setSpeak(roomReq.getRoomCreateReq().isSpeak());
-        room.setUser(user);
-        room.setCreateTime(now);
-        room.setMaxView(0L);
-        return roomRepository.save(room);
+        Room room = Room.builder()
+                .roomReq(roomReq)
+                .category(category)
+                .thumbnail(thumbnail)
+                .user(user)
+                .build();
+
+        roomRepository.save(room);
+
+        return room;
     }
 
     @Override
@@ -99,7 +97,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void roomClose(Long roomId) {
         Room room = roomRepositorySupport.findRoomByRoomId(roomId);
-        room.setActivate(false);
+        room.roomClose();
         roomRepository.save(room);
     }
 
@@ -120,14 +118,14 @@ public class RoomServiceImpl implements RoomService {
             for(int j=0;j<list.size();j++){
                 hashtags.add(list.get(j).getName());
             }
-            RoomRes roomRes = new RoomRes();
-            roomRes.setId(id);
-            roomRes.setTitle(title);
-            roomRes.setThumbnailUrl("d://images/room/"+thumbnail);
-            roomRes.setCategory(category);
-            roomRes.setViewers(count);
-            roomRes.setHashtag(hashtags);
-
+            RoomRes roomRes = RoomRes.builder()
+                    .id(roomInfo.get(i).get(qRoom.id))
+                    .title(roomInfo.get(i).get(qRoom.title))
+                    .thumbnailUrl(roomInfo.get(i).get(qRoom.thumbnailUrl))
+                    .category(roomInfo.get(i).get(qCategory.name))
+                    .count(roomInfo.get(i).get(qUserRoom.room.id.count()))
+                    .list(hashtags)
+                    .build();
             result.add(roomRes);
         }
         return result;

@@ -1,6 +1,7 @@
 package com.babble.db.entity;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,6 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @Getter
-@Setter
 public class UserHashtag extends BaseEntity {
 
     @ManyToOne
@@ -24,5 +24,12 @@ public class UserHashtag extends BaseEntity {
     @JoinColumn(name="hashtagId")
     Hashtag hashtag;
 
+    @Builder
+    public UserHashtag(User user, Hashtag hashtag){
+        this.user = user;
+        this.hashtag = hashtag;
+    }
+
+    public UserHashtag() {}
 
 }

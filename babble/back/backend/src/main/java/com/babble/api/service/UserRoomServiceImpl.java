@@ -23,11 +23,11 @@ public class UserRoomServiceImpl implements UserRoomService {
     UserRoomRepositorySupport userRoomRepositorySupport;
     @Override
     public UserRoom createUserRoom(User user, Room room) {
-        UserRoom userRoom = new UserRoom();
-        userRoom.setRoom(room);
-        userRoom.setUser(user);
-        userRoomRepository.save(userRoom);
-        return userRoom;
+        UserRoom userRoom = UserRoom.builder()
+                .room(room)
+                .user(user)
+                .build();
+        return userRoomRepository.save(userRoom);
     }
 
     @Override

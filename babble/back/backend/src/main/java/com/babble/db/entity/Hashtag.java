@@ -23,4 +23,8 @@ public class Hashtag extends BaseEntity {
 
     @OneToMany(mappedBy = "hashtag")
     List<RoomHashtag> roomHashtags = new ArrayList<>();
+
+    public void createHashtag(String name){
+        this.name = name;
+    }
 }

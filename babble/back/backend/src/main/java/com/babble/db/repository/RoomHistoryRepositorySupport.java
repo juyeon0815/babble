@@ -50,7 +50,7 @@ public class RoomHistoryRepositorySupport {
 
         List<Tuple> userHistory = jpaQueryFactory.select(qRoom.title,qCategory.name, qRoom.createTime,qRoom.maxView)
                 .from(qRoom).leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
-                .where(qRoom.user.id.eq(user.getId()))
+                .where(qRoom.hostId.eq(user.getId()))
                 .where(qRoom.isActivate.eq(false))
                 .fetch();
 
@@ -64,6 +64,11 @@ public class RoomHistoryRepositorySupport {
                 .where(qRoomHistory.endTime.isNull()).fetch();
 
         return roomHistories;
+    }
+
+    public void deleteUserHistory(User user){
+        jpaQueryFactory.delete(qRoomHistory)
+                .where(qRoomHistory.user.id.eq(user.getId())).execute();
     }
 
 

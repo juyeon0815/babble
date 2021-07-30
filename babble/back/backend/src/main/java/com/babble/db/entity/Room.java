@@ -1,6 +1,7 @@
 package com.babble.db.entity;
 
 
+import com.babble.api.request.room.RoomReq;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,15 +19,16 @@ import java.util.List;
  */
 @Entity
 @Getter
-@Setter
 public class Room extends BaseEntity{
 
     String title;
     String content;
 
-    @OneToOne
-    @JoinColumn(name = "hostId")
-    User user;
+//    @OneToOne
+//    @JoinColumn(name = "hostId")
+//    User user;
+
+    Long hostId;
 
     boolean isActivate;
     String thumbnailUrl;
@@ -36,14 +38,6 @@ public class Room extends BaseEntity{
 
     Long maxView;
 
-    @Builder
-    public Room(String title, String content, Date createTime){
-        this.title = title;
-        this.content=content;
-        this.createTime = createTime;
-    }
-
-    public Room(){}
 
     @OneToOne
     @JoinColumn(name ="categoryId")
@@ -54,5 +48,25 @@ public class Room extends BaseEntity{
 
     @OneToMany(mappedBy = "room")
     List<RoomHistory> roomHistories = new ArrayList<>();
+
+    @Builder
+    public Room(RoomReq roomReq, User user, Category category, String thumbnail ){
+        Date now = new Date();
+        this.title = roomReq.getRoomCreateReq().getTitle();
+        this.content= roomReq.getRoomCreateReq().getContent();
+        this.thumbnailUrl = thumbnail;
+        this.category = category;
+        this.isActivate = true;
+        this.speak = roomReq.getRoomCreateReq().isSpeak();
+        this.hostId = user.id;
+        this.createTime = now;
+        this.maxView =0l;
+    }
+
+    public Room(){}
+
+    public void roomClose(){
+        this.isActivate = false;
+    }
 
 }

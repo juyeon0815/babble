@@ -26,11 +26,8 @@ public class RoomHashtagServiceImpl implements RoomHashtagService {
     @Override
     public RoomHashtag createRoomHashtag(Hashtag hashtag, Room room) {
         RoomHashtag roomHashtag = new RoomHashtag();
-        roomHashtag.setRoom(room);
-        roomHashtag.setHashtag(hashtag);
-        roomHashtagRepository.save(roomHashtag);
-
-        return roomHashtag;
+        roomHashtag.createRoomHashtag(room,hashtag);
+        return roomHashtagRepository.save(roomHashtag);
     }
 
     @Override

@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @Getter
-@Setter
 public class RoomHashtag extends BaseEntity {
 
     @ManyToOne
@@ -23,4 +22,9 @@ public class RoomHashtag extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="hashtagId")
     Hashtag hashtag;
+
+    public void createRoomHashtag(Room room, Hashtag hashtag){
+        this.room = room;
+        this.hashtag = hashtag;
+    }
 }

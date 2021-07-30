@@ -11,7 +11,6 @@ import javax.persistence.Entity;
  */
 @Entity
 @Getter
-@Setter
 public class Category extends BaseEntity {
 
     String name;

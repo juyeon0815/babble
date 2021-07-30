@@ -1,6 +1,7 @@
 package com.babble.db.entity;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,6 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @Getter
-@Setter
 public class UserRoom extends BaseEntity{
 
     @OneToOne
@@ -23,4 +23,12 @@ public class UserRoom extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "roomId")
     Room room;
+
+    @Builder
+    public UserRoom(User user, Room room){
+        this.user=user;
+        this.room=room;
+    }
+
+    public UserRoom() { }
 }

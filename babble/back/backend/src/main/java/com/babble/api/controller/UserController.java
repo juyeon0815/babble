@@ -167,6 +167,9 @@ public class UserController {
     })
 	public ResponseEntity deleteUser(@PathVariable("email") @ApiParam(value="회원 정보", required = true) String email) {
 		// 유저 삭제시 관련된 user_hashtag , user_history삭제
+		User user = userService.getUserByUserEmail(email);
+		userHashtagService.deleteUserHashtag(user);
+		roomHistoryService.deleteUserHistory(user);
 		userService.deleteUser(email);
 		return ResponseEntity.status(200).body("success");
 	}

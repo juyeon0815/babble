@@ -3,6 +3,7 @@ package com.babble.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -20,7 +21,6 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @Getter
-@Setter
 public class User extends BaseEntity{
     String email;
 
@@ -33,9 +33,31 @@ public class User extends BaseEntity{
     boolean alarm;
 
     @OneToMany (mappedBy ="user", cascade = CascadeType.REMOVE)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     List<UserHashtag> userHashtag = new ArrayList<>();
 
     @OneToMany (mappedBy = "user" ,cascade = CascadeType.REMOVE)
     List<RoomHistory> roomHistory = new ArrayList<>();
+
+    //객체 생성시 Builder 사용
+    @Builder
+    public User(String email, String password){
+        this.email = email;
+        this.password = password;
+        this.picture = "";
+        this.alarm = false;
+    }
+
+    public User() { }
+
+    public void updateAlarm(boolean alarm){
+        this.alarm= !alarm;
+    }
+
+    public void updatePicture(String fileName){
+        this.picture = fileName;
+    }
+
+    public void updatePassword(String password){
+        this.password = password;
+    }
 }

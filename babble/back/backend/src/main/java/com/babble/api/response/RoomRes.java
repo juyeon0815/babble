@@ -5,6 +5,7 @@ import com.babble.db.entity.Room;
 import com.babble.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,6 @@ import java.util.List;
  * Room 정보 조회관련 API ([GET] /api/v1/room/) 요청에 대한 응답값 정의.
  */
 @Getter
-@Setter
 @ApiModel("RoomResponse")
 public class RoomRes {
     // 방이름, 썸네일 이미지, 카테고리, 태그, 시청자수
@@ -31,17 +31,15 @@ public class RoomRes {
     List<String> hashtag;
     @ApiModelProperty(name="viewers")
     Long viewers;
-    @ApiModelProperty(name="content")
-    String content;
-    @ApiModelProperty(name="createTime")
-    Date createTime;
-//
-    public static RoomRes of(Room room) {
-        RoomRes res = new RoomRes();
-        res.setTitle(room.getTitle());
-        res.setContent(room.getContent());
-        res.setCreateTime(room.getCreateTime());
-        return res;
+
+    @Builder
+    public RoomRes(Long id, String title, String thumbnailUrl, String category, Long count, List<String> list){
+        this.id = id;
+        this.title = title;
+        this.thumbnailUrl = thumbnailUrl;
+        this.category = category;
+        this.viewers = count;
+        this.hashtag = list;
     }
 
 }

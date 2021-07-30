@@ -36,13 +36,10 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User createUser(UserRegisterReq userRegisterInfo) {
-		User user = new User();
-		user.setEmail(userRegisterInfo.getEmail());
-		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
-
-		user.setPicture("default"); //default 사진
-		user.setAlarm(false);
+		User user = User.builder()
+				.email(userRegisterInfo.getEmail())
+				.password(passwordEncoder.encode(userRegisterInfo.getPassword()))
+				.build();
 		return userRepository.save(user);
 	}
 
@@ -68,9 +65,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateAlarm(String email) {
 		User user = userRepositorySupport.findUserByUserEmail(email);
-		boolean flag = !user.isAlarm();
-		System.out.println(flag);
-		user.setAlarm(flag);
+		user.updateAlarm(user.isAlarm());
 		userRepository.save(user);
 	}
 
@@ -111,14 +106,14 @@ public class UserServiceImpl implements UserService {
 	public void updatePicture(String email, String fileName) {
 		User user = userRepositorySupport.findUserByUserEmail(email);
 
-		user.setPicture(fileName);
+		user.updatePicture(fileName);
 		userRepository.save(user);
 	}
 
 	@Override
 	public void updatePassword(UserUpdatePasswordReq userInfo) {
 		User user = userRepositorySupport.findUserByUserEmail(userInfo.getEmail());
-		user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+		user.updatePassword(passwordEncoder.encode(userInfo.getPassword()));
 		userRepository.save(user);
 	}
 }

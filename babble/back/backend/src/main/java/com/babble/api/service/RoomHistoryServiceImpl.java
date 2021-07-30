@@ -30,16 +30,14 @@ public class RoomHistoryServiceImpl implements RoomHistoryService {
     public RoomHistory createRoomHistory(User user, Room room) {
 
         RoomHistory roomHistory = new RoomHistory();
-        roomHistory.setRoom(room);
-        roomHistory.setUser(user);
-        roomHistory.setStartTime(date);
+        roomHistory.createRoomHistory(room,user, date);
         return roomHistoryRepository.save(roomHistory);
     }
 
     @Override
     public void roomExit(User user, Room room) {
         RoomHistory roomHistory = roomHistoryRepositorySupport.findRoomHistoryByUserEmail(user,room);
-        roomHistory.setEndTime(date);
+        roomHistory.roomExit(date);
         roomHistoryRepository.save(roomHistory);
     }
 
@@ -59,8 +57,13 @@ public class RoomHistoryServiceImpl implements RoomHistoryService {
     public void updateEndTime(Long roomId) {
         List<RoomHistory> roomHistories = roomHistoryRepositorySupport.findRoomHistoryByRoomId(roomId);
         for(int i=0;i<roomHistories.size();i++){
-            roomHistories.get(i).setEndTime(date);
+            roomHistories.get(i).roomExit(date);
             roomHistoryRepository.save(roomHistories.get(i));
         }
+    }
+
+    @Override
+    public void deleteUserHistory(User user) {
+        roomHistoryRepositorySupport.deleteUserHistory(user);
     }
 }

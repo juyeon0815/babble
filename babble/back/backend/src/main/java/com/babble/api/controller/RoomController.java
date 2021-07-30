@@ -4,6 +4,7 @@ package com.babble.api.controller;
 import com.babble.api.request.room.RoomReq;
 import com.babble.api.request.room.RoomRelationReq;
 import com.babble.api.response.RoomRes;
+import com.babble.api.response.RoomWaitRes;
 import com.babble.api.response.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.model.response.BaseResponseBody;
@@ -141,36 +142,6 @@ public class RoomController {
     }
 
 
-    @GetMapping("/all/best/{pageNum}")
-    @ApiOperation(value = "인기있는 방 정보", notes = "인기있는 방의 정보를 보여준다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity roomBestList(@PathVariable("pageNum") @ApiParam(value="인기순", required = true) int pageNum) throws IOException {
-        pageNum= (pageNum-1)*10;
-        List<Tuple> roomInfo = roomService.getBestRoomInfo(pageNum);
-        List<RoomRes> bestList = roomService.roomList(roomInfo);
-        return ResponseEntity.status(200).body(bestList);
-    }
-
-    @GetMapping("/all/recent/{pageNum}")
-    @ApiOperation(value = "최신 방 정보", notes = "새로생긴 방의 정보를 보여준다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity roomRecentList(@PathVariable("pageNum") @ApiParam(value="최신순", required = true) int pageNum) throws IOException {
-        pageNum= (pageNum-1)*10;
-        List<Tuple> roomInfo = roomService.getRecentRoomInfo(pageNum);
-        List<RoomRes> recentList = roomService.roomList(roomInfo);
-        return ResponseEntity.status(200).body(recentList);
-    }
-
     @GetMapping("/{categoryName}/best/{pageNum}")
     @ApiOperation(value = "카테고리별 인기 방 정보", notes = "카테고리별 인기순으로 방의 정보를 보여준다.")
     @ApiResponses({
@@ -182,7 +153,9 @@ public class RoomController {
     public ResponseEntity categoryBestList(@PathVariable("categoryName") @ApiParam(value="카테고리명", required = true)String categoryName,
                                            @PathVariable("pageNum") @ApiParam(value="페이지번호", required = true)int pageNum) throws IOException {
         pageNum= (pageNum-1)*10;
-        List<Tuple> roomInfo = roomService.getCategoryBestRoomInfo(categoryName,pageNum);
+        List<Tuple> roomInfo;
+        if(categoryName.equals("all")) roomInfo = roomService.getBestRoomInfo(pageNum);
+        else roomInfo = roomService.getCategoryBestRoomInfo(categoryName,pageNum);
         List<RoomRes> categoryList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(categoryList);
     }
@@ -214,7 +187,9 @@ public class RoomController {
     public ResponseEntity categoryRecentList(@PathVariable("categoryName") @ApiParam(value="카테고리명", required = true)String categoryName,
                                              @PathVariable("pageNum") @ApiParam(value="페이지번호", required = true)int pageNum) throws IOException {
         pageNum= (pageNum-1)*10;
-        List<Tuple> roomInfo = roomService.getCategoryRecentRoomInfo(categoryName,pageNum);
+        List<Tuple> roomInfo;
+        if(categoryName.equals("all")) roomInfo = roomService.getRecentRoomInfo(pageNum);
+        else roomInfo = roomService.getCategoryRecentRoomInfo(categoryName,pageNum);
         List<RoomRes> categoryList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(categoryList);
     }
@@ -247,7 +222,13 @@ public class RoomController {
     })
     public ResponseEntity roomInfo(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
         Room room = roomService.getRoomByRoomId(roomId);
-        System.out.println(room.getTitle());
-        return ResponseEntity.status(200).body(RoomRes.of(room));
+        RoomWaitRes roomWaitRes = RoomWaitRes.builder()
+                .id(room.getId())
+                .title(room.getTitle())
+                .content(room.getContent())
+                .createTime(room.getCreateTime())
+                .build();
+
+        return ResponseEntity.status(200).body(roomWaitRes);
     }
 }

@@ -13,7 +13,6 @@ import java.util.Date;
  */
 @Entity
 @Getter
-@Setter
 public class RoomHistory extends BaseEntity {
 
     @ManyToOne
@@ -26,4 +25,14 @@ public class RoomHistory extends BaseEntity {
 
     Date startTime;
     Date endTime;
+
+    public void createRoomHistory(Room room, User user, Date date){
+        this.room = room;
+        this.user = user;
+        this.startTime = date;
+    }
+
+    public void roomExit(Date date){
+        this.endTime = date;
+    }
 }

@@ -9,5 +9,6 @@ import java.util.List;
 public interface UserHashtagService {
     UserHashtag createUserHashtag(User user, Hashtag hashtag);
     void deleteHashtag(User user, Hashtag hashtag);
+    void deleteUserHashtag(User user);
     List<String> getUserHashtag(Long userId);
 }

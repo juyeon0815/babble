@@ -25,17 +25,22 @@ public class UserHashtagServiceImpl implements UserHashtagService {
 
     @Override
     public UserHashtag createUserHashtag(User user, Hashtag hashtag) {
-        UserHashtag userHashtag = new UserHashtag();
-        userHashtag.setUser(user);
-        userHashtag.setHashtag(hashtag);
-        userHashtagRepository.save(userHashtag);
+        UserHashtag userHashtag = UserHashtag.builder()
+                .user(user)
+                .hashtag(hashtag)
+                .build();
 
-        return userHashtag;
+        return userHashtagRepository.save(userHashtag);
     }
 
     @Override
     public void deleteHashtag(User user, Hashtag hashtag) {
         userHashtagRepositorySupport.deleteUserHashtag(user,hashtag);
+    }
+
+    @Override
+    public void deleteUserHashtag(User user) {
+        userHashtagRepositorySupport.deleteUserHashtag(user);
     }
 
     @Override

@@ -30,4 +30,9 @@ public class UserHashtagRepositorySupport {
 
         return list;
     }
+
+    public void deleteUserHashtag(User user){
+        jpaQueryFactory.delete(qUserHashtag)
+                .where(qUserHashtag.user.eq(user)).execute();
+    }
 }
