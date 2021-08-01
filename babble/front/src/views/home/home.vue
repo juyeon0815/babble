@@ -65,9 +65,14 @@ export default {
       conferenceDialogOpen: false,
       conferenceDialogNum: 0,
     })
-    
+
+    const payloadBest = {
+      linkName: 'all',
+      orderName: 'best',
+      pageNum: 1
+    }
     store.commit('root/startSpinner')
-    store.dispatch('root/requestRoomAllBest')
+    store.dispatch('root/requestRoomCategoryOrder', payloadBest)
     .then(function (result) {
       state.bestRoomList = result.data
       state.count = result.data.length
@@ -79,7 +84,12 @@ export default {
       alert(err)
     })
 
-    store.dispatch('root/requestRoomAllRecent')
+    const payloadRecent = {
+      linkName: 'all',
+      orderName: 'recent',
+      pageNum: 1
+    }
+    store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
     .then(function (result) {
       state.recentRoomList = result.data
       store.commit('root/endSpinner')

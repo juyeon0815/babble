@@ -1,30 +1,35 @@
 <template>
   <el-container>
     <el-main>
-      {{ $route.params.conferenceId + '번 방 상세 보기 페이지' }}
+      <VideoSpace />
     </el-main>
-    <el-aside><Chats /></el-aside>
+    <el-aside class="sideChat">
+      <Chats />
+    </el-aside>
   </el-container>
-  
 </template>
+
 <style>
+  
 </style>
+
 <script>
 import { reactive, onMounted, onUnmounted } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import VideoSpace from './components/video-space'
 import Chats from './components/chats'
 
 export default {
   name: 'conference-detail',
   components: {
+    VideoSpace,
     Chats
   },
   setup () {
     const route = useRoute()
-    const store = useStore()
+
     const state = reactive({
-      conferenceId: ''
+      conferenceId: '',
     })
 
     // 페이지 진입시 불리는 훅
