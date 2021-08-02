@@ -1,10 +1,9 @@
 <template>
-	<h3>OV Video</h3>
-	<video autoplay/>
+	<video ref="el" autoplay/>
 </template>
 
 <script>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 export default {
 	name: 'OvVideo',
@@ -13,10 +12,14 @@ export default {
 		streamManager: Object,
 	},
 
-  setup() {
+  setup(props) {
+		const el = ref(null)
+
     onMounted(() => {
-		  props.streamManager.addVideoElement(this.$el);
+		  props.streamManager.addVideoElement(el.value)
 	  })
+
+		return { el }
   }
 }
 </script>

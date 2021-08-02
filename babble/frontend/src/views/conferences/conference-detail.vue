@@ -1,7 +1,9 @@
 <template>
   <el-container>
     <el-main>
-      <VideoSpace />
+      {{ state.conferenceId }}
+      <VideoSpace 
+      :conferenceId="state.conferenceId"/>
     </el-main>
     <el-aside class="sideChat">
       <Chats />
