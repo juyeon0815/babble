@@ -15,7 +15,7 @@ export default {
 
   setup() {
     onMounted(() => {
-		  // props.streamManager.addVideoElement(this.$el);
+		  props.streamManager.addVideoElement(this.$el);
 	  })
   }
 }

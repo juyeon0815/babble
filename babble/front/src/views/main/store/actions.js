@@ -1,4 +1,5 @@
 // API
+import axios from 'axios'
 import $axios from 'axios'
 
 // 회원가입, 로그인, 로그아웃
