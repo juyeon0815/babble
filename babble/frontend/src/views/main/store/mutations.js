@@ -75,6 +75,12 @@ export function endSpinner (state) {
 	state.loadingStatus = false;
 }
 
+export function joinRoom(state, payload) {
+  console.log("join Room");
+  console.log(payload);
+  state.roomId = payload;
+}
+
 export function setActiveCategory (state, categoryName) {
 	state.activeCategory = categoryName
 }
