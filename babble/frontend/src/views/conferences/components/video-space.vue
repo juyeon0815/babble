@@ -29,16 +29,26 @@
 
   <div class="nav-icons">
     <el-button-group>
-      <el-button type="info" plain>
-        <i class="el-icon-microphone"></i
-      ></el-button>
-      <el-button type="info" plain>
-        <i class="el-icon-video-camera"></i
-      ></el-button>
+      <el-button type="info" plain @click="onOffAudio">
+        <i
+          v-if="state.audioStatus"
+          style="color :red"
+          class="el-icon-microphone"
+        />
+        <i v-else class="el-icon-turn-off-microphone" />
+      </el-button>
+      <el-button type="info" plain @click="onOffVideo">
+        <i
+          v-if="state.videoStatus"
+          style="color:red"
+          class="el-icon-video-camera"
+        />
+        <i v-else type="danger" class="el-icon-video-camera" />
+      </el-button>
       <el-button type="info" plain> <i class="el-icon-thumb"></i></el-button>
       <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
-      <el-button type="info" plain>
-        <i class="el-icon-error" @click="leaveSession"></i
+      <el-button type="info" plain @click="leaveSession">
+        <i class="el-icon-error"></i
       ></el-button>
     </el-button-group>
   </div>
@@ -78,6 +88,8 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      videoStatus: true,
+      audioStatus: true,
 
       myUserName: "익명의" + "너구리", // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
@@ -235,7 +247,33 @@ export default {
       state.mainStreamManager = stream;
     };
 
-    return { state, leaveSession, updateMainVideoStreamManager };
+    const onOffVideo = function() {
+      if (state.videoStatus) {
+        state.publisher.publishVideo(false);
+        state.videoStatus = false;
+      } else {
+        state.publisher.publishVideo(true);
+        state.videoStatus = true;
+      }
+    };
+
+    const onOffAudio = function() {
+      if (state.audioStatus) {
+        state.publisher.publishAudio(false);
+        state.audioStatus = false;
+      } else {
+        state.publisher.publishAudio(true);
+        state.audioStatus = true;
+      }
+    };
+
+    return {
+      state,
+      leaveSession,
+      updateMainVideoStreamManager,
+      onOffVideo,
+      onOffAudio
+    };
   }
 };
 </script>
