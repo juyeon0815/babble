@@ -1,0 +1,5 @@
+/* 공통으로 적용되어야할 css */
+body {
+  margin: 0px;
+  font-family: 'Noto Serif KR', serif;
+}
