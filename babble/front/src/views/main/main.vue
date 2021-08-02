@@ -2,7 +2,8 @@
   <div v-loading="loading">
     <MainHeader
       @openLoginDialog="onOpenLoginDialog"
-      @openJoinDialog="onOpenJoinDialog"/>
+      @openJoinDialog="onOpenJoinDialog"
+      @openRoomCreateDialog="onOpenRoomCreateDialog"/>
     <router-view></router-view>
     <MainFooter />
     <LoginDialog
@@ -11,6 +12,9 @@
     <JoinDialog
       :open="joinDialogOpen"
       @closeJoinDialog="onCloseJoinDialog"/>
+    <RoomCreateDialog
+      :open="roomCreateDialogOpen"
+      @closeRoomCreateDialog="onCloseRoomCreateDialog"/>
   </div>
 </template>
 
@@ -26,6 +30,7 @@ import MainHeader from './components/main-header'
 import MainFooter from './components/main-footer'
 import LoginDialog from './components/login-dialog'
 import JoinDialog from './components/join-dialog'
+import RoomCreateDialog from './components/room-create-dialog'
 
 export default {
   name: 'Main',
@@ -34,11 +39,13 @@ export default {
     MainFooter,
     LoginDialog,
     JoinDialog,
+    RoomCreateDialog,
   },
   data() {
     return {
       loginDialogOpen: false,
-      signUpDialogOpen: false,
+      joinDialogOpen: false,
+      roomCreateDialogOpen: false,
     };
   },
   computed: {
@@ -59,6 +66,12 @@ export default {
     },
     onCloseJoinDialog () {
       this.joinDialogOpen = false
+    },
+    onOpenRoomCreateDialog () {
+      this.roomCreateDialogOpen = true
+    },
+    onCloseRoomCreateDialog () {
+      this.roomCreateDialogOpen = false
     },
   }
 }

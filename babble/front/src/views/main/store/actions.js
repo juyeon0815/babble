@@ -123,3 +123,8 @@ export function requestUpdateProfile ({ state }, payload) {
     }
   })
 }
+
+export function requestRoomCreate ({ state }, payload) {
+  console.log('requestRoomCreate', state, payload)
+  return $axios.post('/room/create', payload)
+}

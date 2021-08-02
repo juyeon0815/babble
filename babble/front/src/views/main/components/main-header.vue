@@ -75,13 +75,17 @@ export default {
     }
 
     const clickJoin = function () {
-      // console.log('clickJoin')
+      console.log('clickJoin')
       emit('openJoinDialog')
     }
 
     const clickLogin = function () {
       // console.log('clickLogin')
       emit('openLoginDialog')
+    }
+
+    const clickRoomCreate = function () {
+      emit('openRoomCreateDialog')
     }
 
     const clickCategory = function () {
@@ -121,7 +125,7 @@ export default {
       state.searchWord = ''
     }
 
-    return { state, clickLogo, clickJoin, clickLogin, clickCategory, clickMyPage, clickLogout, enterSearch }
+    return { state, clickLogo, clickJoin, clickLogin, clickRoomCreate, clickCategory, clickMyPage, clickLogout, enterSearch }
   }
 }
 </script>
