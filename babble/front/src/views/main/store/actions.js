@@ -1,6 +1,8 @@
 // API
+import axios from 'axios'
 import $axios from 'axios'
 
+// 회원가입, 로그인, 로그아웃
 export function requestLogin ({ state }, payload) {
   console.log('requestLogin', state, payload)
   return $axios.post('/auth/login', payload)
@@ -23,26 +25,6 @@ export function requestEmailConfirm ({ state }, payload) {
   return $axios.post('/users/emailConfirm', payload)
 }
 
-export function requestRoomAllBest ({ state }) {
-  return $axios.get('/room/all/best/1')
-}
-
-export function requestRoomAllRecent ({ state }) {
-  return $axios.get('/room/all/recent/1')
-}
-
-export function requestRoomCategoryOrder ({ state }, payload) {
-  return $axios.get(`/room/${payload.linkName}/${payload.orderName}/${payload.pageNum}`)
-}
-
-export function requestRoomSearch ({ state }, payload) {
-  return $axios.get(`/room/${payload.searchName}/${payload.pageNum}`)
-}
-
-export function requestRoomDialog ({ state }, payload) {
-  return $axios.get(`/room/${payload.roomId}`)
-}
-
 export function requestLogout ({ state }) {
   console.log('requestLogout', state)
   $axios.defaults.headers.common['Authorization'] = undefined
@@ -50,6 +32,7 @@ export function requestLogout ({ state }) {
   return
 }
 
+// 마이페이지
 export function requestUserInfo ({ state }, payload) {
   console.log('requestUserInfo', state)
   console.log('payload:', payload)
@@ -127,4 +110,27 @@ export function requestUpdateProfile ({ state }, payload) {
 export function requestRoomCreate ({ state }, payload) {
   console.log('requestRoomCreate', state, payload)
   return $axios.post('/room/create', payload)
+}
+// 방 정보(카테고리, 검색), 대기실
+export function requestRoomCategoryOrder ({ state }, payload) {
+  return $axios.get(`/room/${payload.linkName}/${payload.orderName}/${payload.pageNum}`)
+}
+
+export function requestRoomSearch ({ state }, payload) {
+  return $axios.get(`/room/${payload.searchName}/${payload.pageNum}`)
+}
+
+export function requestRoomDialog ({ state }, payload) {
+  return $axios.get(`/room/${payload.roomId}`)
+}
+
+// WebRTC
+export function requestOVSession ({ state }, payload) {
+  console.log('requestOVSession')
+  // return $axios.post('/', payload)
+}
+
+export function requestOVToken ({ state }, payload) {
+  console.log('requestOVToken')
+  // return $axios.post('/', payload)
 }

@@ -112,7 +112,7 @@ export default {
       store.dispatch('root/requestRoomCategoryOrder', payload)
       .then(function (result) {
         if (result.data.length == 0) {
-          alert('추가 데이터가 없습니다.')
+          alert('추가 데이터가 없습니다. 다른 키워드를 검색해보세요!')
           store.commit('root/endSpinner')
         } else {
           state.pageNum += 1
