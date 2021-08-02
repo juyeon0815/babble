@@ -47,6 +47,7 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+*.gz
 
 .gradle
 .settings
@@ -57,5 +58,4 @@ build
 
 # Tracked gradle-wrapper
 !/backend/gradle/wrapper/gradle-wrapper.jar
-
-*.gz
+/backend/src/main/generated/
