@@ -1,6 +1,6 @@
 <template>
   <h3>Room title <i class="el-icon-user-solid"></i> 0명</h3>
-
+  <h3>{{ conferenceId }}</h3>
   <!-- <div class="temp">
     <div class="dummy"></div>
     <div class="dummy"></div>
@@ -13,11 +13,11 @@
 
   <!-- bootstrap -> element plus 예정(grid/style) -->
   <div id="main-video" class="col-md-6">
-    <UserVideo :stream-manager="mainStreamManager"/>
+    <UserVideo :streamManager="state.mainStreamManager"/>
   </div>
   <div id="video-container" class="col-md-6">
-    <UserVideo :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)"/>
-    <UserVideo v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click="updateMainVideoStreamManager(sub)"/>
+    <UserVideo :stream-manager="state.publisher" @click="updateMainVideoStreamManager(publisher)"/>
+    <UserVideo v-for="sub in state.subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click="updateMainVideoStreamManager(sub)"/>
   </div>
 
   <div class="nav-icons">
@@ -46,28 +46,31 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: 'video-space',
+  props: {
+    conferenceId: {
+      type: Number,
+    }
+  },
   components: {
     UserVideo
   },
-  setup () {
+  setup (props) {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
     const state = reactive({
-      conferenceId: '',
       OV: undefined,
       session: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
       
-      mySessionId: 'SessionA',
+      mySessionId: props.conferenceId,
       myUseName: '익명의' + '너구리' // DB 동물이름으로 교체
     })
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
-      state.conferenceId = route.params.conferenceId
       state.OV = new OpenVidu()
       state.session = state.OV.initSession()
 
@@ -105,9 +108,6 @@ export default {
               },
             })
             .then(response => response.data)
-            .catch(error => {
-              console.log('errrrrr' + error)
-            })
             .then(data => resolve(data.id))
             .catch(error => {
               if (error.response.status === 409) {
@@ -176,7 +176,6 @@ export default {
     // 페이지 이탈시 불리는 훅
     onUnmounted(() => {
       // 반영되는지 확인, 안될경우 leaveSession으로 통합
-      state.conferenceId = ''
       if (state.session) state.session.disconnect()
 			state.session = undefined
 			state.mainStreamManager = undefined

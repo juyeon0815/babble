@@ -1,8 +1,7 @@
 <template>
   <div v-if="streamManager">
-    <h2>UserVideo</h2>
     <OvVideo :stream-manager="streamManager"/>
-    <div><p>{{ state.clientData }}</p></div>
+    <div><p>{{ state.clientData.clientData }}</p></div>
   </div>
 </template>
 
@@ -19,7 +18,7 @@ export default {
 		streamManager: Object,
 	},
 
-  setup() {
+  setup(props) {
     const state = reactive ({
       clientData: computed(() => {
         return getConnectionData()
@@ -27,7 +26,7 @@ export default {
     })
 
     const getConnectionData = function () {
-      const { connection } = this.streamManager.stream;
+      const { connection } = props.streamManager.stream;
       return JSON.parse(connection.data);
     }
 
