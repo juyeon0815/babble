@@ -79,6 +79,7 @@ public class RoomController {
                 } else { //해당 해시태그 있을 경우
                     RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
                 }
+                return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
             }
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         }
