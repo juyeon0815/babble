@@ -61,16 +61,11 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "video-space",
-  props: {
-    conferenceId: {
-      type: Number
-    }
-  },
+
   components: {
     UserVideo
   },
-  setup(props) {
-    const route = useRoute();
+  setup() {
     const router = useRouter();
     const store = useStore();
 
