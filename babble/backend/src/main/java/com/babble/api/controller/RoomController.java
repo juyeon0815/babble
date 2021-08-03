@@ -80,7 +80,7 @@ public class RoomController {
                         RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
                     }
                 }
-                return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+                return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
             }
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Fail"));
 
