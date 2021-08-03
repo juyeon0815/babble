@@ -9,8 +9,8 @@
       {{ state.prevChat }}
       <hr>
       <p v-for="i in state.count" :key="i">{{ state.prevChat[i-1] }}</p>
-      <input type="textarea" class="chat" 
-        placeholder="채팅을 입력해주세요" 
+      <input type="textarea" class="chat"
+        placeholder="채팅을 입력해주세요"
         v-model="state.chatText"
         @keyup.enter="enterChat">
     </el-tab-pane>
@@ -47,13 +47,14 @@ export default {
       state.stompClient.subscribe("/sub/"+"1", res=>{
         console.log('yes!!!!', res)
         let jsonBody = JSON.parse(res.body)
-        let m={
-          'senderNickname':jsonBody.senderNickname,
+        console.log('json>>>>>>>> ' + jsonBody);
+        let m ={
+          // 'senderNickname':jsonBody.senderNickname,
           'content': jsonBody.content,
           'style': jsonBody.senderId == state.id ? 'myMsg':'otherMsg'
         }
         console.log('!!!!!!' + m)
-        state.prevChat.msg.push(m)
+        state.prevChat.push(m)
       })
     }, err=>{
       console.log("fail", err)
@@ -63,13 +64,14 @@ export default {
       if(state.chatText.trim() !='' && state.stompClient!=null) {
         let chatMessage = {
           'content': state.chatText,
-          'chatroomId' : props.conferenceId,
+          // 'chatroomId' : props.conferenceId,
+          'chatroomId' : '1',
           'senderNickname':state.nickname,
           'senderId': state.id,
           'id':"0"
         }
         state.stompClient.send("/pub/message", JSON.stringify(chatMessage),{})
-   
+
         state.chatText=''
       }
     }
