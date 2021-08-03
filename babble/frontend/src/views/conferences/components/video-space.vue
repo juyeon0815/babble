@@ -1,14 +1,6 @@
 <template>
   <h3>Room title <i class="el-icon-user-solid"></i> 0명</h3>
   <h3>{{ conferenceId }}</h3>
-  <!-- <div class="temp">
-    <div class="dummy"></div>
-    <div class="dummy"></div>
-  </div>
-  <div class="temp">
-    <div class="dummy"></div>
-    <div class="dummy"></div>
-  </div> -->
 
   <!-- bootstrap -> element plus 예정(grid/style) -->
   <div id="main-video" class="col-md-6">

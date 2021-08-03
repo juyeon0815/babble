@@ -58,31 +58,32 @@ public class RoomController {
     public ResponseEntity<? extends BaseResponseBody> roomCreate(@ModelAttribute("fileReq") RoomReq roomReq) {
 
         String thumbnail = imageService.roomImageUpload(roomReq.getMultipartFile());
-            if(thumbnail!=null) { //이미지가 업로드안될경우 방생성도 x
-                //방 생성 시 email, title, desc, thumbnail_url, category, hastag, speak 정보 넘어옴
-                //category 테이블에서 category_name과 일치한 id 가져와 저장
-                Category category = categoryService.getCategoryByCategoryName(roomReq.getRoomCreateReq().getCategory());
-                //hostId는 현재 로그인된 유저 id
-                User user = userService.getUserByUserEmail(roomReq.getRoomCreateReq().getEmail());
+        if(thumbnail!=null) { //이미지가 업로드안될경우 방생성도 x
+            //방 생성 시 email, title, desc, thumbnail_url, category, hastag, speak 정보 넘어옴
+            //category 테이블에서 category_name과 일치한 id 가져와 저장
+            Category category = categoryService.getCategoryByCategoryName(roomReq.getRoomCreateReq().getCategory());
+            //hostId는 현재 로그인된 유저 id
+            User user = userService.getUserByUserEmail(roomReq.getRoomCreateReq().getEmail());
 
-                //room create
-                Room room = roomService.createRoom(roomReq, user, category, thumbnail);
+            //room create
+            Room room = roomService.createRoom(roomReq, user, category, thumbnail);
 
 
-                //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
-                String[] tagList = roomReq.getRoomCreateReq().getHashtag().split(" ");
-                for (int i = 0; i < tagList.length; i++) {
-                    Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
-                    if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
-                        Hashtag hashtag = hashtagService.createHashtag(tagList[i]);
-                        RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
-                    } else { //해당 해시태그 있을 경우
-                        RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
-                    }
+            //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
+            String[] tagList = roomReq.getRoomCreateReq().getHashtag().split(" ");
+            for (int i = 0; i < tagList.length; i++) {
+                Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
+                if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
+                    Hashtag hashtag = hashtagService.createHashtag(tagList[i]);
+                    RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
+                } else { //해당 해시태그 있을 경우
+                    RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
                 }
                 return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
             }
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Fail"));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        }
+        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Fail"));
 
     }
 
@@ -97,10 +98,10 @@ public class RoomController {
     public ResponseEntity<? extends BaseResponseBody> roomEnter(
             @RequestBody @ApiParam(value="입장", required = true)RoomRelationReq roomRelationReq) {
 
-            User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
-            Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
-            UserRoom userRoom = userRoomService.createUserRoom(user, room);
-            RoomHistory roomHistory = roomHistoryService.createRoomHistory(user, room);
+        User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
+        Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
+        UserRoom userRoom = userRoomService.createUserRoom(user, room);
+        RoomHistory roomHistory = roomHistoryService.createRoomHistory(user, room);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -114,12 +115,12 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> roomExit(@RequestBody @ApiParam(value="퇴장", required = true)RoomRelationReq roomRelationReq) {
-            User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
-            Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
-            roomHistoryService.roomExit(user,room);
+        User user = userService.getUserByUserEmail(roomRelationReq.getEmail());
+        Room room = roomService.getRoomByRoomId(roomRelationReq.getRoomId());
+        roomHistoryService.roomExit(user,room);
 
-            //방나기면 user_room 데이터 삭제
-            userRoomService.deleteUserRoom(user);
+        //방나기면 user_room 데이터 삭제
+        userRoomService.deleteUserRoom(user);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -169,7 +170,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity searchList(@PathVariable("searchName") @ApiParam(value="검색할 단어", required = true)String searchName,
-                                             @PathVariable("pageNum") @ApiParam(value="페이지번호", required = true)int pageNum) throws IOException {
+                                     @PathVariable("pageNum") @ApiParam(value="페이지번호", required = true)int pageNum) throws IOException {
         pageNum= (pageNum-1)*10;
         List<Tuple> roomInfo = roomService.searchRoomList(searchName, pageNum);
         List<RoomRes> searchRoomList = roomService.roomList(roomInfo);
