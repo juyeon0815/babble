@@ -123,14 +123,3 @@ export function requestRoomSearch ({ state }, payload) {
 export function requestRoomDialog ({ state }, payload) {
   return $axios.get(`/room/${payload.roomId}`)
 }
-
-// WebRTC
-export function requestOVSession ({ state }, payload) {
-  console.log('requestOVSession')
-  // return $axios.post('/', payload)
-}
-
-export function requestOVToken ({ state }, payload) {
-  console.log('requestOVToken')
-  // return $axios.post('/', payload)
-}

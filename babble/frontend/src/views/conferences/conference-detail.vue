@@ -6,7 +6,8 @@
       :conferenceId="state.conferenceId"/>
     </el-main>
     <el-aside class="sideChat">
-      <Chats />
+      <Chats 
+      :conferenceId="state.conferenceId"/>
     </el-aside>
   </el-container>
 </template>
