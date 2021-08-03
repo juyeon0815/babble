@@ -7,6 +7,9 @@
       <el-form-item prop="content" label="방 설명" :label-width="state.formLabelWidth" >
         <el-input v-model="state.form.content" autocomplete="off"></el-input>
       </el-form-item>
+      <el-form-item label="방 썸네일 업데이트">
+        <input type="file" id="thumbnailUrl" name="thumbnailUrl">
+      </el-form-item>
       <el-form-item prop="category" label="카테고리">
         <el-select v-model="state.form.category" placeholder="카테고리 하나를 골라주세요!">
           <el-option label="sports" value="sports"></el-option>
@@ -77,7 +80,7 @@ export default {
         title: '',
         content: '',
         category: '',
-        speak: true,
+        speak: '',
         inputValue: '',
         roomHashtags: [],
         count: computed(() => {
@@ -131,8 +134,7 @@ export default {
     }
 
     const handleInputConfirm = function () {
-      console.log(state.form.inputValue, '들어오니')
-      console.log(state.form.roomHashtags, '이게 undefined라고?')
+      // console.log(state.form.inputValue)
       if (state.form.inputValue == '') {
          console.log('빈 키워드는 입력되지 않고 넘어가기')
           // alert('빈 키워드는 입력되지 않아요!')
@@ -140,28 +142,63 @@ export default {
           state.form.roomHashtags.push(state.form.inputValue)
           state.form.inputValue = ''
       }
+      console.log(state.form.roomHashtags, '추가된 후 해시태그')
     }
 
     const clickRoomCreate = function () {
-      let payload = {
-        email: state.email,
-        title: state.form.title,
-        content: state.form.content,
-        thumbnailUrl: null,
-        name: state.form.category,
-        hashtag: state.form.roomHashtags.join(' '),
-        speak: state.form.speak
+      let form = new FormData()
+      let thumbnailFile = document.getElementsByName("thumbnailUrl")
+      // console.log(thumbnailFile, '잘 집어왔니')
+      // console.log(thumbnailFile[0].files[0])
+
+      form.append("multipartFile", thumbnailFile[0].files[0])
+      form.append("roomCreateReq.email", state.email)
+      form.append("roomCreateReq.title", state.form.title)
+      form.append("roomCreateReq.content", state.form.content)
+      form.append("roomCreateReq.category", state.form.category)
+      if (state.form.roomHashtags.length >= 1) {
+        form.append("roomCreateReq.hashtag", state.form.roomHashtags.join(' '))
       }
-      console.log(payload)
-      // store.dispatch('root/requestRoomCreate', payload)
-      // .then(function(result) {
-      //   console.log(result)
-      // })
+      form.append("roomCreateReq.speak", state.form.speak)
+
+      // console.log(form.get('multipartFile'), '썸네일url')
+      // console.log(form.get('roomCreateReq.email'), '이메일')
+      // console.log(form.get('roomCreateReq.category'), '카테고리')
+      // console.log(form.get('roomCreateReq.hashtag'), '해시태그')
+      store.dispatch('root/requestRoomCreate', form)
+      .then(function(result) {
+        console.log(result)
+      })
+
+      let payloadRecent = {
+        linkName: 'all',
+        orderName: 'recent',
+        pageNum: 1
+      }
+
+      //방금 만든 룸은 10개 중에 포함되지 않는다... db에 반영되기 전에 axios get요청을 보내는 듯.
+      store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
+      .then(function (result) {
+        console.log(result.data)
+        console.log(result.data[0].id, '난 그저 룸 id를 얻고 싶을 뿐인데')
+
+        router.push({
+          name: 'conference-detail',
+          params: {
+            conferenceId: result.data[0].id + 1 //임의로 +1해주어야 참여자가 입장하는 room id와 동일해짐.
+          }
+        })
+        handleClose()
+      })
     }
 
     const handleClose = function () {
       state.form.title = ''
       state.form.content = ''
+      state.form.category = ''
+      state.form.speak = ''
+      state.form.roomHashtags = []
+      // document.getElementsByName("thumbnailUrl")[0].files[0]
       emit('closeRoomCreateDialog')
     }
 
