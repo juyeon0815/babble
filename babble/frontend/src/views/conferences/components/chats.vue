@@ -5,6 +5,7 @@
       <h3>Listener</h3>
     </el-tab-pane>
     <el-tab-pane class="in-tab" label="채팅">
+<<<<<<< HEAD
       <div v-for="(m, idx) in state.prevChat" :key="idx">
         <div v-bind:class="m.style">
         <h5>{{m.nickname}}</h5>
@@ -13,6 +14,14 @@
       </div>
       <input type="textarea" class="chat" 
         placeholder="채팅을 입력해주세요" 
+=======
+      <h4>채팅내용</h4>
+      {{ state.prevChat }}
+      <hr>
+      <p v-for="i in state.count" :key="i">{{ state.prevChat[i-1] }}</p>
+      <input type="textarea" class="chat"
+        placeholder="채팅을 입력해주세요"
+>>>>>>> 5af8804b2ab98cb6c6e9e706d7d28caf87bdd99b
         v-model="state.chatText"
         @keyup.enter="enterChat">
     </el-tab-pane>
@@ -46,8 +55,14 @@ export default {
       state.stompClient.subscribe("/sub/"+ state.chatroomId, res=>{
         console.log('yes!!!!', res)
         let jsonBody = JSON.parse(res.body)
+<<<<<<< HEAD
         let m={
           'nickname':jsonBody.nickname,
+=======
+        console.log('json>>>>>>>> ' + jsonBody);
+        let m ={
+          // 'senderNickname':jsonBody.senderNickname,
+>>>>>>> 5af8804b2ab98cb6c6e9e706d7d28caf87bdd99b
           'content': jsonBody.content,
           'style': jsonBody.nickname == state.nickname ? 'myMsg':'otherMsg'
         }
@@ -62,11 +77,19 @@ export default {
       if(state.chatText.trim() !='' && state.stompClient!=null) {
         let chatMessage = {
           'content': state.chatText,
+<<<<<<< HEAD
           'chatroomId' : state.chatroomId,
           'nickname':state.nickname,
+=======
+          // 'chatroomId' : props.conferenceId,
+          'chatroomId' : '1',
+          'senderNickname':state.nickname,
+          'senderId': state.id,
+          'id':"0"
+>>>>>>> 5af8804b2ab98cb6c6e9e706d7d28caf87bdd99b
         }
         state.stompClient.send("/pub/message", JSON.stringify(chatMessage),{})
-   
+
         state.chatText=''
       }
     }
@@ -88,6 +111,7 @@ export default {
     height: 100px;
     width: 250px;
   }
+<<<<<<< HEAD
   .myMsg{
   text-align: right;
   color : gray;
@@ -96,3 +120,6 @@ export default {
     text-align: left;
   }
 </style>
+=======
+</style>
+>>>>>>> 5af8804b2ab98cb6c6e9e706d7d28caf87bdd99b
