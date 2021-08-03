@@ -109,8 +109,13 @@ export function requestUpdateProfile ({ state }, payload) {
 
 export function requestRoomCreate ({ state }, payload) {
   console.log('requestRoomCreate', state, payload)
-  return $axios.post('/room/create', payload)
+  return $axios.post('/room/create', payload, {
+    headers: {
+      'Content-Type' : 'multipart/form-data'
+    }
+  })
 }
+
 // 방 정보(카테고리, 검색), 대기실
 export function requestRoomCategoryOrder ({ state }, payload) {
   return $axios.get(`/room/${payload.linkName}/${payload.orderName}/${payload.pageNum}`)

@@ -41,6 +41,7 @@ export default {
     .then(function (result) {
       let data = result.data
       // console.log(data, '처음 받아온 데이터')
+      // console.log(result.data[0])
       // console.log(result.data[0].viewDate)
       for (let i = 0; i < data.length; i++) {
         let dateHuman = result.data[i].viewDate.slice(0, 10)

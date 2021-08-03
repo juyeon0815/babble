@@ -42,5 +42,6 @@ export default {
   profile: '',
   loadingStatus : false,
   activeCategory: null,
-  searchWord: ''
+  searchWord: '',
+  roomID:''
 }

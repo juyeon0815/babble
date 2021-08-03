@@ -48,3 +48,7 @@ export function getActiveCategory (state) {
 export function getSearchWord (state) {
 	return state.searchWord
 }
+
+export function getRoomID(state) { // 입장하는 방 이름
+	return state.roomId
+}

@@ -9,13 +9,15 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MessageReq {
-    Long roomId;
+    Long chatroomId;
     String content;
+    String nickname;
 
     @Builder
-    public MessageReq (long roomId, String content) {
+    public MessageReq (long chatroomId, String content, String nickname) {
         super();
-        this.roomId = roomId;
+        this.chatroomId = chatroomId;
         this.content = content;
+        this.nickname = nickname;
     }
 }

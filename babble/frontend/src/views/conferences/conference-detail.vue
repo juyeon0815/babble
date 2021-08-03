@@ -2,50 +2,49 @@
   <el-container>
     <el-main>
       {{ state.conferenceId }}
-      <VideoSpace 
-      :conferenceId="state.conferenceId"/>
+      <VideoSpace :conferenceId="state.conferenceId" />
     </el-main>
     <el-aside class="sideChat">
-      <Chats 
-      :conferenceId="state.conferenceId"/>
+      <Chats />
     </el-aside>
   </el-container>
 </template>
 
-<style>
-  
-</style>
+<style></style>
 
 <script>
-import { reactive, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
-import VideoSpace from './components/video-space'
-import Chats from './components/chats'
+import { reactive, onMounted, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import VideoSpace from "./components/video-space";
+import Chats from "./components/chats";
 
 export default {
-  name: 'conference-detail',
+  name: "conference-detail",
   components: {
     VideoSpace,
     Chats
   },
-  setup () {
-    const route = useRoute()
+  setup() {
+    const store = useStore();
+    const route = useRoute();
 
     const state = reactive({
-      conferenceId: '',
-    })
+      conferenceId: ""
+    });
+    store.commit("root/joinRoom", route.params.conferenceId);
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
-      state.conferenceId = route.params.conferenceId
-    })
+      state.conferenceId = route.params.conferenceId;
+    });
 
     // 페이지 이탈시 불리는 훅
     onUnmounted(() => {
-      state.conferenceId = ''
-    })
+      state.conferenceId = "";
+    });
 
-    return { state }
+    return { state };
   }
-}
+};
 </script>

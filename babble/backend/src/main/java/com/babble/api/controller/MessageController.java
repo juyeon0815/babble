@@ -20,6 +20,7 @@ public class MessageController {
     public void sendMessage(@Payload MessageReq message) {
         log.info("전달 메세지 : " + message);
         // 내가 보내주고자 한 사람이 subscribe한 링크로 보내준다
-        template.convertAndSend("/sub/" + message.getRoomId(), message);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> " + message);
+        template.convertAndSend("/sub/" + message.getChatroomId(), message);
     }
 }
