@@ -37,7 +37,9 @@
         />
         <i v-else type="danger" class="el-icon-video-camera" />
       </el-button>
-      <el-button type="info" plain> <i class="el-icon-thumb"></i></el-button>
+      <el-button type="info" plain @click="findStreamIdBySessionId">
+        <i class="el-icon-thumb"></i
+      ></el-button>
       <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
       <el-button type="info" plain @click="leaveSession">
         <i class="el-icon-error"></i
@@ -78,7 +80,7 @@ export default {
       videoStatus: true,
       audioStatus: true,
 
-      myUserName: "익명의" + "너구리", // DB 동물이름으로 교체
+      myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
     });
 
@@ -102,12 +104,6 @@ export default {
       state.session.on("exception", ({ exception }) => {
         console.warn(exception);
       });
-
-      // token
-      // const getToken = async function (mySessionId) {
-      //   const sessionId = await store.dispatch('root/requestOVSession', mySessionId)
-      //   return await store.dispatch('root/requestOVToken', sessionId)
-      // }
 
       const createSession = function(sessionId) {
         return new Promise((resolve, reject) => {
@@ -151,7 +147,9 @@ export default {
           axios
             .post(
               `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-              {},
+              {
+                role: "MODERATOR"
+              },
               {
                 auth: {
                   username: "OPENVIDUAPP",
@@ -175,8 +173,6 @@ export default {
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
-            console.log("############");
-            console.log(token);
             // --- Get your own camera stream with the desired properties ---
 
             let publisher = state.OV.initPublisher(undefined, {
@@ -194,7 +190,6 @@ export default {
             state.publisher = publisher;
 
             // --- Publish your stream ---
-
             state.session.publish(state.publisher);
           })
           .catch(error => {
@@ -219,7 +214,6 @@ export default {
     });
 
     const leaveSession = function() {
-      console.log("leave");
       store.commit("root/setActiveCategory", null);
       store.commit("root/setMenuActive", 0);
       const MenuItems = store.getters["root/getMenus"];
@@ -254,12 +248,39 @@ export default {
       }
     };
 
+    const getConnection = function() {
+      axios
+        .post(
+          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/ppko1233@naver.com`,
+          {},
+          {
+            auth: {
+              username: "OPENVIDUAPP",
+              password: OPENVIDU_SERVER_SECRET
+            }
+          }
+        )
+        .then(response => {})
+        .catch(error => reject("createTokenError!!!!!!" + error.response));
+    };
+
+    // 유저 아이디로 스트림ID 찾기
+    const findStreamIdBySessionId = function(sessionId) {
+      console.log(state.session.getConnection);
+    };
+    // 강퇴
+    const unpublish = function(streamId) {
+      state.session.unpublish(streamId);
+    };
+
     return {
       state,
       leaveSession,
       updateMainVideoStreamManager,
       onOffVideo,
-      onOffAudio
+      onOffAudio,
+      unpublish,
+      findStreamIdBySessionId
     };
   }
 };
