@@ -1,5 +1,5 @@
 <template>
-  <el-row class="navbar">
+  <el-row class="navbar" v-if="state.activeMenuIndex != -1">
     <h2 @click="clickLogo">Babble</h2>
     <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
     <el-button type="info" plain @click="clickCategory">카테고리</el-button>
@@ -61,7 +61,10 @@ export default {
       isLoggedin: computed(() => {
         return store.getters['root/getToken']
       }),
-      searchWord: ''
+      searchWord: '',
+      activeMenuIndex: computed(() => {
+        return store.getters['root/getActiveMenuIndex']
+      })
     })
 
     const clickLogo = () => {
