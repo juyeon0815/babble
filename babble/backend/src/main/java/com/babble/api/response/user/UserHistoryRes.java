@@ -13,6 +13,7 @@ import java.util.List;
  * 시청기록 정보 조회 API ([GET] /api/v1/users) 요청에 대한 응답값 정의.
  */
 @Getter
+@Setter
 @ApiModel("userHistoryResponse")
 public class UserHistoryRes {
     // 방이름, 카테고리, 시청날짜, 시청시간, 최대 조회수
