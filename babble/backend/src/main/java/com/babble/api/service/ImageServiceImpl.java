@@ -22,7 +22,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public boolean userImageUpload(String email, MultipartFile fileName) {
-        File dest = new File("D://images/users/" + date.getTime()+fileName.getOriginalFilename());
+        File dest = new File(date.getTime()+fileName.getOriginalFilename());
         try {
             fileName.transferTo(dest);
             //db에 파일명 저장
@@ -41,7 +41,7 @@ public class ImageServiceImpl implements ImageService {
     public byte[] getUserImage(String email) throws IOException {
         User user = userService.getUserByUserEmail(email);
         System.out.println(user.getPicture());
-        InputStream imageStream = new FileInputStream("d://images/users/" + user.getPicture());
+        InputStream imageStream = new FileInputStream(user.getPicture());
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
         imageStream.close();
         return imageByteArray;
@@ -49,7 +49,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String roomImageUpload(MultipartFile fileName) {
-        File dest = new File("D://images/room/" + date.getTime()+fileName.getOriginalFilename());
+        File dest = new File(date.getTime()+fileName.getOriginalFilename());
         try {
             fileName.transferTo(dest);
         }catch (FileNotFoundException e){
