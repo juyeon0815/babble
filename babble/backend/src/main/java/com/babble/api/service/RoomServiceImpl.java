@@ -1,7 +1,7 @@
 package com.babble.api.service;
 
 import com.babble.api.request.room.RoomCreateReq;
-import com.babble.api.response.RoomRes;
+import com.babble.api.response.room.RoomRes;
 import com.babble.db.entity.*;
 import com.babble.db.repository.RoomRepository;
 import com.babble.db.repository.RoomRepositorySupport;
@@ -27,9 +27,6 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     RoomHashtagService roomHashtagService;
-
-
-
 
     QRoom qRoom = QRoom.room;
     QCategory qCategory = QCategory.category;
@@ -97,12 +94,6 @@ public class RoomServiceImpl implements RoomService {
 
         List<RoomRes> result = new ArrayList<>();
         for(int i=0;i<roomInfo.size();i++){
-            Long id = roomInfo.get(i).get(qRoom.id);
-            String title = roomInfo.get(i).get(qRoom.title);
-            String thumbnail = roomInfo.get(i).get(qRoom.thumbnailUrl);
-            String category = roomInfo.get(i).get(qCategory.name);
-            Long count = roomInfo.get(i).get(qUserRoom.room.id.count());
-
 
             List<String> hashtags = new ArrayList<>();
             List<Hashtag> list = roomHashtagService.findHashtagByRoomHashtagRoomId(roomInfo.get(i).get(qRoom.id));

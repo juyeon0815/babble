@@ -4,16 +4,15 @@ import com.babble.api.request.user.UserHashtagReq;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
-import com.babble.api.response.UserHistoryRes;
-import com.babble.api.response.UserLoginPostRes;
-import com.babble.api.response.UserRes;
+import com.babble.api.response.user.UserHistoryRes;
+import com.babble.api.response.user.UserLoginPostRes;
+import com.babble.api.response.user.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.auth.BabbleUserDetails;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +26,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
@@ -304,9 +302,6 @@ public class UserController {
 	})
 	public ResponseEntity getUserImage(
 			@PathVariable("email") @ApiParam(value="유저 이메일", required = true) String email){
-//		byte[] imageByteArray = imageService.getUserImage(email);
-//		System.out.println(imageByteArray);
-//		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
 		User user = userService.getUserByUserEmail(email);
 		return ResponseEntity.status(200).body("d://images/room/"+user.getPicture());
 	}

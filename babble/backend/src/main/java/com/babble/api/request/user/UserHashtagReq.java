@@ -10,7 +10,6 @@ import lombok.Setter;
  * 유저 해시태그 추가 API ([POST] /api/v1/users/hashtag) 요청에 필요한 리퀘스트 바디 정의.
  */
 @Getter
-@Setter
 @ApiModel("UserHashtagPostRequest")
 public class UserHashtagReq {
 

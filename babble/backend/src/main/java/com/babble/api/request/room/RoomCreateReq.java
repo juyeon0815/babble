@@ -14,7 +14,6 @@ import java.util.List;
  * Room 생성 API ([POST] /api/v1/room) 요청에 필요한 리퀘스트 바디 정의.
  */
 @Getter
-@Setter
 @ApiModel("RoomCreatePostRequest")
 public class RoomCreateReq {
 

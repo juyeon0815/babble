@@ -3,15 +3,14 @@ package com.babble.api.controller;
 
 import com.babble.api.request.room.RoomCreateReq;
 import com.babble.api.request.room.RoomRelationReq;
-import com.babble.api.response.RoomRes;
-import com.babble.api.response.RoomWaitRes;
+import com.babble.api.response.room.RoomRes;
+import com.babble.api.response.room.RoomWaitRes;
 import com.babble.api.service.*;
 import com.babble.common.model.response.BaseResponseBody;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -134,7 +133,6 @@ public class RoomController {
         List<RoomRes> roomList = roomService.roomList(roomInfo);
         System.out.println(roomList.size());
         return ResponseEntity.status(200).body(roomList);
-//        return new ResponseEntity(roomList.get(0).getThumbnailUrl(), HttpStatus.OK);
     }
 
 

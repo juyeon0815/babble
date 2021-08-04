@@ -3,7 +3,7 @@ package com.babble.api.service;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
-import com.babble.api.response.UserHistoryRes;
+import com.babble.api.response.user.UserHistoryRes;
 import com.babble.db.entity.User;
 import com.querydsl.core.Tuple;
 

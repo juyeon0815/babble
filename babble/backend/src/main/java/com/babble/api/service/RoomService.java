@@ -1,7 +1,7 @@
 package com.babble.api.service;
 
 import com.babble.api.request.room.RoomCreateReq;
-import com.babble.api.response.RoomRes;
+import com.babble.api.response.room.RoomRes;
 import com.babble.db.entity.Category;
 import com.babble.db.entity.Room;
 import com.babble.db.entity.User;
