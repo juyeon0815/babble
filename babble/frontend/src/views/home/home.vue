@@ -18,7 +18,7 @@
     @click="clickConference(state.recentRoomList[i-1].id)"/>
   </el-row>
 
-  <ConferenceDialog 
+  <ConferenceDialog
     :open="state.conferenceDialogOpen"
     :roomId="state.conferenceDialogNum"
     @closeConferenceDialog="onCloseConferenceDialog"/>
@@ -92,6 +92,7 @@ export default {
     store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
     .then(function (result) {
       state.recentRoomList = result.data
+      console.log(result.data, '자 여기서 사진도 가져오는지 확인하자')
       store.commit('root/endSpinner')
     })
     .catch(function (err) {

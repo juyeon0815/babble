@@ -85,33 +85,15 @@ export function requestViewHistory2 ({ state }, payload) {
   return $axios.get(`/users/createRoomHistory/${payload.email}`)
 }
 
-//수정 필요 >> requestUserInfo에서 url도 받아올 수 있게
-export function requestUserProfile ({ state }, payload) {
-  console.log('requestUserProfile', state, payload)
-  return $axios.get(`/users/${payload.email}`)
-}
-
 export function requestUserHashtag ({ state }, payload) {
   console.log('requestUserHashtag', state, payload)
   return $axios.get(`/users/hashtag/${payload.email}`)
 }
 
-//수정 필요 >> 그냥 url만 넘겨주는 거면 폼 데이터로 줄 필요 없을 듯
-// export function requestUpdateProfile ({ state }, payload) {
-//   console.log('requestUpdateProfile', state)
-//   console.log('payload:', payload)
-//   const url = '/users/upload'
-//   return $axios.post(url, payload, {
-//     headers: {
-//       'Content-Type' : 'multipart/form-data'
-//     }
-//   })
-// }
-
 export function requestUpdateProfile ({ state }, payload) {
   console.log('requestUpdateProfile', state)
-  console.log('payload:', payload)
-  return $axios.post('users/upload', payload)
+  console.log('payload 프사 바뀐다 여기 주목:', payload)
+  return $axios.patch('users/updatePicture', payload)
 }
 
 //수정 필요 >> 마찬가지

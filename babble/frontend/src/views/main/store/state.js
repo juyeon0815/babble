@@ -39,7 +39,7 @@ export default {
   userHashtag: [],
   alarmValue: false,
   email: '',
-  profile: '',
+  profile: 'default',
   loadingStatus : false,
   activeCategory: null,
   searchWord: '',
