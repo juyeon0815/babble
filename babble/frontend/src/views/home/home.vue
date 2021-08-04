@@ -40,7 +40,7 @@
   }
 </style>
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import Conference from './components/conference'
@@ -107,6 +107,10 @@ export default {
     const onCloseConferenceDialog = function () {
       state.conferenceDialogOpen = false
     }
+
+    onMounted (() => {
+      store.commit('root/setMenuActiveMenuName', 'home')
+    })
 
     return { state, clickConference, onCloseConferenceDialog }
   }

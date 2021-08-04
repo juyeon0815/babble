@@ -1,10 +1,24 @@
 <template>
-  <h3>Footer</h3>
+  <div v-if="state.activeMenuIndex != -1">
+    <h3>Footer</h3>
+    {{ state.activeMenuIndex }}
+  </div>
 </template>
 
 <script>
-export default {
+import { reactive, computed } from 'vue'
+import { useStore } from 'vuex'
 
+export default {
+  setup() {
+    const store = useStore()
+    const state = reactive ({
+      activeMenuIndex: computed(() => {
+        return store.getters['root/getActiveMenuIndex']
+      })
+    })
+    return { state }
+  }
 }
 </script>
 
