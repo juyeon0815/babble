@@ -18,6 +18,7 @@ export function setLogout (state) {
   console.log('토큰 없앤다!')
 	state.token = null
   state.email = ''
+  state.profile = ''
   state.activeMenu = 'home'
   state.userHashtag = []
   state.alarmValue = false

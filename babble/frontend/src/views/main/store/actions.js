@@ -85,7 +85,7 @@ export function requestViewHistory2 ({ state }, payload) {
   return $axios.get(`/users/createRoomHistory/${payload.email}`)
 }
 
-//수정 필요
+//수정 필요 >> requestUserInfo에서 url도 받아올 수 있게
 export function requestUserProfile ({ state }, payload) {
   console.log('requestUserProfile', state, payload)
   return $axios.get(`/users/${payload.email}`)
@@ -96,24 +96,37 @@ export function requestUserHashtag ({ state }, payload) {
   return $axios.get(`/users/hashtag/${payload.email}`)
 }
 
+//수정 필요 >> 그냥 url만 넘겨주는 거면 폼 데이터로 줄 필요 없을 듯
+// export function requestUpdateProfile ({ state }, payload) {
+//   console.log('requestUpdateProfile', state)
+//   console.log('payload:', payload)
+//   const url = '/users/upload'
+//   return $axios.post(url, payload, {
+//     headers: {
+//       'Content-Type' : 'multipart/form-data'
+//     }
+//   })
+// }
+
 export function requestUpdateProfile ({ state }, payload) {
   console.log('requestUpdateProfile', state)
   console.log('payload:', payload)
-  const url = '/users/upload'
-  return $axios.post(url, payload, {
-    headers: {
-      'Content-Type' : 'multipart/form-data'
-    }
-  })
+  return $axios.post('users/upload', payload)
 }
+
+//수정 필요 >> 마찬가지
+// export function requestRoomCreate ({ state }, payload) {
+//   console.log('requestRoomCreate', state, payload)
+//   return $axios.post('/room/create', payload, {
+//     headers: {
+//       'Content-Type' : 'multipart/form-data'
+//     }
+//   })
+// }
 
 export function requestRoomCreate ({ state }, payload) {
   console.log('requestRoomCreate', state, payload)
-  return $axios.post('/room/create', payload, {
-    headers: {
-      'Content-Type' : 'multipart/form-data'
-    }
-  })
+  return $axios.post('/room/create', payload)
 }
 
 // 방 정보(카테고리, 검색), 대기실
