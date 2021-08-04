@@ -1,24 +1,25 @@
 <template>
   <el-container>
     <el-aside width="500px" class="tab">
-      <h4>{{ state.email }}님 안녕!</h4>
-      <div>
-        <div class="block">
-          <el-avatar :size="90" :src="state.profile"></el-avatar>
-        </div>
-        <img :src="state.profile" alt="내 프로필" />
+      <h4>{{state.email}}님 안녕!</h4>
+      <div v-if="state.profile == 'default'">
+        <div class="block"><el-avatar :size="90" :src="state.circleUrl"></el-avatar></div>
       </div>
+      <div v-else>
+        <img :src="state.profile" alt="내 프로필">
+      </div>
+
       <div>
         <form @submit.prevent>
-          <label for="newProfile"><h5>프로필 사진 변경</h5></label>
-          <input type="file" id="newProfile" name="newProfile" />
-          <button @click="updateProfile">+</button><br />
+          <label for="newProfile"><h5>프로필 사진 변경 </h5></label>
+          <input type="file" ref="fileInput" id="newProfile" name="newProfile" @change="handleFileUpload()"/>
+          <button @click="updateProfile">+</button><br>
           <div class="el-upload__tip">
             jpg/png files with a size less than 500kb
           </div>
         </form>
-        <br />
-        <button>기존 프로필 가져오기</button>
+        <br>
+        <button @click="deleteProfile">프로필 삭제</button>
       </div>
     </el-aside>
 
@@ -91,6 +92,7 @@
         </h6>
         <el-button @click="deleteUser">Adios Ba:bble</el-button>
       </div>
+
     </el-main>
   </el-container>
 </template>
@@ -103,10 +105,12 @@ import { useRouter } from "vue-router";
 export default {
   name: "UserInfo",
 
-  setup(props, { emit }) {
-    const store = useStore();
-    const router = useRouter();
-    const updateForm = ref(null);
+  setup (props, {emit}) {
+    const store = useStore()
+    const router = useRouter()
+    const updateForm = ref(null)
+    const fileInput = ref(null)
+    const AWS = require('aws-sdk')
 
     const state = reactive({
       circleUrl:
@@ -180,8 +184,11 @@ export default {
       },
       isVal: false,
       isSuccess: false,
-      isFail: false
-    });
+      isFail: false,
+      albumBucketName: 'babble-test-zimin',
+      bucketRegion: 'ap-northeast-2',
+      IdentityPoolId: 'ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f',
+    })
 
     const isValid = function() {
       updateForm.value.validate(valid => {
@@ -193,60 +200,75 @@ export default {
       });
     };
 
-    //매 컴포넌트에서 이메일 정보를 가져와야되나 싶었는데 이메일/토큰 여부는 로그인하면서 store에 저장하는 방식으로 처리함
-    // store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
-    // .then((res)=> store.commit('root/setEmail', res.data.email))
-    // console.log(state.email, '왜 아직도 dd..인거니?')
+    const checkPassword = function () {
+      store.dispatch('root/requestPasswordCheck', {email: state.email, password: state.form.password })
+      .then(function (result) {
+        console.log(result.data.message)
+        if (result.data.message == 'Success') {
+          state.isSuccess = true
+        } else if (result.data.message == 'fail') {
+          state.isFail = true
+        }
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+    }
 
-    const checkPassword = function() {
-      store
-        .dispatch("root/requestPasswordCheck", {
-          email: state.email,
-          password: state.form.password
+    store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
+      .then(function (result) {
+        console.log(result.data.picture)
+        store.commit('root/setUserProfile', result.data.picture)
+      })
+
+    const handleFileUpload = function () {
+      let test1 = document.getElementsByName("newProfile")[0].files[0]
+      let test2 = fileInput.value.files[0]
+      console.log(test1, '기존 방식')
+      console.log(test2, 'ref 방식')
+      state.form.file = test2
+      console.log(state.form.file, '파일이 업로드 되었다')
+    }
+
+    const updateProfile = function () {
+      AWS.config.update({
+        region: state.bucketRegion,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: state.IdentityPoolId
         })
-        .then(function(result) {
-          console.log(result.data.message);
-          if (result.data.message == "Success") {
-            state.isSuccess = true;
-          } else if (result.data.message == "fail") {
-            state.isFail = true;
-          }
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
-    };
-
-    // const getProfile = function () {
-    //   store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
-    //   .then(function (result) {
-    //     console.log(result.data.alarm)
-    //     console.log(result.data.picture)
-    //   })
-    // }
-
-    store
-      .dispatch("root/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        console.log(result.data.picture);
-        store.commit("root/setUserProfile", result.data.picture);
       });
 
-    const updateProfile = function() {
-      let form = new FormData();
-      let profileFile = document.getElementsByName("newProfile");
-      console.log(profileFile, "잘 집어왔니");
-      console.log(profileFile[0].files[0]);
-      // console.log(profileFile[0].files[0].name)
-      // console.log(profileFile[0].value)
-      form.append("file", profileFile[0].files[0]);
-      form.append("email", state.email);
-      // console.log(form)
-      store.dispatch("root/requestUpdateProfile", form).then(function(result) {
-        console.log(result);
+      let upload = new AWS.S3.ManagedUpload({
+        params: {
+          Bucket: state.albumBucketName,
+          Key: state.form.file.name,
+          Body: state.form.file
+        }
       });
-      console.log("하..이미지.. 진짜");
-    };
+
+      let promise = upload.promise();
+
+      promise.then(
+        function(data) {
+          alert("Successfully uploaded photo.");
+          console.log(data, '자 업로드 된 데이터야')
+          store.commit('root/setUserProfile', data.Location)
+          store.dispatch('root/requestUpdateProfile', {email: state.email, picture: data.Location})
+          .then((res) => console.log(res))
+        },
+        function(err) {
+          return alert("There was an error uploading your photo: ", err.message);
+        }
+      )
+    }
+
+    const deleteProfile = function () {
+      store.commit('root/setUserProfile', 'default')
+      const backToDefault = 'default'
+      store.dispatch('root/requestUpdateProfile', {email: state.email, picture: backToDefault})
+      .then((res) => console.log(res))
+    }
+
 
     //비밀번호 변경 후 로그아웃 처리를 해줘야 하나...? 다시 로그인하라고...?
     const updatePassword = function() {
@@ -275,15 +297,7 @@ export default {
         });
     };
 
-    return {
-      state,
-      updateForm,
-      isValid,
-      checkPassword,
-      updateProfile,
-      updatePassword,
-      deleteUser
-    };
+  return {state, updateForm, fileInput, isValid, checkPassword, handleFileUpload, updateProfile, deleteProfile, updatePassword, deleteUser }
   }
 };
 </script>

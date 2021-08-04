@@ -18,7 +18,7 @@
     @click="clickConference(state.recentRoomList[i-1].id)"/>
   </el-row>
 
-  <ConferenceDialog 
+  <ConferenceDialog
     :open="state.conferenceDialogOpen"
     :roomId="state.conferenceDialogNum"
     @closeConferenceDialog="onCloseConferenceDialog"/>
