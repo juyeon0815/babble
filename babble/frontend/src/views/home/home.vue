@@ -71,7 +71,6 @@ export default {
       orderName: 'best',
       pageNum: 1
     }
-    store.commit('root/startSpinner')
     store.dispatch('root/requestRoomCategoryOrder', payloadBest)
     .then(function (result) {
       state.bestRoomList = result.data
@@ -92,10 +91,8 @@ export default {
     store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
     .then(function (result) {
       state.recentRoomList = result.data
-      store.commit('root/endSpinner')
     })
     .catch(function (err) {
-      store.commit('root/endSpinner')
       alert(err)
     })
 

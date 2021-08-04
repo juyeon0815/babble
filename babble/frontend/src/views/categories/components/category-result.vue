@@ -63,17 +63,14 @@ export default {
         orderName: 'best',
         pageNum: 1
       }
-      store.commit('root/startSpinner')
       store.dispatch('root/requestRoomCategoryOrder', payload)
       .then(function (result) {
         state.pageNum = 1
         state.bestRoomList = result.data
         state.count = result.data.length
         state.radio = 'best'
-        store.commit('root/endSpinner')
       })
       .catch(function (err) {
-        store.commit('root/endSpinner')
         alert(err)
       })
     }
@@ -86,18 +83,15 @@ export default {
         orderName: 'recent',
         pageNum: 1
       }
-      store.commit('root/startSpinner')
       store.dispatch('root/requestRoomCategoryOrder', payload)
       .then(function (result) {
         state.pageNum = 1
         state.recentRoomList = result.data
         state.count = result.data.length
         state.radio = 'recent'
-        store.commit('root/endSpinner')
       })
       .catch(function (err) {
         alert(err)
-        store.commit('root/endSpinner')
       })
     }
 
@@ -108,22 +102,18 @@ export default {
         orderName: state.radio,
         pageNum: state.pageNum + 1
       }
-      store.commit('root/startSpinner')
       store.dispatch('root/requestRoomCategoryOrder', payload)
       .then(function (result) {
         if (result.data.length == 0) {
           alert('추가 데이터가 없습니다. 다른 키워드를 검색해보세요!')
-          store.commit('root/endSpinner')
         } else {
           state.pageNum += 1
           state.recentRoomList.push(result.data)
           state.count += result.data.length
-          store.commit('root/endSpinner')
         }
       })
       .catch(function (err) {
         alert(err)
-        store.commit('root/endSpinner')
       })
     }
 

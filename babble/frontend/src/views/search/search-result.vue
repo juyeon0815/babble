@@ -41,15 +41,12 @@ export default {
         searchName: state.searchWord,
         pageNum: 1
       }
-      store.commit('root/startSpinner')
       store.dispatch('root/requestRoomSearch', payload)
       .then(function (result) {
         state.roomList = result.data
         state.count = result.data.length
-        store.commit('root/endSpinner')
       })
       .catch(function (err) {
-        store.commit('root/endSpinner')
         alert(err)
       })
     }
@@ -69,22 +66,18 @@ export default {
         searchName: state.searchWord,
         pageNum: state.pageNum + 1
       }
-      store.commit('root/startSpinner')
       store.dispatch('root/requestRoomSearch', payload)
       .then(function (result) {
         if (result.data.length == 0) {
           alert('추가 데이터가 없습니다.')
-          store.commit('root/endSpinner')
         } else {
           state.pageNum += 1
           state.roomList.push(result.data)
           state.count += result.data.length
-          store.commit('root/endSpinner')
         }
       })
       .catch(function (err) {
         alert(err)
-        store.commit('root/endSpinner')
       })
     }
 
