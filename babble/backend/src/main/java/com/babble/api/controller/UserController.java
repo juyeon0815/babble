@@ -51,8 +51,7 @@ public class UserController {
 	RoomHistoryService roomHistoryService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	@Autowired
-	ImageService imageService;
+
 	
 	@PostMapping("/join")
 	@ApiOperation(value = "회원 가입", notes = "<strong>이메일과 패스워드</strong>를 통해 회원가입 한다.")
@@ -281,7 +280,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(list);
 	}
 
-	@PostMapping("/upload")
+	@PatchMapping("/updatePicture")
 	@ApiOperation(value = "유저 프로필 사진 업로드", notes = "유저 프로필 사진을 업로드한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
@@ -290,12 +289,9 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> userImageUpload(
-			@RequestParam("file") @ApiParam(value="이미지 정보", required = true) MultipartFile file,
-			@RequestParam("email") @ApiParam(value="유저 이메일 정보", required = true) String email) throws Exception {
-
-		boolean flag = imageService.userImageUpload(email,file);
-		if(flag) return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success"));
-		else return ResponseEntity.status(400).body(BaseResponseBody.of(400, "fail"));
+			@RequestBody @ApiParam(value="유저프로필 변경 정보", required = true) UserUpdatePictureReq userUpdatePictureReq )  {
+		userService.updatePicture(userUpdatePictureReq);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success"));
 	}
 
 	@GetMapping(value = "/image/{email}")

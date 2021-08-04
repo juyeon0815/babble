@@ -1,19 +1,15 @@
 package com.babble.api.service;
 
 import com.babble.api.request.room.RoomCreateReq;
-import com.babble.api.request.room.RoomReq;
 import com.babble.api.response.RoomRes;
 import com.babble.db.entity.*;
 import com.babble.db.repository.RoomRepository;
 import com.babble.db.repository.RoomRepositorySupport;
 import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -32,8 +28,6 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     RoomHashtagService roomHashtagService;
 
-    @Autowired
-    ImageService imageService;
 
 
 
@@ -43,17 +37,14 @@ public class RoomServiceImpl implements RoomService {
 
 
     @Override
-    public Room createRoom(RoomReq roomReq, User user, Category category, String thumbnail) {
+    public Room createRoom(Category category, User user, RoomCreateReq roomCreateReq) {
 
         Room room = Room.builder()
-                .roomReq(roomReq)
                 .category(category)
-                .thumbnail(thumbnail)
                 .user(user)
+                .roomCreateReq(roomCreateReq)
                 .build();
-
         roomRepository.save(room);
-
         return room;
     }
 
