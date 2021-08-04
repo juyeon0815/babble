@@ -4,6 +4,7 @@
     <div v-if="roomInfo">
       <div class="card-bottom">
         <div class="name-area">
+          <div class="tag">{{ roomInfo.title }}</div>
           <el-tag class="tag" @click="clickCategory">{{
             roomInfo.category
           }}</el-tag>
