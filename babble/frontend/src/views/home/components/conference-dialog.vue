@@ -82,7 +82,6 @@ export default {
           const payload = {
             roomId: props.roomId
           };
-          store.commit("root/startSpinner");
           store
             .dispatch("root/requestRoomDialog", payload)
             .then(function(result) {
@@ -92,10 +91,8 @@ export default {
                 result.data.createTime.slice(0, 10) +
                 " " +
                 result.data.createTime.slice(11, 19);
-              store.commit("root/endSpinner");
             })
             .catch(function(err) {
-              store.commit("root/endSpinner");
               alert(err + "!!!!!!");
             });
 
