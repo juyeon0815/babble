@@ -1,23 +1,24 @@
 <template>
   <h3>Room title <i class="el-icon-user-solid"></i> 0명</h3>
   <h3>{{ conferenceId }}</h3>
-
-  <!-- bootstrap -> element plus 예정(grid/style) -->
-  <div id="main-video" class="col-md-6">
-    <UserVideo :streamManager="state.mainStreamManager" />
+  <div class="container">
+    <div class="main-video">
+      <UserVideo :streamManager="state.mainStreamManager" />
+    </div>
+    <div class="video-container">
+      <UserVideo
+        :stream-manager="state.publisher"
+        @click="updateMainVideoStreamManager(publisher)"
+      />
+      <UserVideo
+        v-for="sub in state.subscribers"
+        :key="sub.stream.connection.connectionId"
+        :stream-manager="sub"
+        @click="updateMainVideoStreamManager(sub)"
+      />
+    </div>
   </div>
-  <div id="video-container" class="col-md-6">
-    <UserVideo
-      :stream-manager="state.publisher"
-      @click="updateMainVideoStreamManager(publisher)"
-    />
-    <UserVideo
-      v-for="sub in state.subscribers"
-      :key="sub.stream.connection.connectionId"
-      :stream-manager="sub"
-      @click="updateMainVideoStreamManager(sub)"
-    />
-  </div>
+  
 
   <div class="nav-icons">
     <el-button-group>
@@ -56,21 +57,16 @@ import axios from "axios";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io" + ":4443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
   name: "video-space",
-  props: {
-    conferenceId: {
-      type: Number
-    }
-  },
+
   components: {
     UserVideo
   },
-  setup(props) {
-    const route = useRoute();
+  setup() {
     const router = useRouter();
     const store = useStore();
 
@@ -89,6 +85,8 @@ export default {
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
+      store.commit("root/setMenuActive", -1);
+      
       state.OV = new OpenVidu();
       state.session = state.OV.initSession();
 
@@ -271,10 +269,6 @@ export default {
 </script>
 
 <style>
-.sideChat {
-  background-color: lightgrey;
-  min-height: 600px;
-}
 
 .nav-icons {
   margin-top: 10px;
@@ -284,14 +278,8 @@ export default {
   font-size: 25px;
 }
 
-.temp {
-  text-align: center;
-}
-.dummy {
-  display: inline-block;
-  margin: 5px;
-  width: 300px;
-  height: 250px;
-  background-color: lightblue;
+.container {
+  display: flex;
+  justify-content: center;
 }
 </style>

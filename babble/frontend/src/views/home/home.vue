@@ -40,7 +40,7 @@
   }
 </style>
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import Conference from './components/conference'
@@ -71,7 +71,6 @@ export default {
       orderName: 'best',
       pageNum: 1
     }
-    store.commit('root/startSpinner')
     store.dispatch('root/requestRoomCategoryOrder', payloadBest)
     .then(function (result) {
       state.bestRoomList = result.data
@@ -92,11 +91,8 @@ export default {
     store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
     .then(function (result) {
       state.recentRoomList = result.data
-      console.log(result.data, '자 여기서 사진도 가져오는지 확인하자')
-      store.commit('root/endSpinner')
     })
     .catch(function (err) {
-      store.commit('root/endSpinner')
       alert(err)
     })
 
@@ -108,6 +104,10 @@ export default {
     const onCloseConferenceDialog = function () {
       state.conferenceDialogOpen = false
     }
+
+    onMounted (() => {
+      store.commit('root/setMenuActiveMenuName', 'home')
+    })
 
     return { state, clickConference, onCloseConferenceDialog }
   }

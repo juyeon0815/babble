@@ -1,5 +1,5 @@
 <template>
-  <el-row class="navbar">
+  <el-row class="navbar" v-if="state.activeMenuIndex != -1">
     <h2 @click="clickLogo">Babble</h2>
     <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
     <el-button type="info" plain @click="clickCategory">카테고리</el-button>
@@ -9,127 +9,139 @@
     </div>
     <div v-show="state.isLoggedin">
       <el-button type="primary" class="circle" @click="clickMyPage">
-        <img
-          class="profile"
-          src="https://picsum.photos/30">
+        <img class="profile" src="https://picsum.photos/30" />
       </el-button>
-      <el-button type="primary" plain @click="clickRoomCreate">방 생성</el-button>
+      <el-button type="primary" plain @click="clickRoomCreate"
+        >방 생성</el-button
+      >
       <el-button type="info" plain @click="clickLogout">로그아웃</el-button>
     </div>
   </el-row>
 </template>
 
 <style scoped>
-  .navbar {
-    padding-top: 5px;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #d3c4ed;
-  }
+.navbar {
+  padding-top: 5px;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #d3c4ed;
+}
 
-  .navbar .search-bar {
-    width: 400px;
-    display: inline;
-    margin: 20px;
-  }
-  .circle {
-    width: 30px;
-    height: 30px;
-    border-radius: 70%;
-    overflow: hidden;
-  }
-  .profile {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.navbar .search-bar {
+  width: 400px;
+  display: inline;
+  margin: 20px;
+}
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 70%;
+  overflow: hidden;
+}
+.profile {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
 
 <script>
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { reactive, computed, onMounted } from 'vue'
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { reactive, computed, onMounted } from "vue";
 
 export default {
-  name: 'main-header',
+  name: "main-header",
 
   setup(props, { emit }) {
-    const router = useRouter()
-    const store = useStore()
+    const router = useRouter();
+    const store = useStore();
 
     const state = reactive({
       isLoggedin: computed(() => {
-        return store.getters['root/getToken']
+        return store.getters["root/getToken"];
       }),
-      searchWord: ''
+      searchWord: '',
+      activeMenuIndex: computed(() => {
+        return store.getters['root/getActiveMenuIndex']
+      })
     })
 
     const clickLogo = () => {
-      store.commit('root/setActiveCategory', null)
-      store.commit('root/setMenuActive', 0)
-      const MenuItems = store.getters['root/getMenus']
-      let keys = Object.keys(MenuItems)
+      store.commit("root/setActiveCategory", null);
+      store.commit("root/setMenuActive", 0);
+      const MenuItems = store.getters["root/getMenus"];
+      let keys = Object.keys(MenuItems);
       router.push({
         name: keys[0]
-      })
-    }
+      });
+    };
 
-    const clickJoin = function () {
-      console.log('clickJoin')
-      emit('openJoinDialog')
-    }
+    const clickJoin = function() {
+      console.log("clickJoin");
+      emit("openJoinDialog");
+    };
 
-    const clickLogin = function () {
+    const clickLogin = function() {
       // console.log('clickLogin')
-      emit('openLoginDialog')
-    }
+      emit("openLoginDialog");
+    };
 
-    const clickRoomCreate = function () {
-      emit('openRoomCreateDialog')
-    }
+    const clickRoomCreate = function() {
+      emit("openRoomCreateDialog");
+    };
 
-    const clickCategory = function () {
-      store.commit('root/setMenuActive', 1)
-      store.commit('root/setActiveCategory', 'all')
+    const clickCategory = function() {
+      store.commit("root/setMenuActive", 1);
+      store.commit("root/setActiveCategory", "all");
       router.push({
-        path: '/category/all'
-      })
-    }
+        path: "/category/all"
+      });
+    };
 
-    const clickMyPage = function () {
-      let nowIndex = store.getters['root/getActiveMenuIndex']
+    const clickMyPage = function() {
+      let nowIndex = store.getters["root/getActiveMenuIndex"];
       if (nowIndex != 2) {
-        store.commit('root/setMenuActive', 2)
+        store.commit("root/setMenuActive", 2);
         router.push({
-          path: '/mypage/keyword'
-        })
+          path: "/mypage/keyword"
+        });
       }
-    }
+    };
 
-    const clickLogout = function () {
-      console.log('clickLogout')
-      store.dispatch('root/requestLogout')
-      .then(()=> store.commit('root/setLogout'))
-      .then(()=> router.push('/'))
-      console.log(state.isLoggedin)
-    }
+    const clickLogout = function() {
+      console.log("clickLogout");
+      store
+        .dispatch("root/requestLogout")
+        .then(() => store.commit("root/setLogout"))
+        .then(() => router.push("/"));
+      console.log(state.isLoggedin);
+    };
 
-    const enterSearch = function () {
-      store.commit('root/setSearchWord', state.searchWord)
+    const enterSearch = function() {
+      store.commit("root/setSearchWord", state.searchWord);
       router.push({
-        name: 'search-result',
+        name: "search-result",
         params: {
           searchWord: state.searchWord
         }
-      })
-      state.searchWord = ''
-    }
+      });
+      state.searchWord = "";
+    };
 
-    return { state, clickLogo, clickJoin, clickLogin, clickRoomCreate, clickCategory, clickMyPage, clickLogout, enterSearch }
+    return {
+      state,
+      clickLogo,
+      clickJoin,
+      clickLogin,
+      clickRoomCreate,
+      clickCategory,
+      clickMyPage,
+      clickLogout,
+      enterSearch
+    };
   }
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

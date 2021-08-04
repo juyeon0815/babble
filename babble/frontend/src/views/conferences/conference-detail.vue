@@ -4,26 +4,31 @@
       {{ state.conferenceId }}
       <VideoSpace :conferenceId="state.conferenceId" />
     </el-main>
-    <el-aside class="sideChat">
-      <Chats />
+    <el-aside class="side-bar">
+      <Sidebar />
     </el-aside>
   </el-container>
 </template>
 
-<style></style>
+<style>
+  .side-bar {
+    background-color: lightgrey;
+    height: 100vh;
+  }
+</style>
 
 <script>
 import { reactive, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import VideoSpace from "./components/video-space";
-import Chats from "./components/chats";
+import Sidebar from "./components/sidebar";
 
 export default {
   name: "conference-detail",
   components: {
     VideoSpace,
-    Chats
+    Sidebar
   },
   setup() {
     const store = useStore();
