@@ -4,16 +4,15 @@ import com.babble.api.request.user.UserHashtagReq;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
-import com.babble.api.response.UserHistoryRes;
-import com.babble.api.response.UserLoginPostRes;
-import com.babble.api.response.UserRes;
+import com.babble.api.response.user.UserHistoryRes;
+import com.babble.api.response.user.UserLoginPostRes;
+import com.babble.api.response.user.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.auth.BabbleUserDetails;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +26,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
@@ -51,8 +49,7 @@ public class UserController {
 	RoomHistoryService roomHistoryService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	@Autowired
-	ImageService imageService;
+
 	
 	@PostMapping("/join")
 	@ApiOperation(value = "회원 가입", notes = "<strong>이메일과 패스워드</strong>를 통해 회원가입 한다.")
@@ -281,7 +278,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(list);
 	}
 
-	@PostMapping("/upload")
+	@PatchMapping("/updatePicture")
 	@ApiOperation(value = "유저 프로필 사진 업로드", notes = "유저 프로필 사진을 업로드한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
@@ -290,12 +287,9 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> userImageUpload(
-			@RequestParam("file") @ApiParam(value="이미지 정보", required = true) MultipartFile file,
-			@RequestParam("email") @ApiParam(value="유저 이메일 정보", required = true) String email) throws Exception {
-
-		boolean flag = imageService.userImageUpload(email,file);
-		if(flag) return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success"));
-		else return ResponseEntity.status(400).body(BaseResponseBody.of(400, "fail"));
+			@RequestBody @ApiParam(value="유저프로필 변경 정보", required = true) UserUpdatePictureReq userUpdatePictureReq )  {
+		userService.updatePicture(userUpdatePictureReq);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success"));
 	}
 
 	@GetMapping(value = "/image/{email}")
@@ -308,9 +302,6 @@ public class UserController {
 	})
 	public ResponseEntity getUserImage(
 			@PathVariable("email") @ApiParam(value="유저 이메일", required = true) String email){
-//		byte[] imageByteArray = imageService.getUserImage(email);
-//		System.out.println(imageByteArray);
-//		return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
 		User user = userService.getUserByUserEmail(email);
 		return ResponseEntity.status(200).body("d://images/room/"+user.getPicture());
 	}

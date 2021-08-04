@@ -1,6 +1,5 @@
 package com.babble.db.repository;
 
-import com.babble.api.response.RoomRes;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,14 +20,6 @@ public class RoomRepositorySupport {
     QUserRoom qUserRoom = QUserRoom.userRoom;
     QRoomHashtag qRoomHashtag = QRoomHashtag.roomHashtag;
     QHashtag qHashtag = QHashtag.hashtag;
-
-//    public Room findRoomByRoomTitle(String title){
-//        Room room = jpaQueryFactory.select(qRoom).from(qRoom)
-//                .where(qRoom.title.eq(title)).fetchOne();
-//
-//        if(room==null) return null;
-//        return room;
-//    }
 
     public Room findRoomByRoomId(Long roomId){
         Room room = jpaQueryFactory.select(qRoom).from(qRoom)

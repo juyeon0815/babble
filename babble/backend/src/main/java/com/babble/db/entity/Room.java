@@ -1,11 +1,9 @@
 package com.babble.db.entity;
 
 
-import com.babble.api.request.room.RoomReq;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.babble.api.request.room.RoomCreateReq;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -22,16 +20,15 @@ import java.util.List;
 public class Room extends BaseEntity{
 
     String title;
-    String content;
 
-//    @OneToOne
-//    @JoinColumn(name = "hostId")
-//    User user;
+    String content;
 
     Long hostId;
 
     boolean isActivate;
+
     String thumbnailUrl;
+
     boolean speak;
 
     Date createTime;
@@ -50,14 +47,14 @@ public class Room extends BaseEntity{
     List<RoomHistory> roomHistories = new ArrayList<>();
 
     @Builder
-    public Room(RoomReq roomReq, User user, Category category, String thumbnail ){
+    public Room(Category category, User user, RoomCreateReq roomCreateReq){
         Date now = new Date();
-        this.title = roomReq.getRoomCreateReq().getTitle();
-        this.content= roomReq.getRoomCreateReq().getContent();
-        this.thumbnailUrl = thumbnail;
+        this.title = roomCreateReq.getTitle();
+        this.content= roomCreateReq.getContent();
+        this.thumbnailUrl = roomCreateReq.getThumbnailUrl();
         this.category = category;
         this.isActivate = true;
-        this.speak = roomReq.getRoomCreateReq().isSpeak();
+        this.speak = roomCreateReq.isSpeak();
         this.hostId = user.id;
         this.createTime = now;
         this.maxView =0l;

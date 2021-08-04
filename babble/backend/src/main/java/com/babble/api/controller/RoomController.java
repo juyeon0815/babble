@@ -1,19 +1,16 @@
 package com.babble.api.controller;
 
 
-import com.babble.api.request.room.RoomReq;
+import com.babble.api.request.room.RoomCreateReq;
 import com.babble.api.request.room.RoomRelationReq;
-import com.babble.api.response.RoomRes;
-import com.babble.api.response.RoomWaitRes;
-import com.babble.api.response.UserRes;
+import com.babble.api.response.room.RoomRes;
+import com.babble.api.response.room.RoomWaitRes;
 import com.babble.api.service.*;
 import com.babble.common.model.response.BaseResponseBody;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +40,10 @@ public class RoomController {
     UserRoomService userRoomService;
     @Autowired
     RoomHistoryService roomHistoryService;
-    @Autowired
-    ImageService imageService;
 
 
-    @PostMapping(value = "/create",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+
+    @PostMapping(value = "/create" )
     @ApiOperation(value = "방 생성", notes = "방에 대한 정보를 입력한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -55,22 +51,23 @@ public class RoomController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> roomCreate(@ModelAttribute("fileReq") RoomReq roomReq) {
+    public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) {
 
-        String thumbnail = imageService.roomImageUpload(roomReq.getMultipartFile());
-        if(thumbnail!=null) { //이미지가 업로드안될경우 방생성도 x
-            //방 생성 시 email, title, desc, thumbnail_url, category, hastag, speak 정보 넘어옴
+
+            //방 생성 시 email, title, content, thumbnail_url, category, hashtag, speak 정보 넘어옴
+
             //category 테이블에서 category_name과 일치한 id 가져와 저장
-            Category category = categoryService.getCategoryByCategoryName(roomReq.getRoomCreateReq().getCategory());
+            Category category = categoryService.getCategoryByCategoryName(roomCreateReq.getCategory());
+
             //hostId는 현재 로그인된 유저 id
-            User user = userService.getUserByUserEmail(roomReq.getRoomCreateReq().getEmail());
+            User user = userService.getUserByUserEmail(roomCreateReq.getEmail());
 
             //room create
-            Room room = roomService.createRoom(roomReq, user, category, thumbnail);
+            Room room = roomService.createRoom(category, user, roomCreateReq);
 
 
             //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
-            String[] tagList = roomReq.getRoomCreateReq().getHashtag().split(" ");
+            String[] tagList = roomCreateReq.getHashtag().split(" ");
             for (int i = 0; i < tagList.length; i++) {
                 Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
                 if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
@@ -79,12 +76,9 @@ public class RoomController {
                 } else { //해당 해시태그 있을 경우
                     RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
                 }
-                return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
             }
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        }
-        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Fail"));
 
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
     }
 
     @PostMapping("/enter")
@@ -139,7 +133,6 @@ public class RoomController {
         List<RoomRes> roomList = roomService.roomList(roomInfo);
         System.out.println(roomList.size());
         return ResponseEntity.status(200).body(roomList);
-//        return new ResponseEntity(roomList.get(0).getThumbnailUrl(), HttpStatus.OK);
     }
 
 
