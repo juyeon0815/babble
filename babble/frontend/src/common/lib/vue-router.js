@@ -80,6 +80,7 @@ const router = createRouter({
   routes
 })
 
+
 router.afterEach((to) => {
   console.log(to)
 })
