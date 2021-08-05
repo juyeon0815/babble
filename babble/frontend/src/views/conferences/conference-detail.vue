@@ -1,0 +1,55 @@
+<template>
+  <el-container>
+    <el-main>
+      {{ state.conferenceId }}
+      <VideoSpace :conferenceId="state.conferenceId" />
+    </el-main>
+    <el-aside class="side-bar">
+      <Sidebar />
+    </el-aside>
+  </el-container>
+</template>
+
+<style>
+  .side-bar {
+    background-color: lightgrey;
+    height: 100vh;
+  }
+</style>
+
+<script>
+import { reactive, onMounted, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import VideoSpace from "./components/video-space";
+import Sidebar from "./components/sidebar";
+
+export default {
+  name: "conference-detail",
+  components: {
+    VideoSpace,
+    Sidebar
+  },
+  setup() {
+    const store = useStore();
+    const route = useRoute();
+
+    const state = reactive({
+      conferenceId: ""
+    });
+    store.commit("root/joinRoom", route.params.conferenceId);
+
+    // 페이지 진입시 불리는 훅
+    onMounted(() => {
+      state.conferenceId = route.params.conferenceId;
+    });
+
+    // 페이지 이탈시 불리는 훅
+    onUnmounted(() => {
+      state.conferenceId = "";
+    });
+
+    return { state };
+  }
+};
+</script>

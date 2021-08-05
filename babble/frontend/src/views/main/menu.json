@@ -1,0 +1,20 @@
+{
+  "home" : {
+    "name" : "홈",       
+    "path" : "/",
+    "children" : []
+  },
+  "category" : {
+    "name" : "카테고리",
+    "path" : "/category"
+  },
+  "search" : {
+    "name" : "검색결과",
+    "path" : "/search"
+  },
+  "mypage" : {
+    "name" : "마이페이지",
+    "hidden" : false,
+    "path" : "/mypage"
+  }
+}
