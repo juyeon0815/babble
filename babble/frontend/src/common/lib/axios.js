@@ -12,7 +12,6 @@ axios.defaults.headers['Content-Type'] = DEFAULT_ACCEPT_TYPE
 
 axios.interceptors.request.use(
     config => {
-        console.log("1");
         store.commit('root/startSpinner');
         return config;
     },
