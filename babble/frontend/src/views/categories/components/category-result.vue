@@ -21,7 +21,8 @@
       </el-row>
     </el-col>
     <el-col :offset="20"><el-button type="success" plain @click="clickMore">더보기</el-button></el-col>
-  </el-row> 
+  </el-row>
+  <button v-show="state.showBacktop" class="backtop" @click="clickTop">Top</button>
   <ConferenceDialog 
     :open="state.conferenceDialogOpen"
     :roomId="state.conferenceDialogNum"
@@ -29,7 +30,7 @@
 </template>
 
 <script>
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import Conference from '@/views/home/components/conference'
@@ -55,6 +56,7 @@ export default {
       activeCategory: computed(() => store.getters['root/getActiveCategory']),
       conferenceDialogOpen: false,
       conferenceDialogNum: 0,
+      showBacktop: false
     })
 
     const changetoBest = function () {
@@ -70,7 +72,6 @@ export default {
         state.bestRoomList = result.data
         state.count = result.data.length
         state.radio = 'best'
-        console.log(state)
       })
       .catch(function (err) {
         alert(err)
@@ -142,7 +143,24 @@ export default {
       }
     )
 
-    return { state, changetoBest, changetoRecent, clickMore, clickConference, onCloseConferenceDialog }
+    onMounted(() => {
+      window.addEventListener('scroll', function(e) {
+        if (document.documentElement.scrollTop > 200) {
+          state.showBacktop = true
+        } else {
+          state.showBacktop = false
+        }
+      })
+    })
+
+    const clickTop = function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      })
+    }
+
+    return { state, changetoBest, changetoRecent, clickMore, clickConference, onCloseConferenceDialog, clickTop }
   },
   
 }
@@ -155,5 +173,19 @@ export default {
   .conference-row {
     justify-content: center;
     align-items: center;
+  }
+  .backtop {
+    position: fixed; 
+    bottom: 20px; 
+    right: 30px; 
+    z-index: 99;
+    border: none; 
+    outline: none; 
+    background-color: #8860D8; 
+    color: white; 
+    cursor: pointer; 
+    padding: 15px;
+    border-radius: 10px; 
+    font-size: 18px;
   }
 </style>
