@@ -43,7 +43,7 @@ public class User extends BaseEntity{
     public User(String email, String password){
         this.email = email;
         this.password = password;
-        this.picture = "";
+        this.picture = "default";
         this.alarm = false;
     }
 
@@ -53,8 +53,8 @@ public class User extends BaseEntity{
         this.alarm= !alarm;
     }
 
-    public void updatePicture(String fileName){
-        this.picture = fileName;
+    public void updatePicture(String picture){
+        this.picture = picture;
     }
 
     public void updatePassword(String password){
