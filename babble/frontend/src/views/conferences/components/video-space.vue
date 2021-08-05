@@ -14,11 +14,10 @@
         v-for="sub in state.subscribers"
         :key="sub.stream.connection.connectionId"
         :stream-manager="sub"
-        @click="updateMainVideoStreamManager(sub)"
+        @click="unpublish(sub)"
       />
     </div>
   </div>
-  
 
   <div class="nav-icons">
     <el-button-group>
@@ -50,7 +49,7 @@
 </template>
 
 <script>
-import { reactive, onMounted, onUnmounted } from "vue";
+import { computed, reactive, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
@@ -73,13 +72,15 @@ export default {
     const store = useStore();
 
     const state = reactive({
-      OV: undefined,
-      session: undefined,
-      mainStreamManager: undefined,
-      publisher: undefined,
-      subscribers: [],
-      videoStatus: true,
-      audioStatus: true,
+      OV: computed(() => store.getters["root/getOV"]),
+      session: computed(() => store.getters["root/getSession"]),
+      mainStreamManager: computed(
+        () => store.getters["root/getMainStreamManager"]
+      ),
+      publisher: computed(() => store.getters["root/getPublisher"]),
+      subscribers: computed(() => store.getters["root/getSubscribers"]),
+      videoStatus: computed(() => store.getters["root/getVideoStatus"]),
+      audioStatus: computed(() => store.getters["root/getAudioStatus"]),
 
       myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
@@ -88,13 +89,20 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       store.commit("root/setMenuActive", -1);
-      
-      state.OV = new OpenVidu();
-      state.session = state.OV.initSession();
+
+      let a = new OpenVidu();
+      store.commit("root/setOV", new OpenVidu());
+
+      console.log("###############");
+      // console.log(a.initSession());
+      // console.log(state.OV.initSession());
+      // state.session = state.OV.initSession();
+      store.commit("root/setSession", state.OV.initSession());
 
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
-        state.subscribers.push(subscriber);
+        // state.subscribers.push(subscriber);
+        store.commit("root/setSubscribers", subscriber);
       });
 
       state.session.on("streamDestroyed", ({ stream }) => {
@@ -176,8 +184,6 @@ export default {
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
-            // --- Get your own camera stream with the desired properties ---
-
             let publisher = state.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
@@ -189,8 +195,11 @@ export default {
               mirror: false // Whether to mirror your local video or not
             });
 
-            state.mainStreamManager = publisher;
-            state.publisher = publisher;
+            // state.mainStreamManager = publisher;
+            store.commit("root/setMainStreamManager", publisher);
+
+            // state.publisher = publisher;
+            store.commit("root/setPublisher", publisher);
 
             // --- Publish your stream ---
             state.session.publish(state.publisher);
@@ -214,6 +223,12 @@ export default {
       state.publisher = undefined;
       state.subscribers = [];
       state.OV = undefined;
+
+      store.commit("root/setSession", undefined);
+      store.commit("root/setMainStreamManager", undefined);
+      store.commit("root/setPublisher", undefined);
+      store.commit("root/setClearSubscribers", []);
+      store.commit("root/setOV", undefined);
     });
 
     const leaveSession = function() {
@@ -226,9 +241,11 @@ export default {
       });
     };
 
+    //메인 화면으로 옮기기 // 아직 비활성화임.
     const updateMainVideoStreamManager = function(stream) {
-      if (state.mainStreamManager === stream) return;
-      state.mainStreamManager = stream;
+      // if (state.mainStreamManager === stream) return;
+      // state.mainStreamManager = stream;
+      console.log(stream);
     };
 
     const onOffVideo = function() {
@@ -251,11 +268,12 @@ export default {
       }
     };
 
-    const getConnection = function() {
+    // 강퇴
+    const unpublish = function(stream) {
+      let cId = stream.stream.connection.connectionId;
       axios
-        .post(
-          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/ppko1233@naver.com`,
-          {},
+        .delete(
+          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/${cId}`,
           {
             auth: {
               username: "OPENVIDUAPP",
@@ -263,17 +281,30 @@ export default {
             }
           }
         )
-        .then(response => {})
-        .catch(error => reject("createTokenError!!!!!!" + error.response));
+        .then(response => console.log(response))
+        .catch(error => console.log(error));
     };
 
-    // 유저 아이디로 스트림ID 찾기
-    const findStreamIdBySessionId = function(sessionId) {
-      console.log(state.session.getConnection);
-    };
-    // 강퇴
-    const unpublish = function(streamId) {
-      state.session.unpublish(streamId);
+    // 권한 수정
+    const patchRole = function(stream) {
+      let cId = stream.stream.connection.connectionId;
+      axios
+        .patch(
+          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/${cId}`,
+          {
+            role: "SUBSCRIBER",
+            record: false
+          },
+          {
+            auth: {
+              username: "OPENVIDUAPP",
+              password: OPENVIDU_SERVER_SECRET
+            }
+          }
+        )
+        .then(response => console.log(response))
+        .then(data => console.log(data))
+        .catch(error => console.log(error));
     };
 
     return {
@@ -283,14 +314,13 @@ export default {
       onOffVideo,
       onOffAudio,
       unpublish,
-      findStreamIdBySessionId
+      patchRole
     };
   }
 };
 </script>
 
 <style>
-
 .nav-icons {
   margin-top: 10px;
   text-align: center;
