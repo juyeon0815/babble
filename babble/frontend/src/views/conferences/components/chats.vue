@@ -34,7 +34,7 @@ export default {
     })
 
     // socket 연결
-    let socket = new SockJS("http://localhost:8443/ws")
+    let socket = new SockJS("http://localhost:8080/ws")
     state.stompClient = Stomp.over(socket)
     state.stompClient.connect({}, frame=>{
       console.log("success", frame)
