@@ -7,12 +7,12 @@
       <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
       <el-button type="info" plain @click="clickLogin">로그인</el-button>
     </div>
-    <div v-show="state.isLoggedin" class="btn">
-      <button class="circle" @click="clickMyPage">
+    <div v-show="state.isLoggedin">
+      <el-button class="circle btn" @click="clickMyPage">
         <img class="profile" :src="state.profile" />
-      </button>
-      <el-button type="primary" plain @click="clickRoomCreate">방 생성</el-button>
-      <el-button type="info" plain @click="clickLogout">로그아웃</el-button>
+      </el-button>
+      <el-button type="primary btn" plain @click="clickRoomCreate">방 생성</el-button>
+      <el-button type="info btn" plain @click="clickLogout">로그아웃</el-button>
     </div>
   </el-row>
 </template>
@@ -30,19 +30,26 @@
   display: inline;
   margin: 20px;
 }
+
+.btn-group {
+  display: block;
+}
+
 .circle {
   width: 40px;
   height: 40px;
   border-radius: 70%;
   overflow: hidden;
 }
+
 .circle .profile {
   width: 40px;
   height: 40px;
   object-fit: cover;
 }
+
 .btn {
-  margin: 0px 10px 0px;
+  margin: 0px 5px 0px;
 }
 </style>
 

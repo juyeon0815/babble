@@ -1,7 +1,7 @@
 <template>
   <div class="header-space"></div>
   <div class="head-label">베스트 라이브</div>
-  <el-carousel trigger="click" height="400px">
+  <el-carousel trigger="click" height="450px">
     <el-carousel-item v-for="item in state.carouselCount" :key="item">
       <el-row class="conference-row">
         <Conference v-for="i in 5" :key="i" v-cloak
@@ -37,6 +37,7 @@
   .conference-row {
     justify-content: center;
     align-items: center;
+    margin-top: 15px;
   }
 </style>
 <script>
@@ -91,6 +92,7 @@ export default {
     store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
     .then(function (result) {
       state.recentRoomList = result.data
+      // console.log(state.recentRoomList, '확인필수')
     })
     .catch(function (err) {
       alert(err)

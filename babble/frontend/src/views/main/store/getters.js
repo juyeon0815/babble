@@ -22,8 +22,6 @@ export function getEmail (state) {
 
 export function getProfile (state) {
   return state.profile
-	// return `file:///D:/images/users/${state.profile}`
-  // `D:\\images\\users\\${state.profile}`
 }
 
 export function getUserHashtag (state) {

@@ -1,28 +1,38 @@
 <template>
   <!--받아오는 룸인포가 없다면 아예 카드가 안 보이게?-->
-  <el-card class="conference-card">
-    <div v-if="roomInfo">
-      <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null || roomInfo.thumbnailUrl == 'default'">
-        <img src="https://picsum.photos/200" class="image">
-      </div>
-      <div v-else>
-        <img :src="roomInfo.thumbnailUrl" class="image">
-      </div>
-      <div class="card-bottom">
-        <div class="stringcut t1">{{ roomInfo.title }}</div>
-        <div class="name-area">
-          <el-tag class="tag" @click="clickCategory">{{ roomInfo.category }}</el-tag>
+  <div v-if="roomInfo">
+    <el-card class="conference-card">
+      <div class="hide-show">
+        <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null || roomInfo.thumbnailUrl == 'default'" class="image-cover">
+          <img src="https://picsum.photos/200" class="image">
         </div>
-        <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
-          <el-tag type="warning">{{ roomInfo.hashtag[i - 1] }}</el-tag>
+        <div v-else class="image-cover">
+          <img :src="roomInfo.thumbnailUrl" class="image">
+        </div>
+        <p class="text">대기실로 이동</p>
+      </div>
+
+      <div class="card-bottom">
+        <div class="stringcut">{{ roomInfo.title }}</div>
+        <div>
+          <el-tag class="tag" @click.stop="clickCategory(roomInfo.category)">{{ roomInfo.category }}</el-tag>
+        </div>
+        <div v-if="roomInfo.hashtag && roomInfo.hashtag[0] !== ''">
+          <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
+            <el-tag type="warning" @click.stop="clickHashtag(roomInfo.hashtag[i - 1])">{{ roomInfo.hashtag[i - 1] }}</el-tag>
+          </div>
         </div>
         <div><i class="el-icon-user"></i> {{ roomInfo.viewers }} Watching</div>
       </div>
-    </div>
-  </el-card>
+    </el-card>
+  </div>
 </template>
 
 <script>
+import { reactive } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 export default {
   props: {
     roomInfo: {
@@ -30,43 +40,101 @@ export default {
     }
   },
 
-  setup() {
-    const clickCategory = () => {
-      console.log("click category");
-      // 해당 카테고리 페이지로 이동
-      // 카드 자체가 회의실로 이동? - preventDefault? 아니면 회의실로 가는게 맞나?
-      // 그럼 버튼으로 하는게?
-      // 키워드도 같은 고민
+  setup(props) {
+    const store = useStore()
+    const router = useRouter()
+    const state = reactive({
+
+    })
+
+    const clickCategory = function (tag) {
+      // console.log("click category");
+      store.commit('root/setActiveCategory', tag)
+      router.push({
+        path: `/category/${tag}`
+      })
     };
 
-    return { clickCategory };
+    const clickHashtag = function (tag) {
+      // console.log(tag)
+      store.commit("root/setSearchWord", tag)
+      router.push({
+        name: "search-result",
+        params: {
+          searchWord: tag
+        }
+      })
+    }
+
+    return { state, clickCategory, clickHashtag };
   }
 };
 </script>
 
 <style>
 .conference-card {
+  margin: 10px;
+  transition: all 0.2s linear;
+  position: relative;
+}
+
+.conference-card:hover {
   margin: 0 10px 0;
+  transform: scale(1.05);
+  border-width: 3px;
+  border-style: solid;
+  border-color: #A0A0FF;
+}
+
+/* .hide-show {
+  transition: opacity 0.2s;
+  position: relative;
+} */
+
+.conference-card .text {
+  color: #fff;
+  bottom: 220px;
+  right: 1px;
+  opacity: 0;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.conference-card .image-cover {
+  display: block;
+  transition: all 0.3s ease 0s;
+}
+
+.conference-card img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.conference-card:hover .text {
+  opacity: 1;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.conference-card:hover .image-cover {
+  background-color: rgb(95, 93, 93);
+}
+
+.conference-card:hover img {
+  transition: all .3s ease;
+  opacity: 0.15;
 }
 
 .card-bottom {
   margin-top: 13px;
 }
 
-.image {
-  width: 200px;
-  height: 200px;
-  display: block;
-  object-fit: cover;
-}
-
-.card-bottom .name-area {
-  justify-content: start;
-  /* display: block; */
-}
-
 .card-bottom .tag {
   display: inline;
+  cursor: pointer;
 }
 
 .card-bottom .stringcut {
@@ -77,7 +145,4 @@ export default {
   text-overflow: ellipsis;
 }
 
-.card-bottom .stringcut .t1 {
-  width: 10px;
-}
 </style>

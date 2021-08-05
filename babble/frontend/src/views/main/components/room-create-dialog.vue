@@ -171,25 +171,6 @@ export default {
       console.log(fileInput.value.files.length, '이거 확인해')
       if (fileInput.value.files.length == 0) {
 
-        if (state.form.roomHashtags.length == 0) {
-          const payload = {
-            email: state.email,
-            title: state.form.title,
-            content: state.form.content,
-            thumbnailUrl: 'default',
-            category: state.form.category,
-            speak: state.form.speak
-          }
-          store.dispatch('root/requestRoomCreate', payload)
-          .then((res) => router.push({
-              name: "conference-detail",
-              params: {
-                conferenceId: res.data.message
-              }
-            })
-          )
-          handleClose()
-        } else {
           let joinHashtag = ''
           if (state.form.roomHashtags.length >= 1) {
             joinHashtag = state.form.roomHashtags.join(' ')
@@ -212,7 +193,6 @@ export default {
             })
           )
           handleClose()
-        }
       } else {
         let upload = new AWS.S3.ManagedUpload({
           params: {
@@ -222,16 +202,12 @@ export default {
           }
         });
 
-
         let promise = upload.promise();
 
         promise.then(
           function(data) {
             // alert("Successfully uploaded photo.");
-            console.log(data, '저장된 데이터야')
-            // state.form.thumnailUrl = data.Location
-            // console.log(state.form.thumbnailUrl, '썸네일 바뀌었습니다') 아무것도 안 찍혀...
-            console.log(data.Location, '자 데이터로는 찍히니?')
+            console.log(data, '저장된 데이터')
             let joinHashtag = ''
             if (state.form.roomHashtags.length >= 1) {
               joinHashtag = state.form.roomHashtags.join(' ')
