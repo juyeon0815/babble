@@ -1,5 +1,5 @@
 <template>
- 
+
   <div class="chatlog" id="messages">
     <div v-for="(m, idx) in state.prevChat" :key="idx">
       <div v-bind:class="m.style">
@@ -8,9 +8,9 @@
       </div>
     </div>
   </div>
-  
-  <input type="textarea" class="chat" 
-    placeholder="채팅을 입력해주세요" 
+
+  <input type="textarea" class="chat"
+    placeholder="채팅을 입력해주세요"
     v-model="state.chatText"
     @keyup.enter="enterChat">
 </template>
@@ -34,7 +34,7 @@ export default {
     })
 
     // socket 연결
-    let socket = new SockJS('https://localhost:8080/ws')
+    let socket = new SockJS('https://localhost:8443/ws')
     state.stompClient = Stomp.over(socket)
     state.stompClient.connect({}, frame=>{
       console.log("success", frame)

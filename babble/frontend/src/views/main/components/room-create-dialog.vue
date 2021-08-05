@@ -154,8 +154,8 @@ export default {
     const handleFileUpload = function () {
       let test1 = document.getElementsByName("thumbnailUrl")[0].files[0]
       let test2 = fileInput.value.files[0]
-      console.log(test1, '기존 방식')
-      console.log(test2, 'ref 방식')
+      // console.log(test1, '기존 방식')
+      // console.log(test2, 'ref 방식')
       state.form.file = test2
       console.log(state.form.file, '파일이 업로드 되었다')
     }
@@ -168,33 +168,37 @@ export default {
         })
       });
 
-      let upload = new AWS.S3.ManagedUpload({
-        params: {
-          Bucket: state.albumBucketName,
-          Key: state.form.file.name,
-          Body: state.form.file
-        }
-      });
+      console.log(fileInput.value.files.length, '이거 확인해')
+      if (fileInput.value.files.length == 0) {
 
-      let promise = upload.promise();
-
-      promise.then(
-        function(data) {
-          // alert("Successfully uploaded photo.");
-          console.log(data, '저장된 데이터야')
-          // state.form.thumnailUrl = data.Location
-          // console.log(state.form.thumbnailUrl, '썸네일 바뀌었습니다') 아무것도 안 찍혀...
-          console.log(data.Location, '자 데이터로는 찍히니?')
-          let joinHashtag = ''
-          if (state.form.roomHashtags.length >= 1) {
-            joinHashtag = state.form.roomHashtags.join(' ')
-          }
-          console.log(joinHashtag, '해시태그조인')
+        if (state.form.roomHashtags.length == 0) {
           const payload = {
             email: state.email,
             title: state.form.title,
             content: state.form.content,
-            thumbnailUrl: data.Location,
+            thumbnailUrl: 'default',
+            category: state.form.category,
+            speak: state.form.speak
+          }
+          store.dispatch('root/requestRoomCreate', payload)
+          .then((res) => router.push({
+              name: "conference-detail",
+              params: {
+                conferenceId: res.data.message
+              }
+            })
+          )
+          handleClose()
+        } else {
+          let joinHashtag = ''
+          if (state.form.roomHashtags.length >= 1) {
+            joinHashtag = state.form.roomHashtags.join(' ')
+          }
+          const payload = {
+            email: state.email,
+            title: state.form.title,
+            content: state.form.content,
+            thumbnailUrl: 'default',
             category: state.form.category,
             hashtag: joinHashtag,
             speak: state.form.speak
@@ -208,11 +212,55 @@ export default {
             })
           )
           handleClose()
-        },
-        function(err) {
-          return alert("There was an error uploading your photo: ", err.message);
         }
-      )
+      } else {
+        let upload = new AWS.S3.ManagedUpload({
+          params: {
+            Bucket: state.albumBucketName,
+            Key: state.form.file.name,
+            Body: state.form.file
+          }
+        });
+
+
+        let promise = upload.promise();
+
+        promise.then(
+          function(data) {
+            // alert("Successfully uploaded photo.");
+            console.log(data, '저장된 데이터야')
+            // state.form.thumnailUrl = data.Location
+            // console.log(state.form.thumbnailUrl, '썸네일 바뀌었습니다') 아무것도 안 찍혀...
+            console.log(data.Location, '자 데이터로는 찍히니?')
+            let joinHashtag = ''
+            if (state.form.roomHashtags.length >= 1) {
+              joinHashtag = state.form.roomHashtags.join(' ')
+            }
+            console.log(joinHashtag, '해시태그조인')
+            const payload = {
+              email: state.email,
+              title: state.form.title,
+              content: state.form.content,
+              thumbnailUrl: data.Location,
+              category: state.form.category,
+              hashtag: joinHashtag,
+              speak: state.form.speak
+            }
+            store.dispatch('root/requestRoomCreate', payload)
+            .then((res) => router.push({
+                name: "conference-detail",
+                params: {
+                  conferenceId: res.data.message
+                }
+              })
+            )
+            handleClose()
+          },
+          function(err) {
+            return alert("There was an error uploading your photo: ", err.message);
+          }
+        )
+      }
     }
 
     const handleClose = function() {

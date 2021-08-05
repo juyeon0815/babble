@@ -96,22 +96,12 @@ export function requestUpdateProfile ({ state }, payload) {
   return $axios.patch('users/updatePicture', payload)
 }
 
-//수정 필요 >> 마찬가지
-// export function requestRoomCreate ({ state }, payload) {
-//   console.log('requestRoomCreate', state, payload)
-//   return $axios.post('/room/create', payload, {
-//     headers: {
-//       'Content-Type' : 'multipart/form-data'
-//     }
-//   })
-// }
-
+// 방 생성, 정보(카테고리, 검색), 대기실
 export function requestRoomCreate ({ state }, payload) {
   console.log('requestRoomCreate', state, payload)
   return $axios.post('/room/create', payload)
 }
 
-// 방 정보(카테고리, 검색), 대기실
 export function requestRoomCategoryOrder ({ state }, payload) {
   return $axios.get(`/room/${payload.linkName}/${payload.orderName}/${payload.pageNum}`)
 }

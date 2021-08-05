@@ -2,15 +2,15 @@
   <!--받아오는 룸인포가 없다면 아예 카드가 안 보이게?-->
   <el-card class="conference-card">
     <div v-if="roomInfo">
-      <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null">
+      <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null || roomInfo.thumbnailUrl == 'default'">
         <img src="https://picsum.photos/200" class="image">
       </div>
       <div v-else>
         <img :src="roomInfo.thumbnailUrl" class="image">
       </div>
       <div class="card-bottom">
+        <div class="stringcut t1">{{ roomInfo.title }}</div>
         <div class="name-area">
-          <div class="stringcut t1">{{ roomInfo.title }}</div>
           <el-tag class="tag" @click="clickCategory">{{ roomInfo.category }}</el-tag>
         </div>
         <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
@@ -54,26 +54,30 @@ export default {
 }
 
 .image {
-  width: 100%;
+  width: 200px;
+  height: 200px;
   display: block;
+  object-fit: cover;
 }
 
-  .card-bottom .name-area {
-    /* justify-content: start; */
-    display: block;
-  }
+.card-bottom .name-area {
+  justify-content: start;
+  /* display: block; */
+}
 
-  .card-bottom .tag {
-    display: inline;
-  }
+.card-bottom .tag {
+  display: inline;
+}
 
-  .card-bottom .name-area .stringcut {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+.card-bottom .stringcut {
+  width: 200px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .card-bottom .name-area .stringcut .t1 {
-    width: 10px;
-  }
+.card-bottom .stringcut .t1 {
+  width: 10px;
+}
 </style>
