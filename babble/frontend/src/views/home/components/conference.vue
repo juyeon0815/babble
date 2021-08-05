@@ -13,8 +13,10 @@
           <div class="stringcut t1">{{ roomInfo.title }}</div>
           <el-tag class="tag" @click="clickCategory">{{ roomInfo.category }}</el-tag>
         </div>
-        <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
-          <el-tag type="warning">{{ roomInfo.hashtag[i - 1] }}</el-tag>
+        <div v-if="roomInfo.hashtag">
+          <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
+            <el-tag type="warning">{{ roomInfo.hashtag[i - 1] }}</el-tag>
+          </div>
         </div>
         <div><i class="el-icon-user"></i> {{ roomInfo.viewers }} Watching</div>
       </div>

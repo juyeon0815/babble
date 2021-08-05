@@ -66,9 +66,11 @@ export default {
       store.dispatch('root/requestRoomCategoryOrder', payload)
       .then(function (result) {
         state.pageNum = 1
+        state.recentRoomList = []
         state.bestRoomList = result.data
         state.count = result.data.length
         state.radio = 'best'
+        console.log(state)
       })
       .catch(function (err) {
         alert(err)
@@ -86,9 +88,11 @@ export default {
       store.dispatch('root/requestRoomCategoryOrder', payload)
       .then(function (result) {
         state.pageNum = 1
+        state.bestRoomList = []
         state.recentRoomList = result.data
         state.count = result.data.length
         state.radio = 'recent'
+        console.log(state)
       })
       .catch(function (err) {
         alert(err)
@@ -108,7 +112,11 @@ export default {
           alert('추가 데이터가 없습니다. 다른 키워드를 검색해보세요!')
         } else {
           state.pageNum += 1
-          state.recentRoomList.push(result.data)
+          if (state.radio == 'best') {
+            state.bestRoomList.push(...result.data)
+          } else {
+            state.recentRoomList.push(...result.data)
+          }
           state.count += result.data.length
         }
       })
