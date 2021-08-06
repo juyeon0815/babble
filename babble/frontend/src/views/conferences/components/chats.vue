@@ -36,7 +36,7 @@ export default {
     });
 
     // socket 연결
-    let socket = new SockJS("https://54.180.135.150:8443/wss")
+    let socket = new SockJS("https://i5a308.p.ssafy.io:8443/ws")
     state.stompClient = Stomp.over(socket)
     state.stompClient.connect({}, frame=>{
       console.log("success", frame)
