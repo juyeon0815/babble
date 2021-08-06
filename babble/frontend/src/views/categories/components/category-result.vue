@@ -6,8 +6,6 @@
       <el-radio v-model="state.radio" label="recent" @change="changetoRecent">최신순 정렬</el-radio>
       </div>
     </el-col>
-    <el-col :offset="1"><h2>{{ state.activeCategory }}</h2></el-col>
-    <el-col :offset="1"><h2>Page : {{ state.pageNum }}</h2></el-col>
     <el-col>
       <el-row class="conference-row" v-if="state.radio === 'best'">
         <Conference v-for="i in state.count" :key="i" :num="i" v-cloak

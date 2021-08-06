@@ -1,27 +1,33 @@
 <template>
   <div class="header-space"></div>
   <div class="head-label">베스트 라이브</div>
-  <el-carousel trigger="click" height="450px">
-    <el-carousel-item v-for="item in state.carouselCount" :key="item">
-      <el-row class="conference-row">
-        <Conference v-for="i in 5" :key="i" v-cloak
-        :roomInfo="state.bestRoomList[i+5*(item-1)-1]"
-        @click="clickConference(state.bestRoomList[i+5*(item-1)-1].id)"/>
-      </el-row>
-    </el-carousel-item>
-  </el-carousel>
+  
+  <el-row class="conference-row">
+    <Conference
+      v-for="i in state.bestRoomCount"
+      :key="i"
+      v-cloak
+      :roomInfo="state.bestRoomList[i - 1]"
+      @click="clickConference(state.bestRoomList[i - 1].id)"
+    />
+  </el-row>
 
   <div class="head-label">최신 라이브</div>
   <el-row class="conference-row">
-    <Conference v-for="i in state.count" :key="i" v-cloak
-    :roomInfo="state.recentRoomList[i-1]"
-    @click="clickConference(state.recentRoomList[i-1].id)"/>
+    <Conference
+      v-for="i in state.recentRoomCount"
+      :key="i"
+      v-cloak
+      :roomInfo="state.recentRoomList[i - 1]"
+      @click="clickConference(state.recentRoomList[i - 1].id)"
+    />
   </el-row>
 
   <ConferenceDialog
     :open="state.conferenceDialogOpen"
     :roomId="state.conferenceDialogNum"
-    @closeConferenceDialog="onCloseConferenceDialog"/>
+    @closeConferenceDialog="onCloseConferenceDialog"
+  />
 </template>
 
 <style>
@@ -38,80 +44,81 @@
     justify-content: center;
     align-items: center;
     margin-top: 15px;
+    margin-left: 5%;
+    width: 90%;
   }
 </style>
 <script>
-import { reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import Conference from './components/conference'
-import ConferenceDialog from './components/conference-dialog'
+import { reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import Conference from "./components/conference";
+import ConferenceDialog from "./components/conference-dialog";
 
 export default {
-  name: 'Home',
+  name: "Home",
 
   components: {
     Conference,
     ConferenceDialog
   },
 
-  setup () {
-    const router = useRouter()
-    const store = useStore()
+  setup() {
+    const router = useRouter();
+    const store = useStore();
     const state = reactive({
       bestRoomList: [],
       recentRoomList: [],
-      count: 0,
-      carouselCount: 1,
+      bestRoomCount: 0,
+      recentRoomCount: 0,
       conferenceDialogOpen: false,
-      conferenceDialogNum: 0,
-    })
+      conferenceDialogNum: 0
+    });
 
     const payloadBest = {
-      linkName: 'all',
-      orderName: 'best',
+      linkName: "all",
+      orderName: "best",
       pageNum: 1
-    }
-    store.dispatch('root/requestRoomCategoryOrder', payloadBest)
-    .then(function (result) {
-      state.bestRoomList = result.data
-      state.count = result.data.length
-      if (state.count > 5) {
-        state.carouselCount = 2
-      }
-    })
-    .catch(function (err) {
-      alert(err)
-    })
+    };
+    store
+      .dispatch("root/requestRoomCategoryOrder", payloadBest)
+      .then(function(result) {
+        state.bestRoomList = result.data
+        state.bestRoomCount = result.data.length
+      })
+      .catch(function(err) {
+        alert(err);
+      });
 
     const payloadRecent = {
-      linkName: 'all',
-      orderName: 'recent',
+      linkName: "all",
+      orderName: "recent",
       pageNum: 1
-    }
-    store.dispatch('root/requestRoomCategoryOrder', payloadRecent)
-    .then(function (result) {
-      state.recentRoomList = result.data
-      // console.log(state.recentRoomList, '확인필수')
-    })
-    .catch(function (err) {
-      alert(err)
-    })
+    };
+    store
+      .dispatch("root/requestRoomCategoryOrder", payloadRecent)
+      .then(function(result) {
+        state.recentRoomList = result.data
+        state.recentRoomCount = result.data.length
+      })
+      .catch(function(err) {
+        alert(err);
+      });
 
-    const clickConference = function (id) {
-      state.conferenceDialogOpen = true
-      state.conferenceDialogNum = id
-    }
+    const clickConference = function(id) {
+      state.conferenceDialogOpen = true;
+      state.conferenceDialogNum = id;
+    };
 
-    const onCloseConferenceDialog = function () {
-      state.conferenceDialogOpen = false
-    }
+    const onCloseConferenceDialog = function() {
+      state.conferenceDialogOpen = false;
+    };
 
-    onMounted (() => {
-      store.commit('root/setMenuActiveMenuName', 'home')
-    })
+    onMounted(() => {
+      store.commit("root/setMenuActiveMenuName", "home");
+    });
 
-    return { state, clickConference, onCloseConferenceDialog }
+    return { state, clickConference, onCloseConferenceDialog };
   }
-}
+};
 </script>

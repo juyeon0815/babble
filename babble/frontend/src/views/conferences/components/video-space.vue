@@ -79,8 +79,8 @@ export default {
       ),
       publisher: computed(() => store.getters["root/getPublisher"]),
       subscribers: computed(() => store.getters["root/getSubscribers"]),
-      videoStatus: computed(() => store.getters["root/getVideoStatus"]),
-      audioStatus: computed(() => store.getters["root/getAudioStatus"]),
+      videoStatus: true,
+      audioStatus: true,
 
       myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
@@ -93,7 +93,6 @@ export default {
       let a = new OpenVidu();
       store.commit("root/setOV", new OpenVidu());
 
-      console.log("###############");
       // console.log(a.initSession());
       // console.log(state.OV.initSession());
       // state.session = state.OV.initSession();
