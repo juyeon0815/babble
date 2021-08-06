@@ -3,7 +3,8 @@
     <el-aside width="500px" class="tab">
       <h4>{{state.email}}님 안녕!</h4>
       <div v-if="state.profile == 'default'">
-        <div class="block"><el-avatar :size="90" :src="state.circleUrl"></el-avatar></div>
+        <el-avatar :size="90" :src="state.circleUrl"></el-avatar>
+        <!-- <div class="block"></div> -->
       </div>
       <div v-else>
         <img :src="state.profile" alt="내 프로필">

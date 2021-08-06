@@ -8,13 +8,11 @@
       <el-button type="info" plain @click="clickLogin">로그인</el-button>
     </div>
     <div v-show="state.isLoggedin">
-      <el-button type="primary" class="circle" @click="clickMyPage">
-        <img class="profile" src="https://picsum.photos/30" />
+      <el-button class="circle btn" @click="clickMyPage">
+        <img class="profile" :src="state.profile" />
       </el-button>
-      <el-button type="primary" plain @click="clickRoomCreate"
-        >방 생성</el-button
-      >
-      <el-button type="info" plain @click="clickLogout">로그아웃</el-button>
+      <el-button type="primary btn" plain @click="clickRoomCreate">방 생성</el-button>
+      <el-button type="info btn" plain @click="clickLogout">로그아웃</el-button>
     </div>
   </el-row>
 </template>
@@ -32,16 +30,26 @@
   display: inline;
   margin: 20px;
 }
+
+.btn-group {
+  display: block;
+}
+
 .circle {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 70%;
   overflow: hidden;
 }
-.profile {
-  width: 100%;
-  height: 100%;
+
+.circle .profile {
+  width: 40px;
+  height: 40px;
   object-fit: cover;
+}
+
+.btn {
+  margin: 0px 5px 0px;
 }
 </style>
 
@@ -61,11 +69,20 @@ export default {
       isLoggedin: computed(() => {
         return store.getters["root/getToken"];
       }),
+      profile: computed(() => {
+        return store.getters["root/getProfile"];
+      }),
       searchWord: '',
       activeMenuIndex: computed(() => {
         return store.getters['root/getActiveMenuIndex']
       })
     })
+
+    store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
+      .then(function (result) {
+        // console.log(result.data.picture)
+        store.commit('root/setUserProfile', result.data.picture)
+      })
 
     const clickLogo = () => {
       store.commit("root/setActiveCategory", null);
@@ -78,7 +95,7 @@ export default {
     };
 
     const clickJoin = function() {
-      console.log("clickJoin");
+      // console.log("clickJoin");
       emit("openJoinDialog");
     };
 
