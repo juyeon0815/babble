@@ -1,4 +1,4 @@
-package com.babble.api.response;
+package com.babble.api.response.room;
 
 
 import com.babble.db.entity.Room;

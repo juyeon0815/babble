@@ -102,3 +102,40 @@ export function setUserHashtag (state, hashtag) {
   state.userHashtag = hashtag
   console.log(state.userHashtag)
 }
+
+// OV: undefined,
+// session: undefined,
+// mainStreamManager: undefined,
+// publisher: undefined,
+// subscribers: [],
+// videoStatus: true,
+// audioStatus: true,
+
+export function setOV(state,ov) {
+  state.OV = ov
+}
+export function setSession(state, session) {
+  state.session = session
+}
+export function setMainStreamManager(state,manager) {
+  state.mainStreamManager = manager
+}
+export function setPublisher(state, publisher) {
+  state.publisher = publisher
+}
+export function setSubscribers(state,subscriber) {
+  // state.subscribers = subscribers
+  state.subscribers.push(subscriber);
+}
+
+export function setClearSubscribers(state,subscribers) {
+  // state.subscribers = subscribers
+  state.subscribers = subscribers;
+}
+
+export function setVideoStatus(state,status) {
+  state.videoStatus = status
+}
+export function setAudioStatus(state,status) {
+  state.audioStatus = status
+}

@@ -1,4 +1,4 @@
-package com.babble.api.response;
+package com.babble.api.response.user;
 
 
 import io.swagger.annotations.ApiModel;

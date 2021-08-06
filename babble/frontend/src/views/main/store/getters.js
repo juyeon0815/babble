@@ -51,3 +51,25 @@ export function getSearchWord (state) {
 export function getRoomID(state) { // 입장하는 방 이름
 	return state.roomId
 }
+
+export function getOV(state) {
+	return state.OV
+}
+export function getSession(state) {
+	return state.session
+}
+export function getMainStreamManager(state) {
+	return state.mainStreamManager
+}
+export function getPublisher(state) {
+	return state.publisher
+}
+export function getSubscribers(state) {
+	return state.subscribers
+}
+export function getVideoStatus(state) {
+	return state.videoStatus
+}
+export function getAudioStatus(state) {
+	return state.audioStatus
+}
