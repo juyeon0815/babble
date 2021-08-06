@@ -43,5 +43,14 @@ export default {
   loadingStatus : false,
   activeCategory: null,
   searchWord: '',
-  roomID:''
+  roomID: '',
+  
+  //OpenVid
+  OV: undefined,
+  session: undefined,
+  mainStreamManager: undefined,
+  publisher: undefined,
+  subscribers: [],
+  videoStatus: true,
+  audioStatus: true,
 }

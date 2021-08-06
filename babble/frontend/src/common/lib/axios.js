@@ -12,7 +12,6 @@ axios.defaults.headers['Content-Type'] = DEFAULT_ACCEPT_TYPE
 
 axios.interceptors.request.use(
     config => {
-        console.log("1");
         store.commit('root/startSpinner');
         return config;
     },
@@ -30,7 +29,6 @@ axios.interceptors.response.use(
     },
     error => {
         store.commit('root/endSpinner');
-        alert('데이터 응답 실패');
         return Promise.reject(error);
     }
 )

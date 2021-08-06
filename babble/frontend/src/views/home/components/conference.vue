@@ -1,28 +1,46 @@
 <template>
   <!--받아오는 룸인포가 없다면 아예 카드가 안 보이게?-->
-  <el-card class="conference-card">
-    <div v-if="roomInfo">
-      <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null">
-        <img src="https://picsum.photos/200" class="image">
+  <div v-if="roomInfo">
+    <el-card class="conference-card">
+      <div class="card-header">
+        <span>{{ roomInfo.id }}</span>
+      </div>
+      <div
+        v-if="
+          roomInfo.thumbnailUrl == 'room_thumbnailUrl' ||
+            roomInfo.thumbnailUrl == null
+        "
+      >
+        <img src="https://picsum.photos/200" class="image" />
       </div>
       <div v-else>
-        <img :src="roomInfo.thumbnailUrl" class="image">
+        <img :src="roomInfo.thumbnailUrl" class="image" />
       </div>
       <div class="card-bottom">
         <div class="name-area">
           <div class="stringcut t1">{{ roomInfo.title }}</div>
-          <el-tag class="tag" @click="clickCategory">{{ roomInfo.category }}</el-tag>
+          <el-tag class="tag" @click="clickCategory">{{
+            roomInfo.category
+          }}</el-tag>
         </div>
         <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
           <el-tag type="warning">{{ roomInfo.hashtag[i - 1] }}</el-tag>
         </div>
-        <div><i class="el-icon-user"></i> {{ roomInfo.viewers }} Watching</div>
+        <div><i class="el-icon-user"></i> {{ state.connNum }} Watching</div>
       </div>
-    </div>
-  </el-card>
+    </el-card>
+  </div>
 </template>
 
 <script>
+import axios from "axios";
+import { computed, reactive, onMounted, onUnmounted } from "vue";
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
+
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_SECRET = "BABBLE";
+
 export default {
   props: {
     roomInfo: {
@@ -30,16 +48,34 @@ export default {
     }
   },
 
-  setup() {
-    const clickCategory = () => {
-      console.log("click category");
-      // 해당 카테고리 페이지로 이동
-      // 카드 자체가 회의실로 이동? - preventDefault? 아니면 회의실로 가는게 맞나?
-      // 그럼 버튼으로 하는게?
-      // 키워드도 같은 고민
+  setup(props) {
+    const state = reactive({
+      connNum: 0
+    });
+
+    const getConnectionNum = function(roomInfo) {
+      console.log(roomInfo);
+      axios
+        .get(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${roomInfo.id}`, {
+          auth: {
+            username: "OPENVIDUAPP",
+            password: OPENVIDU_SERVER_SECRET
+          }
+        })
+        .then(response => {
+          console.log(roomInfo.id);
+          state.connNum = response.data.connections.numberOfElements;
+        })
+        .catch(error => console.log(error));
     };
 
-    return { clickCategory };
+    getConnectionNum(props.roomInfo);
+
+    const clickCategory = () => {
+      console.log("click category");
+    };
+
+    return { state, clickCategory, getConnectionNum };
   }
 };
 </script>
@@ -58,22 +94,22 @@ export default {
   display: block;
 }
 
-  .card-bottom .name-area {
-    /* justify-content: start; */
-    display: block;
-  }
+.card-bottom .name-area {
+  /* justify-content: start; */
+  display: block;
+}
 
-  .card-bottom .tag {
-    display: inline;
-  }
+.card-bottom .tag {
+  display: inline;
+}
 
-  .card-bottom .name-area .stringcut {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+.card-bottom .name-area .stringcut {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-  .card-bottom .name-area .stringcut .t1 {
-    width: 10px;
-  }
+.card-bottom .name-area .stringcut .t1 {
+  width: 10px;
+}
 </style>
