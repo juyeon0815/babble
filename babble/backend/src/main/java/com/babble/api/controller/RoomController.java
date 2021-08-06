@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Room 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -40,6 +42,10 @@ public class RoomController {
     UserRoomService userRoomService;
     @Autowired
     RoomHistoryService roomHistoryService;
+    @Autowired
+    UserHashtagService userHashtagService;
+    @Autowired
+    EmailService emailService;
 
 
 
@@ -51,8 +57,7 @@ public class RoomController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) {
-
+    public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) throws Exception {
 
             //방 생성 시 email, title, content, thumbnail_url, category, hashtag, speak 정보 넘어옴
 
@@ -65,6 +70,7 @@ public class RoomController {
             //room create
             Room room = roomService.createRoom(category, user, roomCreateReq);
 
+            HashMap<String, String> userHashtagMap = new HashMap<String, String>();
 
             //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
             String[] tagList = roomCreateReq.getHashtag().split(" ");
@@ -75,6 +81,29 @@ public class RoomController {
                     RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
                 } else { //해당 해시태그 있을 경우
                     RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
+                }
+
+                // 해당 해시테그를 가지고 있으면서 이메일 알림을 설정한 유저들을 조회
+                List<String> userList = userHashtagService.getUserByHashtag(tagList[i]);
+                System.out.println(" >>>>> userList: " + userList);
+                if(!userList.isEmpty() && userList.size()>0 && userList.get(0)!=null) {
+                    for(String userEmail: userList) {
+                        if(userHashtagMap.containsKey(userEmail)) {
+                            String hastagValue = userHashtagMap.get(userEmail);
+                            userHashtagMap.put(userEmail, hastagValue + ", " + tagList[i]);
+                        } else {
+                            userHashtagMap.put(userEmail, tagList[i]);
+                        }
+                    }
+                }
+            } //for
+
+            System.out.println(">> 생성된 방 " + room.getId());
+            // HashMap에 담긴 정보로 이메일 전송
+            if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
+                for(String userEmail: userHashtagMap.keySet()) {
+                    System.out.println(userEmail + " "  + userHashtagMap.get(userEmail) + " 이메일 전송");
+                    emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail), room.getId());
                 }
             }
 
