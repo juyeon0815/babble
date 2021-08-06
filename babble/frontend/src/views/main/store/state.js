@@ -51,6 +51,5 @@ export default {
   mainStreamManager: undefined,
   publisher: undefined,
   subscribers: [],
-  videoStatus: true,
-  audioStatus: true,
+
 }

@@ -68,11 +68,14 @@ export function setDefaultAlarm (state, payload) {
   console.log(state.alarmValue)
 }
 
-export function startSpinner (state) {
+export function startSpinner(state) {
+  console.log("################$$START");
 	state.loadingStatus = true;
 }
 
-export function endSpinner (state) {
+export function endSpinner(state) {
+  console.log("################$$END");
+  
 	state.loadingStatus = false;
 }
 
@@ -131,11 +134,4 @@ export function setSubscribers(state,subscriber) {
 export function setClearSubscribers(state,subscribers) {
   // state.subscribers = subscribers
   state.subscribers = subscribers;
-}
-
-export function setVideoStatus(state,status) {
-  state.videoStatus = status
-}
-export function setAudioStatus(state,status) {
-  state.audioStatus = status
 }
