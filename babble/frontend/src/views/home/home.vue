@@ -49,20 +49,20 @@
 </template>
 
 <style>
-  .header-space {
-    height: 400px;
-    background-color: #d3c4ed;
-  }
-  .head-label {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20px 0 20px 50px;
-  }
-  .conference-row {
-    justify-content: center;
-    align-items: center;
-    margin-top: 15px;
-  }
+.header-space {
+  height: 400px;
+  background-color: #d3c4ed;
+}
+.head-label {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px 0 20px 50px;
+}
+.conference-row {
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
 </style>
 <script>
 import { reactive, onMounted } from "vue";

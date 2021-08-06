@@ -67,9 +67,3 @@ export function getPublisher(state) {
 export function getSubscribers(state) {
 	return state.subscribers
 }
-export function getVideoStatus(state) {
-	return state.videoStatus
-}
-export function getAudioStatus(state) {
-	return state.audioStatus
-}
