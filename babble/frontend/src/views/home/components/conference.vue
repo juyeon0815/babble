@@ -2,6 +2,7 @@
   <!--받아오는 룸인포가 없다면 아예 카드가 안 보이게?-->
   <div v-if="roomInfo">
     <el-card class="conference-card">
+
       <div class="hide-show">
         <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null || roomInfo.thumbnailUrl == 'default'" class="image-cover">
           <img src="https://picsum.photos/200" class="image">
@@ -10,28 +11,40 @@
           <img :src="roomInfo.thumbnailUrl" class="image">
         </div>
         <p class="text">대기실로 이동</p>
+
       </div>
 
       <div class="card-bottom">
+
         <div class="stringcut">{{ roomInfo.title }}</div>
         <div>
           <el-tag class="tag" @click.stop="clickCategory(roomInfo.category)">{{ roomInfo.category }}</el-tag>
+
         </div>
         <div v-if="roomInfo.hashtag && roomInfo.hashtag[0] !== ''">
           <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
             <el-tag type="warning" @click.stop="clickHashtag(roomInfo.hashtag[i - 1])">{{ roomInfo.hashtag[i - 1] }}</el-tag>
           </div>
         </div>
-        <div><i class="el-icon-user"></i> {{ roomInfo.viewers }} Watching</div>
+        <div><i class="el-icon-user"></i> {{ state.connNum }} Watching</div>
       </div>
     </el-card>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
+import axios from "axios";
+import { computed, reactive, onMounted, onUnmounted } from "vue";
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
+
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_SECRET = "BABBLE";
+
+
+
 
 export default {
   props: {
@@ -43,9 +56,28 @@ export default {
   setup(props) {
     const store = useStore()
     const router = useRouter()
-    const state = reactive({
 
-    })
+    const state = reactive({
+      connNum: 0
+    });
+
+    const getConnectionNum = function(roomInfo) {
+      console.log(roomInfo);
+      axios
+        .get(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${roomInfo.id}`, {
+          auth: {
+            username: "OPENVIDUAPP",
+            password: OPENVIDU_SERVER_SECRET
+          }
+        })
+        .then(response => {
+          console.log(roomInfo.id);
+          state.connNum = response.data.connections.numberOfElements;
+        })
+        .catch(error => console.log(error));
+    };
+
+    getConnectionNum(props.roomInfo);
 
     const clickCategory = function (tag) {
       // console.log("click category");
@@ -65,8 +97,7 @@ export default {
         }
       })
     }
-
-    return { state, clickCategory, clickHashtag };
+    return { state, clickCategory, getConnectionNum, clickHashtag };
   }
 };
 </script>
