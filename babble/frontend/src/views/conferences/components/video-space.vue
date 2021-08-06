@@ -93,7 +93,6 @@ export default {
       let a = new OpenVidu();
       store.commit("root/setOV", new OpenVidu());
 
-      console.log("###############");
       // console.log(a.initSession());
       // console.log(state.OV.initSession());
       // state.session = state.OV.initSession();
