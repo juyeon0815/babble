@@ -3,7 +3,7 @@ package com.babble.api.service;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
-import com.babble.api.response.UserHistoryRes;
+import com.babble.api.response.user.UserHistoryRes;
 import com.babble.db.entity.QCategory;
 import com.babble.db.entity.QRoom;
 import com.babble.db.entity.QRoomHistory;
@@ -103,10 +103,9 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void updatePicture(String email, String fileName) {
-		User user = userRepositorySupport.findUserByUserEmail(email);
-
-		user.updatePicture(fileName);
+	public void updatePicture(UserUpdatePictureReq userUpdatePictureReq) {
+		User user = userRepositorySupport.findUserByUserEmail(userUpdatePictureReq.getEmail());
+		user.updatePicture(userUpdatePictureReq.getPicture());
 		userRepository.save(user);
 	}
 

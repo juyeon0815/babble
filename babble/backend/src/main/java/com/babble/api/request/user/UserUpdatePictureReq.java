@@ -7,7 +7,6 @@ import lombok.Setter;
 
 
 @Getter
-@Setter
 @ApiModel("UserUpdatePicturePatchRequest")
 public class UserUpdatePictureReq {
     @ApiModelProperty(name="유저 Email", example="your_email")

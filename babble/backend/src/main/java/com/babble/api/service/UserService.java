@@ -3,7 +3,7 @@ package com.babble.api.service;
 import com.babble.api.request.user.UserRegisterReq;
 import com.babble.api.request.user.UserUpdatePasswordReq;
 import com.babble.api.request.user.UserUpdatePictureReq;
-import com.babble.api.response.UserHistoryRes;
+import com.babble.api.response.user.UserHistoryRes;
 import com.babble.db.entity.User;
 import com.querydsl.core.Tuple;
 
@@ -16,7 +16,7 @@ public interface UserService {
 	User createUser(UserRegisterReq userRegisterInfo);
 	User getUserByUserEmail(String email);
 	User checkEmail(String email);
-	void updatePicture(String email, String fileName);
+	void updatePicture(UserUpdatePictureReq userUpdatePictureReq);
 	void updatePassword(UserUpdatePasswordReq userInfo);
 	void deleteUser(String email);
 	void updateAlarm(String email);
