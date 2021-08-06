@@ -69,13 +69,10 @@ export function setDefaultAlarm (state, payload) {
 }
 
 export function startSpinner(state) {
-  console.log("################$$START");
 	state.loadingStatus = true;
 }
 
 export function endSpinner(state) {
-  console.log("################$$END");
-  
 	state.loadingStatus = false;
 }
 

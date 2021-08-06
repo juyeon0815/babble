@@ -91,7 +91,7 @@ export default {
       OV: undefined,
       session: undefined,
       mainStreamManager: undefined,
-      publisher: computed(() => store.getters["root/getPublisher"]),
+      publisher: undefined,
       videoStatus: true,
       audioStatus: true
     });
@@ -207,14 +207,13 @@ export default {
                   mirror: false // Whether to mirror your local video or not
                 });
 
-                // state.mainStreamManager = publisher;
+                state.mainStreamManager = publisher;
                 store.commit("root/setMainStreamManager", publisher);
 
-                // state.publisher = publisher;
+                state.publisher = publisher;
                 store.commit("root/setPublisher", publisher);
 
                 // --- Publish your stream ---
-
                 state.session.publish(state.publisher);
               })
               .catch(error => {
@@ -248,7 +247,6 @@ export default {
     };
 
     const handleClose = function() {
-      console.log("CLOSE DIALOG");
       if (state.session) state.session.disconnect();
       state.session = undefined;
       state.mainStreamManager = undefined;
