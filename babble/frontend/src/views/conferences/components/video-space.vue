@@ -79,8 +79,8 @@ export default {
       ),
       publisher: computed(() => store.getters["root/getPublisher"]),
       subscribers: computed(() => store.getters["root/getSubscribers"]),
-      videoStatus: computed(() => store.getters["root/getVideoStatus"]),
-      audioStatus: computed(() => store.getters["root/getAudioStatus"]),
+      videoStatus: true,
+      audioStatus: true,
 
       myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
