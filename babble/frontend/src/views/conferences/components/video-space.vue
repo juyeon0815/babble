@@ -79,8 +79,8 @@ export default {
       ),
       publisher: computed(() => store.getters["root/getPublisher"]),
       subscribers: computed(() => store.getters["root/getSubscribers"]),
-      videoStatus: true,
-      audioStatus: true,
+      videoStatus: store.getters["root/getPublisher"].stream.videoActive,
+      audioStatus: store.getters["root/getPublisher"].stream.audioActive,
 
       myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
@@ -90,17 +90,12 @@ export default {
     onMounted(() => {
       store.commit("root/setMenuActive", -1);
 
-      let a = new OpenVidu();
       store.commit("root/setOV", new OpenVidu());
 
-      // console.log(a.initSession());
-      // console.log(state.OV.initSession());
-      // state.session = state.OV.initSession();
       store.commit("root/setSession", state.OV.initSession());
 
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
-        // state.subscribers.push(subscriber);
         store.commit("root/setSubscribers", subscriber);
       });
 
@@ -183,24 +178,6 @@ export default {
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
-            let publisher = state.OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: "640x480", // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: false // Whether to mirror your local video or not
-            });
-
-            // state.mainStreamManager = publisher;
-            store.commit("root/setMainStreamManager", publisher);
-
-            // state.publisher = publisher;
-            store.commit("root/setPublisher", publisher);
-
-            // --- Publish your stream ---
             state.session.publish(state.publisher);
           })
           .catch(error => {
@@ -242,8 +219,6 @@ export default {
 
     //메인 화면으로 옮기기 // 아직 비활성화임.
     const updateMainVideoStreamManager = function(stream) {
-      // if (state.mainStreamManager === stream) return;
-      // state.mainStreamManager = stream;
       console.log(stream);
     };
 
