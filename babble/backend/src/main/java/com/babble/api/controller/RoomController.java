@@ -47,8 +47,6 @@ public class RoomController {
     @Autowired
     EmailService emailService;
 
-
-
     @PostMapping(value = "/create" )
     @ApiOperation(value = "방 생성", notes = "방에 대한 정보를 입력한다.")
     @ApiResponses({
@@ -58,56 +56,55 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) throws Exception {
+        //방 생성 시 email, title, content, thumbnail_url, category, hashtag, speak 정보 넘어옴
 
-            //방 생성 시 email, title, content, thumbnail_url, category, hashtag, speak 정보 넘어옴
+        //category 테이블에서 category_name과 일치한 id 가져와 저장
+        Category category = categoryService.getCategoryByCategoryName(roomCreateReq.getCategory());
 
-            //category 테이블에서 category_name과 일치한 id 가져와 저장
-            Category category = categoryService.getCategoryByCategoryName(roomCreateReq.getCategory());
+        //hostId는 현재 로그인된 유저 id
+        User user = userService.getUserByUserEmail(roomCreateReq.getEmail());
 
-            //hostId는 현재 로그인된 유저 id
-            User user = userService.getUserByUserEmail(roomCreateReq.getEmail());
+        //room create
+        Room room = roomService.createRoom(category, user, roomCreateReq);
 
-            //room create
-            Room room = roomService.createRoom(category, user, roomCreateReq);
+        HashMap<String, String> userHashtagMap = new HashMap<String, String>();
 
-            HashMap<String, String> userHashtagMap = new HashMap<String, String>();
-
-            //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
-            String[] tagList = roomCreateReq.getHashtag().split(" ");
-            for (int i = 0; i < tagList.length; i++) {
-                Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
-                if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
-                    Hashtag hashtag = hashtagService.createHashtag(tagList[i]);
-                    RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
-                } else { //해당 해시태그 있을 경우
-                    RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
-                }
-
-                // 해당 해시테그를 가지고 있으면서 이메일 알림을 설정한 유저들을 조회
-                List<String> userList = userHashtagService.getUserByHashtag(tagList[i]);
-                System.out.println(" >>>>> userList: " + userList);
-                if(!userList.isEmpty() && userList.size()>0 && userList.get(0)!=null) {
-                    for(String userEmail: userList) {
-                        if(userHashtagMap.containsKey(userEmail)) {
-                            String hastagValue = userHashtagMap.get(userEmail);
-                            userHashtagMap.put(userEmail, hastagValue + ", " + tagList[i]);
-                        } else {
-                            userHashtagMap.put(userEmail, tagList[i]);
-                        }
-                    }
-                }
-            } //for
-
-            System.out.println(">> 생성된 방 " + room.getId());
-            // HashMap에 담긴 정보로 이메일 전송
-            if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
-                for(String userEmail: userHashtagMap.keySet()) {
-                    System.out.println(userEmail + " "  + userHashtagMap.get(userEmail) + " 이메일 전송");
-                    emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail), room.getId());
-                }
+        //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
+        String[] tagList = roomCreateReq.getHashtag().split(" ");
+        for (int i = 0; i < tagList.length; i++) {
+            Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
+            if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
+                Hashtag hashtag = hashtagService.createHashtag(tagList[i]);
+                RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
+            } else { //해당 해시태그 있을 경우
+                RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
             }
 
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
+            // 해당 해시테그를 가지고 있으면서 이메일 알림을 설정한 유저들을 조회
+            List<String> userList = userHashtagService.getUserByHashtag(tagList[i]);
+            System.out.println(" >>>>> userList: " + userList);
+            if(!userList.isEmpty() && userList.size()>0 && userList.get(0)!=null) {
+                for(String userEmail: userList) {
+                    if(userHashtagMap.containsKey(userEmail)) {
+                        String hastagValue = userHashtagMap.get(userEmail);
+                        userHashtagMap.put(userEmail, hastagValue + ", " + tagList[i]);
+                    } else {
+                        userHashtagMap.put(userEmail, tagList[i]);
+                    }
+                }
+            }
+        } //for
+
+        System.out.println(">> 생성된 방 " + room.getId());
+        // HashMap에 담긴 정보로 이메일 전송
+        if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
+            for(String userEmail: userHashtagMap.keySet()) {
+                System.out.println(userEmail + " "  + userHashtagMap.get(userEmail) + " 이메일 전송");
+                emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail), room.getId());
+            }
+        }
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
     }
 
     @PostMapping("/enter")
@@ -164,7 +161,6 @@ public class RoomController {
         return ResponseEntity.status(200).body(roomList);
     }
 
-
     @GetMapping("/{categoryName}/best/{pageNum}")
     @ApiOperation(value = "카테고리별 인기 방 정보", notes = "카테고리별 인기순으로 방의 정보를 보여준다.")
     @ApiResponses({
@@ -216,7 +212,6 @@ public class RoomController {
         List<RoomRes> categoryList = roomService.roomList(roomInfo);
         return ResponseEntity.status(200).body(categoryList);
     }
-
 
     @Transactional
     @DeleteMapping("/{roomId}")
