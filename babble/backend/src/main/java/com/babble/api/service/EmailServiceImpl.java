@@ -85,4 +85,39 @@ public class EmailServiceImpl implements EmailService{
         return ePw;
     }
 
+    // 방이 생성되면 해당 해시테그를 가진 유젇르에게 이메일을 보낸다.
+    private MimeMessage createHashTagMessage(String to, String hashtag, Long roomId) throws Exception{
+        System.out.println("보내는 대상 : "+ to);
+        MimeMessage  message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to);//보내는 대상
+        message.setSubject("[Babble] 관심 주제 대화방이 생성되었습니다.");//제목
+        // 배포 시 도메인으로 변경, but 대기실이 아니라 바로 회의실로?
+        String linkUrl = "http://localhost:8080/conferences/" + roomId;
+
+        String msgg="";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 안녕하세요 Babble입니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<h4>회원님이 등록하신 관심 주제 <strong>[" + hashtag +"]</strong>에 대한 방이 생성되었습니다.</h4>";
+        msgg+= "<h4><a href=" + linkUrl +">링크</a>를 눌러 확인해보세요!</h4>";
+        msgg+= "<br>";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("babble0802@gmail.com","Babble"));//보내는 사람
+
+        return message;
+    }
+
+    @Override
+    public String sendHashtagMessage(String to, String hashtag, Long roomId) throws Exception {
+        MimeMessage message = createHashTagMessage(to, hashtag, roomId);
+        try{ //예외처리
+            emailSender.send(message);
+        } catch(MailException es){
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+        return ePw;
+    }
 }

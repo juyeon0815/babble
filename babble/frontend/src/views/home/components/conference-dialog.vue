@@ -18,6 +18,27 @@
         <div id="video-container" class="col-md-6">
           <UserVideo :stream-manager="state.publisher" /></div
       ></el-col>
+
+      <div class="nav-icons">
+        <el-button-group>
+          <el-button type="info" plain @click="onOffAudio">
+            <i
+              v-if="state.audioStatus"
+              style="color :red"
+              class="el-icon-microphone"
+            />
+            <i v-else class="el-icon-turn-off-microphone" />
+          </el-button>
+          <el-button type="info" plain @click="onOffVideo">
+            <i
+              v-if="state.videoStatus"
+              style="color:red"
+              class="el-icon-video-camera"
+            />
+            <i v-else type="danger" class="el-icon-video-camera" />
+          </el-button>
+        </el-button-group>
+      </div>
     </el-row>
     <template #footer>
       <span class="dialog-footer">
@@ -187,10 +208,12 @@ export default {
                 });
 
                 state.mainStreamManager = publisher;
+                store.commit("root/setMainStreamManager", publisher);
+
                 state.publisher = publisher;
+                store.commit("root/setPublisher", publisher);
 
                 // --- Publish your stream ---
-
                 state.session.publish(state.publisher);
               })
               .catch(error => {
@@ -224,7 +247,6 @@ export default {
     };
 
     const handleClose = function() {
-      console.log("CLOSE DIALOG");
       if (state.session) state.session.disconnect();
       state.session = undefined;
       state.mainStreamManager = undefined;
@@ -234,7 +256,27 @@ export default {
       emit("closeConferenceDialog");
     };
 
-    return { state, clickEnterRoom, handleClose };
+    const onOffVideo = function() {
+      if (state.videoStatus) {
+        state.publisher.publishVideo(false);
+        state.videoStatus = false;
+      } else {
+        state.publisher.publishVideo(true);
+        state.videoStatus = true;
+      }
+    };
+
+    const onOffAudio = function() {
+      if (state.audioStatus) {
+        state.publisher.publishAudio(false);
+        state.audioStatus = false;
+      } else {
+        state.publisher.publishAudio(true);
+        state.audioStatus = true;
+      }
+    };
+
+    return { state, clickEnterRoom, handleClose, onOffVideo, onOffAudio };
   }
 };
 </script>
