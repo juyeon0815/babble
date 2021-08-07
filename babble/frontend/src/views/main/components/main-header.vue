@@ -74,10 +74,10 @@ export default {
 
     const state = reactive({
       isLoggedin: computed(() => {
-        return store.getters["root/getToken"];
+        return store.getters["auth/getToken"];
       }),
       profile: computed(() => {
-        return store.getters["root/getProfile"];
+        return store.getters["auth/getProfile"];
       }),
       searchWord: "",
       activeMenuIndex: computed(() => {
@@ -86,10 +86,10 @@ export default {
     });
 
     store
-      .dispatch("root/requestUserInfo", localStorage.getItem("jwt"))
+      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
       .then(function(result) {
         // console.log(result.data.picture)
-        store.commit("root/setUserProfile", result.data.picture);
+        store.commit("auth/setUserProfile", result.data.picture);
       });
 
     const clickLogo = () => {
@@ -137,8 +137,8 @@ export default {
     const clickLogout = function() {
       console.log("clickLogout");
       store
-        .dispatch("root/requestLogout")
-        .then(() => store.commit("root/setLogout"))
+        .dispatch("auth/requestLogout")
+        .then(() => store.commit("auth/setLogout"))
         .then(() => router.push("/"));
       console.log(state.isLoggedin);
     };

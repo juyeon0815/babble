@@ -6,7 +6,7 @@ import * as actions from './actions'
 
 
 
-const root = {
+const auth = {
   namespaced: true,
   state,
   getters,
@@ -15,4 +15,4 @@ const root = {
 }
 
 
-export default root 
+export default auth 

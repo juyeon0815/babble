@@ -167,7 +167,7 @@ export default {
         ]
       },
       email: computed(() => {
-        return store.getters["root/getEmail"];
+        return store.getters["auth/getEmail"];
       }),
       isVal: false,
       dialogVisible: computed(() => props.open),

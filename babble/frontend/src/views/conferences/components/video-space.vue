@@ -84,7 +84,7 @@ export default {
       // videoStatus: true,
       // audioStatus: false,
 
-      myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
+      myUserName: store.getters["auth/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
     });
 
