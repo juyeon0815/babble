@@ -1,7 +1,12 @@
 <template>
   <el-row class="navbar" v-if="state.activeMenuIndex != -1">
     <h2 @click="clickLogo">Babble</h2>
-    <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
+    <el-input
+      prefix-icon="el-icon-search"
+      class="search-bar"
+      @keyup.enter="enterSearch"
+      v-model="state.searchWord"
+    ></el-input>
     <el-button type="info" plain @click="clickCategory">카테고리</el-button>
     <div v-show="!state.isLoggedin">
       <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
@@ -11,7 +16,9 @@
       <el-button class="circle btn" @click="clickMyPage">
         <img class="profile" :src="state.profile" />
       </el-button>
-      <el-button type="primary btn" plain @click="clickRoomCreate">방 생성</el-button>
+      <el-button type="primary btn" plain @click="clickRoomCreate"
+        >방 생성</el-button
+      >
       <el-button type="info btn" plain @click="clickLogout">로그아웃</el-button>
     </div>
   </el-row>
@@ -67,22 +74,23 @@ export default {
 
     const state = reactive({
       isLoggedin: computed(() => {
-        return store.getters["root/getToken"];
+        return store.getters["auth/getToken"];
       }),
       profile: computed(() => {
-        return store.getters["root/getProfile"];
+        return store.getters["auth/getProfile"];
       }),
-      searchWord: '',
+      searchWord: "",
       activeMenuIndex: computed(() => {
-        return store.getters['root/getActiveMenuIndex']
+        return store.getters["root/getActiveMenuIndex"];
       })
-    })
+    });
 
-    store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
-      .then(function (result) {
+    store
+      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      .then(function(result) {
         // console.log(result.data.picture)
-        store.commit('root/setUserProfile', result.data.picture)
-      })
+        store.commit("auth/setUserProfile", result.data.picture);
+      });
 
     const clickLogo = () => {
       store.commit("root/setActiveCategory", null);
@@ -129,8 +137,8 @@ export default {
     const clickLogout = function() {
       console.log("clickLogout");
       store
-        .dispatch("root/requestLogout")
-        .then(() => store.commit("root/setLogout"))
+        .dispatch("auth/requestLogout")
+        .then(() => store.commit("auth/setLogout"))
         .then(() => router.push("/"));
       console.log(state.isLoggedin);
     };

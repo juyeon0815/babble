@@ -14,30 +14,6 @@ export function setMenuActiveMenuName (state, menuName) {
 	state.activeMenu = menuName
 }
 
-export function setLogout (state) {
-  console.log('토큰 없앤다!')
-	state.token = null
-  state.email = ''
-  state.profile = ''
-  state.activeMenu = 'home'
-  state.userHashtag = []
-  state.alarmValue = false
-}
-
-export function setEmail (state, email) {
-  console.log('이메일 저장한다!')
-  console.log(state.email)
-	state.email = email
-  console.log(state.email)
-}
-
-export function setToken (state, token) {
-  console.log('토큰을 store에 저장한다!')
-  console.log(state.token)
-	state.token = token
-  console.log(state.token)
-}
-
 export function setUserHashtagPush (state, input) {
   console.log('사용자 해시태그를 저장한다!')
   console.log(state.userHashtag)
@@ -69,13 +45,10 @@ export function setDefaultAlarm (state, payload) {
 }
 
 export function startSpinner(state) {
-  console.log("################$$START");
 	state.loadingStatus = true;
 }
 
 export function endSpinner(state) {
-  console.log("################$$END");
-  
 	state.loadingStatus = false;
 }
 
@@ -92,19 +65,6 @@ export function setSearchWord(state, searchWord) {
 	state.searchWord = searchWord
 }
 
-export function setUserProfile (state, profile) {
-  console.log('사용자 프로필 저장!')
-  console.log(state.profile)
-  state.profile = profile
-  console.log(state.profile)
-}
-
-export function setUserHashtag (state, hashtag) {
-  console.log('사용자 해시태그 db에서 가져와 store에 저장!')
-  console.log(state.userHashtag)
-  state.userHashtag = hashtag
-  console.log(state.userHashtag)
-}
 
 // OV: undefined,
 // session: undefined,
