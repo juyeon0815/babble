@@ -12,7 +12,7 @@
 
 <style>
   .side-bar {
-    background-color: lightgrey;
+    background-color: #C1C8E4;
     height: 100vh;
   }
 </style>
