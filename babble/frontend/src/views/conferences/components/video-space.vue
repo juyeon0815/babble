@@ -88,6 +88,19 @@ export default {
       mySessionId: store.getters["root/getRoomID"]
     });
 
+    const getRandomName = function() {
+      axios
+        .get("https://nickname.hwanmoo.kr/?format=text&count=1")
+        .then(response => {
+          state.myUserName = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+          state.myUserName = "ERROR";
+        });
+    };
+    getRandomName();
+
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       // 새로고침 방지
@@ -327,7 +340,8 @@ export default {
       onOffVideo,
       onOffAudio,
       unpublish,
-      patchRole
+      patchRole,
+      getRandomName
     };
   }
 };
