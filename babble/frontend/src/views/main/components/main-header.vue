@@ -4,29 +4,51 @@
       <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
     </div>
     <div class="navbar-search">
-      <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
+      <el-input
+        prefix-icon="el-icon-search"
+        class="search-bar"
+        @keyup.enter="enterSearch"
+        v-model="state.searchWord"
+      ></el-input>
     </div>
     <div class="navbar-menu">
       <ul v-show="!state.isLoggedin">
         <li><button @click="clickCategory">카테고리</button></li>
-        <li><button  @click="clickJoin">회원가입</button></li>
+        <li><button @click="clickJoin">회원가입</button></li>
         <li><button @click="clickLogin">로그인</button></li>
       </ul>
       <ul v-show="state.isLoggedin">
-        <li><button @click="clickCategory" class="textBtn">카테고리</button></li>
-        <li class="textline"><button @click="clickMyPage">마이페이지</button></li>
-        <li class="circle-img"><button @click="clickMyPage" class="circle"> <img class="profile" :src="state.profile" /></button></li>
-        <li><button @click="clickRoomCreate" class="textBtn">방 생성</button></li>
-        <li><button  @click="clickLogout" class="textBtn">로그아웃</button></li>
+        <li>
+          <button @click="clickCategory" class="textBtn">카테고리</button>
+        </li>
+        <li class="textline">
+          <button @click="clickMyPage">마이페이지</button>
+        </li>
+        <li class="circle-img">
+          <button @click="clickMyPage" class="circle">
+            <img class="profile" :src="state.profile" />
+          </button>
+        </li>
+        <li>
+          <button @click="clickRoomCreate" class="textBtn">방 생성</button>
+        </li>
+        <li><button @click="clickLogout" class="textBtn">로그아웃</button></li>
       </ul>
     </div>
-    <button class="navbar-toggleBtn" @click="clickToggle"><i class="fas fa-bars"></i></button>
+    <button class="navbar-toggleBtn" @click="clickToggle">
+      <i class="fas fa-bars"></i>
+    </button>
     <div class="seen-media">
       <div class="navbar-logo">
         <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
       </div>
       <div class="navbar-search">
-        <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
+        <el-input
+          prefix-icon="el-icon-search"
+          class="search-bar"
+          @keyup.enter="enterSearch"
+          v-model="state.searchWord"
+        ></el-input>
       </div>
     </div>
   </nav>
@@ -34,9 +56,14 @@
     <div class="overlay">
       <div class="header-text">
         <h2>당신을 위한 공간, Ba:bble</h2>
-        <p>lorem ipsum lorenm loerm loremlmlmlkk</p>
+        <p style="color:#fce3ff">
+          bab·ble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
+        </p>
       </div>
-      <img :src="require('@/assets/images/Visionary technology-rafiki.png')" class="illust">
+      <img
+        :src="require('@/assets/images/Visionary technology-rafiki.png')"
+        class="illust"
+      />
     </div>
   </div>
 </template>
@@ -47,14 +74,14 @@
   padding-bottom: 50px;
 }
 
-.header-space .overlay{
+.header-space .overlay {
   width: 100%;
   height: 100%;
   padding: 50px;
-  color: #FFF;
+  color: #fff;
   border-radius: 0 0 90% 50% /30%;
   text-shadow: 1px 1px 1px #333;
-  background-image: linear-gradient( 135deg, #9f05ff69 10%, #4a63cfc2 100%);
+  background-image: linear-gradient(135deg, #9f05ff69 10%, #4a63cfc2 100%);
   position: relative;
 }
 
@@ -77,7 +104,7 @@
   justify-content: space-between;
   align-items: center;
   background: transparent;
-  background-image: linear-gradient( 40deg, #9f05ff69 40%, #4a63cfc2 100%);
+  background-image: linear-gradient(40deg, #9f05ff69 40%, #4a63cfc2 100%);
   padding: 10px 42px;
 }
 
@@ -163,7 +190,6 @@
 .textline {
   display: none;
 }
-
 
 @media screen and (max-width: 550px) {
   .navbar {
@@ -335,26 +361,26 @@ export default {
       state.searchWord = "";
     };
 
-    const clickToggle = function () {
-      let menu = document.querySelector(".navbar-menu")
-      menu.classList.toggle('active')
-    }
+    const clickToggle = function() {
+      let menu = document.querySelector(".navbar-menu");
+      menu.classList.toggle("active");
+    };
 
-     watch(
+    watch(
       () => state.isLoggedin,
       (after, prev) => {
         // console.log(prev + '--->' + after)
-        loadProfile()
+        loadProfile();
       }
-    )
+    );
 
-    const loadProfile = function () {
-      store.dispatch('auth/requestUserInfo', localStorage.getItem('jwt'))
-        .then(function (result) {
-          store.commit('auth/setUserProfile', result.data.picture)
-        })
-    }
-
+    const loadProfile = function() {
+      store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function(result) {
+          store.commit("auth/setUserProfile", result.data.picture);
+        });
+    };
 
     return {
       state,

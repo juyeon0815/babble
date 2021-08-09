@@ -1,7 +1,7 @@
 <template>
   <div class="chatlog" id="messages">
     <div v-for="(m, idx) in state.prevChat" :key="idx">
-      <div class="chatbubble" :class="m.style" >
+      <div class="chatbubble" :class="m.style">
         <span>{{ m.nickname }}</span>
         <p class="chatmsg">{{ m.content }}</p>
       </div>
@@ -20,7 +20,7 @@
 <script>
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
-import { reactive, watch, nextTick } from "vue";
+import { reactive, watch, nextTick, computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -28,7 +28,7 @@ export default {
     const store = useStore();
     const state = reactive({
       prevChat: [],
-      nickname: "익명의" + store.getters["root/getEmail"],
+      nickname: computed(() => store.getters["root/getUserName"]),
       chatText: "",
       count: 0,
       stompClient: null,
@@ -37,23 +37,27 @@ export default {
 
     // socket 연결
     // let socket = new SockJS("https://localhost:8443/ws")
-    let socket = new SockJS("http://localhost:8080/ws")
-    state.stompClient = Stomp.over(socket)
-    state.stompClient.connect({}, frame=>{
-      console.log("success", frame)
-      state.stompClient.subscribe("/sub/"+ state.chatroomId, res=>{
-        let jsonBody = JSON.parse(res.body)
-        let m={
-          'nickname':jsonBody.nickname,
-          'content': jsonBody.content,
-          'style': jsonBody.nickname == state.nickname ? 'myMsg':'otherMsg'
-        }
-        state.prevChat.push(m)
-        changeScroll()
-      })
-    }, err=>{
-      console.log("fail", err)
-    })
+    let socket = new SockJS("http://localhost:8080/ws");
+    state.stompClient = Stomp.over(socket);
+    state.stompClient.connect(
+      {},
+      frame => {
+        console.log("success", frame);
+        state.stompClient.subscribe("/sub/" + state.chatroomId, res => {
+          let jsonBody = JSON.parse(res.body);
+          let m = {
+            nickname: jsonBody.nickname,
+            content: jsonBody.content,
+            style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+          };
+          state.prevChat.push(m);
+          changeScroll();
+        });
+      },
+      err => {
+        console.log("fail", err);
+      }
+    );
 
     const enterChat = function() {
       if (state.chatText.trim() != "" && state.stompClient != null) {
@@ -114,7 +118,7 @@ export default {
   border-radius: 0 6px 6px 0;
   max-width: 60%;
   width: auto;
-  box-shadow: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
