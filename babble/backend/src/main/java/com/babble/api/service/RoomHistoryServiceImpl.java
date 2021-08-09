@@ -28,6 +28,11 @@ public class RoomHistoryServiceImpl implements RoomHistoryService {
     @Override
     public RoomHistory createRoomHistory(User user, Room room) {
         Date date = new Date();
+        RoomHistory history = roomHistoryRepositorySupport.findRoomHistoryByUserEmail(user, room);
+        System.out.println(history);
+        if(history!=null){
+            roomHistoryRepository.delete(history);
+        }
         RoomHistory roomHistory = new RoomHistory();
         roomHistory.createRoomHistory(room,user, date);
         return roomHistoryRepository.save(roomHistory);
