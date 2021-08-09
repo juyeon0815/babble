@@ -1,25 +1,31 @@
 <template>
   <el-container>
     <el-aside width="500px" class="tab">
-      <h4>{{state.email}}님 안녕!</h4>
+      <h4>{{ state.email }}님 안녕!</h4>
       <div v-if="state.profile == 'default'">
         <el-avatar :size="90" :src="state.circleUrl"></el-avatar>
         <!-- <div class="block"></div> -->
       </div>
       <div v-else>
-        <img :src="state.profile" alt="내 프로필">
+        <img :src="state.profile" alt="내 프로필" class="profile"/>
       </div>
 
       <div>
         <form @submit.prevent>
-          <label for="newProfile"><h5>프로필 사진 변경 </h5></label>
-          <input type="file" ref="fileInput" id="newProfile" name="newProfile" @change="handleFileUpload()"/>
-          <button @click="updateProfile">+</button><br>
+          <label for="newProfile"><h5>프로필 사진 변경</h5></label>
+          <input
+            type="file"
+            ref="fileInput"
+            id="newProfile"
+            name="newProfile"
+            @change="handleFileUpload()"
+          />
+          <button @click="updateProfile">+</button><br />
           <div class="el-upload__tip">
             jpg/png files with a size less than 500kb
           </div>
         </form>
-        <br>
+        <br />
         <button @click="deleteProfile">프로필 삭제</button>
       </div>
     </el-aside>
@@ -93,7 +99,6 @@
         </h6>
         <el-button @click="deleteUser">Adios Ba:bble</el-button>
       </div>
-
     </el-main>
   </el-container>
 </template>
@@ -106,21 +111,21 @@ import { useRouter } from "vue-router";
 export default {
   name: "UserInfo",
 
-  setup (props, {emit}) {
-    const store = useStore()
-    const router = useRouter()
-    const updateForm = ref(null)
-    const fileInput = ref(null)
-    const AWS = require('aws-sdk')
+  setup(props, { emit }) {
+    const store = useStore();
+    const router = useRouter();
+    const updateForm = ref(null);
+    const fileInput = ref(null);
+    const AWS = require("aws-sdk");
 
     const state = reactive({
       circleUrl:
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       email: computed(() => {
-        return store.getters["root/getEmail"];
+        return store.getters["auth/getEmail"];
       }),
       profile: computed(() => {
-        return store.getters["root/getProfile"];
+        return store.getters["auth/getProfile"];
       }),
       form: {
         password: "",
@@ -186,10 +191,10 @@ export default {
       isVal: false,
       isSuccess: false,
       isFail: false,
-      albumBucketName: 'babble-test-zimin',
-      bucketRegion: 'ap-northeast-2',
-      IdentityPoolId: 'ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f',
-    })
+      albumBucketName: "babble-test-zimin",
+      bucketRegion: "ap-northeast-2",
+      IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f"
+    });
 
     const isValid = function() {
       updateForm.value.validate(valid => {
@@ -201,37 +206,42 @@ export default {
       });
     };
 
-    const checkPassword = function () {
-      store.dispatch('root/requestPasswordCheck', {email: state.email, password: state.form.password })
-      .then(function (result) {
-        console.log(result.data.message)
-        if (result.data.message == 'Success') {
-          state.isSuccess = true
-        } else if (result.data.message == 'fail') {
-          state.isFail = true
-        }
-      })
-      .catch(function (err) {
-        console.log(err)
-      })
-    }
+    const checkPassword = function() {
+      store
+        .dispatch("auth/requestPasswordCheck", {
+          email: state.email,
+          password: state.form.password
+        })
+        .then(function(result) {
+          console.log(result.data.message);
+          if (result.data.message == "Success") {
+            state.isSuccess = true;
+          } else if (result.data.message == "fail") {
+            state.isFail = true;
+          }
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+    };
 
-    store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
-      .then(function (result) {
-        console.log(result.data.picture)
-        store.commit('root/setUserProfile', result.data.picture)
-      })
+    store
+      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      .then(function(result) {
+        console.log(result.data.picture);
+        store.commit("auth/setUserProfile", result.data.picture);
+      });
 
-    const handleFileUpload = function () {
-      let test1 = document.getElementsByName("newProfile")[0].files[0]
-      let test2 = fileInput.value.files[0]
-      console.log(test1, '기존 방식')
-      console.log(test2, 'ref 방식')
-      state.form.file = test2
-      console.log(state.form.file, '파일이 업로드 되었다')
-    }
+    const handleFileUpload = function() {
+      let test1 = document.getElementsByName("newProfile")[0].files[0];
+      let test2 = fileInput.value.files[0];
+      console.log(test1, "기존 방식");
+      console.log(test2, "ref 방식");
+      state.form.file = test2;
+      console.log(state.form.file, "파일이 업로드 되었다");
+    };
 
-    const updateProfile = function () {
+    const updateProfile = function() {
       AWS.config.update({
         region: state.bucketRegion,
         credentials: new AWS.CognitoIdentityCredentials({
@@ -252,29 +262,39 @@ export default {
       promise.then(
         function(data) {
           alert("Successfully uploaded photo.");
-          console.log(data, '자 업로드 된 데이터야')
-          store.commit('root/setUserProfile', data.Location)
-          store.dispatch('root/requestUpdateProfile', {email: state.email, picture: data.Location})
-          .then((res) => console.log(res))
+          console.log(data, "자 업로드 된 데이터야");
+          store.commit("auth/setUserProfile", data.Location);
+          store
+            .dispatch("auth/requestUpdateProfile", {
+              email: state.email,
+              picture: data.Location
+            })
+            .then(res => console.log(res));
         },
         function(err) {
-          return alert("There was an error uploading your photo: ", err.message);
+          return alert(
+            "There was an error uploading your photo: ",
+            err.message
+          );
         }
-      )
-    }
+      );
+    };
 
-    const deleteProfile = function () {
-      store.commit('root/setUserProfile', 'default')
-      const backToDefault = 'default'
-      store.dispatch('root/requestUpdateProfile', {email: state.email, picture: backToDefault})
-      .then((res) => console.log(res))
-    }
-
+    const deleteProfile = function() {
+      store.commit("auth/setUserProfile", "default");
+      const backToDefault = "default";
+      store
+        .dispatch("auth/requestUpdateProfile", {
+          email: state.email,
+          picture: backToDefault
+        })
+        .then(res => console.log(res));
+    };
 
     //비밀번호 변경 후 로그아웃 처리를 해줘야 하나...? 다시 로그인하라고...?
     const updatePassword = function() {
       store
-        .dispatch("root/requestUpdatePassword", {
+        .dispatch("auth/requestUpdatePassword", {
           email: state.email,
           password: state.form.newPassword
         })
@@ -289,16 +309,27 @@ export default {
 
     const deleteUser = function() {
       store
-        .dispatch("root/requestDeleteUser", { email: state.email })
+        .dispatch("auth/requestDeleteUser", { email: state.email })
         .then(function(result) {
           console.log("삭제되었니", result);
           alert("다시 또 만나요 우리...See U Soon");
-          store.commit("root/setLogout");
+          store.commit("auth/setLogout");
           router.push("/");
         });
     };
 
-  return {state, updateForm, fileInput, isValid, checkPassword, handleFileUpload, updateProfile, deleteProfile, updatePassword, deleteUser }
+    return {
+      state,
+      updateForm,
+      fileInput,
+      isValid,
+      checkPassword,
+      handleFileUpload,
+      updateProfile,
+      deleteProfile,
+      updatePassword,
+      deleteUser
+    };
   }
 };
 </script>
@@ -321,5 +352,10 @@ export default {
 }
 .alert {
   width: 330px;
+}
+.profile {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 </style>

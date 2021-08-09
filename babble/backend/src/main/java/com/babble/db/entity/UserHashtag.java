@@ -4,6 +4,7 @@ package com.babble.db.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,6 +15,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @Getter
+@ToString
 public class UserHashtag extends BaseEntity {
 
     @ManyToOne

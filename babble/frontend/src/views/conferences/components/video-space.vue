@@ -79,23 +79,45 @@ export default {
       ),
       publisher: computed(() => store.getters["root/getPublisher"]),
       subscribers: computed(() => store.getters["root/getSubscribers"]),
-      videoStatus: computed(() => store.getters["root/getVideoStatus"]),
-      audioStatus: computed(() => store.getters["root/getAudioStatus"]),
+      videoStatus: store.getters["root/getPublisher"],
+      audioStatus: store.getters["root/getPublisher"],
+      // videoStatus: true,
+      // audioStatus: false,
 
-      myUserName: store.getters["root/getEmail"], // DB 동물이름으로 교체
+      myUserName: store.getters["auth/getEmail"], // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
     });
 
+    const getRandomName = function() {
+      axios
+        .get("https://nickname.hwanmoo.kr/?format=text&count=1")
+        .then(response => {
+          state.myUserName = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+          state.myUserName = "ERROR";
+        });
+    };
+    getRandomName();
+
     // 페이지 진입시 불리는 훅
     onMounted(() => {
+      // 새로고침 방지
+      if (state.videoStatus === undefined) {
+        state.videoStatus = true;
+        state.audioStatus = true;
+      } else {
+        state.videoStatus =
+          store.getters["root/getPublisher"].stream.videoActive;
+        state.audioStatus =
+          store.getters["root/getPublisher"].stream.audioActive;
+      }
+
       store.commit("root/setMenuActive", -1);
 
-      let a = new OpenVidu();
       store.commit("root/setOV", new OpenVidu());
 
-      // console.log(a.initSession());
-      // console.log(state.OV.initSession());
-      // state.session = state.OV.initSession();
       store.commit("root/setSession", state.OV.initSession());
 
       state.session.on("streamCreated", ({ stream }) => {
@@ -174,6 +196,7 @@ export default {
       };
 
       const getToken = function(mySessionId) {
+        console.log("@@@@@@@@@@@@@@");
         return createSession(mySessionId).then(sessionId =>
           createToken(sessionId)
         );
@@ -183,25 +206,29 @@ export default {
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
-            let publisher = state.OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: "640x480", // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: false // Whether to mirror your local video or not
-            });
+            if (state.publisher === undefined) {
+              let publisher = state.OV.initPublisher(undefined, {
+                audioSource: undefined, // The source of audio. If undefined default microphone
+                videoSource: undefined, // The source of video. If undefined default webcam
+                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                resolution: "640x480", // The resolution of your video
+                frameRate: 30, // The frame rate of your video
+                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                mirror: false // Whether to mirror your local video or not
+              });
 
-            // state.mainStreamManager = publisher;
-            store.commit("root/setMainStreamManager", publisher);
+              // state.mainStreamManager = publisher;
+              store.commit("root/setMainStreamManager", publisher);
 
-            // state.publisher = publisher;
-            store.commit("root/setPublisher", publisher);
+              // state.publisher = publisher;
+              store.commit("root/setPublisher", publisher);
 
-            // --- Publish your stream ---
-            state.session.publish(state.publisher);
+              // --- Publish your stream ---
+              state.session.publish(publisher);
+            } else {
+              state.session.publish(state.publisher);
+            }
           })
           .catch(error => {
             console.log(
@@ -313,7 +340,8 @@ export default {
       onOffVideo,
       onOffAudio,
       unpublish,
-      patchRole
+      patchRole,
+      getRandomName
     };
   }
 };

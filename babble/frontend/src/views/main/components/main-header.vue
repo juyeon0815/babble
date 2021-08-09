@@ -1,41 +1,153 @@
 <template>
-  <el-row class="navbar" v-if="state.activeMenuIndex != -1">
-    <h2 @click="clickLogo">Babble</h2>
-    <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
-    <el-button type="info" plain @click="clickCategory">카테고리</el-button>
-    <div v-show="!state.isLoggedin">
-      <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
-      <el-button type="info" plain @click="clickLogin">로그인</el-button>
+  <nav class="navbar" v-if="state.activeMenuIndex != -1">
+    <div class="navbar-logo">
+      <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
     </div>
-    <div v-show="state.isLoggedin">
-      <el-button class="circle btn" @click="clickMyPage">
-        <img class="profile" :src="state.profile" />
-      </el-button>
-      <el-button type="primary btn" plain @click="clickRoomCreate">방 생성</el-button>
-      <el-button type="info btn" plain @click="clickLogout">로그아웃</el-button>
+    <div class="navbar-search">
+      <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
     </div>
-  </el-row>
+    <div class="navbar-menu">
+      <ul v-show="!state.isLoggedin">
+        <li><button @click="clickCategory">카테고리</button></li>
+        <li><button  @click="clickJoin">회원가입</button></li>
+        <li><button @click="clickLogin">로그인</button></li>
+      </ul>
+      <ul v-show="state.isLoggedin">
+        <li><button @click="clickCategory" class="textBtn">카테고리</button></li>
+        <li class="textline"><button @click="clickMyPage">마이페이지</button></li>
+        <li class="circle-img"><button @click="clickMyPage" class="circle"> <img class="profile" :src="state.profile" /></button></li>
+        <li><button @click="clickRoomCreate" class="textBtn">방 생성</button></li>
+        <li><button  @click="clickLogout" class="textBtn">로그아웃</button></li>
+      </ul>
+    </div>
+    <button class="navbar-toggleBtn" @click="clickToggle"><i class="fas fa-bars"></i></button>
+    <div class="seen-media">
+      <div class="navbar-logo">
+        <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
+      </div>
+      <div class="navbar-search">
+        <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
+      </div>
+    </div>
+  </nav>
+  <div class="header-space" v-if="state.activeMenuIndex == 0">
+    <div class="overlay">
+      <div class="header-text">
+        <h2>당신을 위한 공간, Ba:bble</h2>
+        <p>lorem ipsum lorenm loerm loremlmlmlkk</p>
+      </div>
+      <img :src="require('@/assets/images/Visionary technology-rafiki.png')" class="illust">
+    </div>
+  </div>
 </template>
 
 <style scoped>
+.header-space {
+  height: 300px;
+  padding-bottom: 50px;
+}
+
+.header-space .overlay{
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+  color: #FFF;
+  border-radius: 0 0 90% 50% /30%;
+  text-shadow: 1px 1px 1px #333;
+  background-image: linear-gradient( 135deg, #9f05ff69 10%, #4a63cfc2 100%);
+  position: relative;
+}
+
+.header-text {
+  /* display: inline-block; */
+  float: left;
+  padding-left: 70px;
+}
+
+.illust {
+  width: 425px;
+  height: 425px;
+  float: right;
+  padding-bottom: 5px;
+  padding-right: 125px;
+}
+
 .navbar {
-  padding-top: 5px;
-  justify-content: space-around;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  background-color: #d3c4ed;
+  background: transparent;
+  background-image: linear-gradient( 40deg, #9f05ff69 40%, #4a63cfc2 100%);
+  padding: 10px 42px;
 }
 
-.navbar .search-bar {
+.navbar-logo h2 {
+  font-size: 36px;
+  color: white;
+}
+
+.navbar-logo h2:hover {
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.navbar-logo mark {
+  color: white;
+  background: none;
+}
+
+.navbar-logo h2:hover .purple {
+  color: #341a63;
+  background: none;
+}
+
+.navbar-search .search-bar {
   width: 400px;
-  display: inline;
-  margin: 20px;
 }
 
-.btn-group {
-  display: block;
+.navbar-menu ul {
+  display: flex;
+  list-style: none;
+  padding-left: 0px;
+}
+
+.navbar-menu li {
+  padding: 8px 12px;
+}
+
+.navbar-menu button:hover {
+  color: #341a63;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.navbar-menu button {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: white;
+}
+
+.navbar-menu .textBtn {
+  margin-top: 3px;
+}
+
+.navbar-toggleBtn {
+  display: none;
+  position: absolute;
+  border: none;
+  background: transparent;
+  right: 32px;
+  font-size: 24px;
+  color: #341a63;
+}
+
+.seen-media {
+  display: none;
 }
 
 .circle {
+  padding: 0px;
   width: 40px;
   height: 40px;
   border-radius: 70%;
@@ -48,15 +160,91 @@
   object-fit: cover;
 }
 
-.btn {
-  margin: 0px 5px 0px;
+.textline {
+  display: none;
+}
+
+
+@media screen and (max-width: 550px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .navbar-logo,
+  .navbar-search {
+    display: none;
+  }
+
+  .navbar-menu {
+    display: none;
+    width: 100%;
+  }
+
+  .navbar-toggleBtn,
+  .seen-media {
+    display: block;
+  }
+
+  .navbar-toggleBtn:hover {
+    cursor: pointer;
+  }
+
+  .seen-media {
+    text-align: center;
+  }
+
+  .seen-media .navbar-search {
+    display: block;
+    padding-bottom: 10px;
+  }
+
+  .seen-media .navbar-logo {
+    display: inline-block;
+  }
+
+  .seen-media .navbar-logo h2:hover .purple {
+    color: #341a63;
+    background: none;
+  }
+
+  .navbar-menu.active {
+    display: flex;
+    width: 100%;
+  }
+
+  .navbar-menu.active ul {
+    flex-direction: column;
+    width: 100%;
+    /* align-items: center; */
+  }
+
+  .navbar-menu.active li {
+    width: 90%;
+    /* text-align: center; */
+  }
+
+  .navbar-menu.active button:hover {
+    width: 100%;
+    background-color: rgb(245, 247, 215, 0.5);
+    border-radius: 5%;
+    text-align: start;
+    padding: 5px 1px;
+  }
+
+  .circle-img {
+    display: none;
+  }
+
+  .textline {
+    display: block;
+  }
 }
 </style>
 
 <script>
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { reactive, computed, onMounted } from "vue";
+import { reactive, computed, watch, onMounted } from "vue";
 
 export default {
   name: "main-header",
@@ -67,22 +255,23 @@ export default {
 
     const state = reactive({
       isLoggedin: computed(() => {
-        return store.getters["root/getToken"];
+        return store.getters["auth/getToken"];
       }),
       profile: computed(() => {
-        return store.getters["root/getProfile"];
+        return store.getters["auth/getProfile"];
       }),
-      searchWord: '',
+      searchWord: "",
       activeMenuIndex: computed(() => {
-        return store.getters['root/getActiveMenuIndex']
+        return store.getters["root/getActiveMenuIndex"];
       })
-    })
+    });
 
-    store.dispatch('root/requestUserInfo', localStorage.getItem('jwt'))
-      .then(function (result) {
+    store
+      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      .then(function(result) {
         // console.log(result.data.picture)
-        store.commit('root/setUserProfile', result.data.picture)
-      })
+        store.commit("auth/setUserProfile", result.data.picture);
+      });
 
     const clickLogo = () => {
       store.commit("root/setActiveCategory", null);
@@ -129,8 +318,8 @@ export default {
     const clickLogout = function() {
       console.log("clickLogout");
       store
-        .dispatch("root/requestLogout")
-        .then(() => store.commit("root/setLogout"))
+        .dispatch("auth/requestLogout")
+        .then(() => store.commit("auth/setLogout"))
         .then(() => router.push("/"));
       console.log(state.isLoggedin);
     };
@@ -146,6 +335,27 @@ export default {
       state.searchWord = "";
     };
 
+    const clickToggle = function () {
+      let menu = document.querySelector(".navbar-menu")
+      menu.classList.toggle('active')
+    }
+
+     watch(
+      () => state.isLoggedin,
+      (after, prev) => {
+        // console.log(prev + '--->' + after)
+        loadProfile()
+      }
+    )
+
+    const loadProfile = function () {
+      store.dispatch('auth/requestUserInfo', localStorage.getItem('jwt'))
+        .then(function (result) {
+          store.commit('auth/setUserProfile', result.data.picture)
+        })
+    }
+
+
     return {
       state,
       clickLogo,
@@ -155,7 +365,9 @@ export default {
       clickCategory,
       clickMyPage,
       clickLogout,
-      enterSearch
+      enterSearch,
+      clickToggle,
+      loadProfile
     };
   }
 };

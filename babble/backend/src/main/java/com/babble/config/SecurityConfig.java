@@ -25,10 +25,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private BabbleUserDetailService BabbleUserDetailService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     // 암호화에 필요한 passwordEncoder bean등록
     @Bean
@@ -63,8 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests() // 요청에 대한 사용권한 체크
-                .antMatchers("/api/v1/users/me").authenticated()       // api/v1/uesrs/me 요청은 인증되어야함
-    	        	    .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
+                .antMatchers("/api/v1/users/me").authenticated()   // api/v1/uesrs/me 요청은 인증되어야함
+                .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
                 .and().cors();
     }
 }

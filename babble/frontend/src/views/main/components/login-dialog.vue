@@ -127,10 +127,10 @@ export default {
       dialogVisible: computed(() => props.open),
       formLabelWidth: "120px",
       setEmail: computed(() => {
-        return store.getters["root/getEmail"];
+        return store.getters["auth/getEmail"];
       }),
       setToken: computed(() => {
-        return store.getters["root/getToken"];
+        return store.getters["auth/getToken"];
       })
     });
 
@@ -151,7 +151,7 @@ export default {
         if (valid) {
           console.log("submit");
           store
-            .dispatch("root/requestLogin", {
+            .dispatch("auth/requestLogin", {
               email: state.form.email,
               password: state.form.password
             })
@@ -159,8 +159,8 @@ export default {
               console.log(result);
               localStorage.setItem("jwt", result.data.accessToken);
               console.log("이메일과 토큰 store에 저장");
-              store.commit("root/setEmail", state.form.email);
-              store.commit("root/setToken", result.data.accessToken);
+              store.commit("auth/setEmail", state.form.email);
+              store.commit("auth/setToken", result.data.accessToken);
               alert("로그인 성공");
               emit("closeLoginDialog");
               // router.go()
@@ -177,22 +177,6 @@ export default {
         }
       });
     };
-
-    // const setUserProfile = function () {
-    //   store.dispatch('root/requestUserProfile', {email: state.setEmail})
-    //   .then(function (result) {
-    //     console.log(result, '이미지 로드')
-    //     // store.commit('root/setUserProfile', result)
-    //   })
-    // }
-    // // setUserProfile()
-
-    // watch(
-    //   () => state.setEmail,
-    //   (newValue, prev) => {
-    //   console.log(prev + '--->' + newValue)
-    //   setUserProfile()
-    // })
 
     const handleClose = function() {
       state.form.email = "";

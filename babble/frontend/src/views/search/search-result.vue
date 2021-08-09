@@ -52,13 +52,13 @@ export default {
     }
     loadSearchResult()
 
-    // watch(
-    //   () => state.searchWord,
-    //   (searchWord, prev) => {
-    //     console.log(prev + '--->' + searchWord)
-    //     loadSearchResult()
-    //   }
-    // )
+    watch(
+      () => state.searchWord,
+      (searchWord, prev) => {
+        console.log(prev + '--->' + searchWord)
+        loadSearchResult()
+      }
+    )
 
     const clickMore = function () {
       // 데이터 10개 이상으로 test 시 v-if로 더보기 버튼 안보이게 설정하기
@@ -72,7 +72,7 @@ export default {
           alert('추가 데이터가 없습니다.')
         } else {
           state.pageNum += 1
-          state.roomList.push(result.data)
+          state.roomList.push(...result.data)
           state.count += result.data.length
         }
       })

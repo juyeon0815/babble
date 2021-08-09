@@ -35,4 +35,17 @@ public class UserHashtagRepositorySupport {
         jpaQueryFactory.delete(qUserHashtag)
                 .where(qUserHashtag.user.eq(user)).execute();
     }
+
+    public List<String> getUserByHashtag(String hashtag) {
+        List<String> list = jpaQueryFactory.select(qUser.email)
+                .from(qHashtag)
+                .leftJoin(qUserHashtag)
+                .on(qHashtag.id.eq(qUserHashtag.hashtag.id))
+                .leftJoin(qUser)
+                .on(qUserHashtag.user.id.eq(qUser.id))
+                .where(qHashtag.name.eq(hashtag))
+                .where(qUser.alarm.eq(true))
+                .fetch();
+        return list;
+    }
 }

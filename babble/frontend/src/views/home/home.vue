@@ -1,39 +1,21 @@
 <template>
-  <div class="header-space"></div>
-  <div class="head-label">베스트 라이브</div>
-  <!-- {{ state.bestRoomList }}
-  {{ state.recentRoomList }} -->
+  <!-- <div class="header-space"></div> -->
 
-  <!-- <el-carousel trigger="click" height="400px">
-    <el-carousel-item v-for="item in state.carouselCount" :key="item">
-      <el-row class="conference-row">
-        <Conference
-          v-for="i in 5"
-          :key="i"
-          v-cloak
-          :roomInfo="state.bestRoomList[i + 5 * (item - 1) - 1]"
-          @click="
-            clickConference(state.bestRoomList[i + 5 * (item - 1) - 1].id)
-          "
-        />
-      </el-row>
-    </el-carousel-item>
-  </el-carousel> -->
-
-  <!-- <el-row class="conference-row">
+  <div class="head-label"><mark class="purple">Best</mark> LIVE</div>
+  <el-row class="conference-row">
     <Conference
-      v-for="i in 10"
+      v-for="i in state.bestRoomCount"
       :key="i"
       v-cloak
       :roomInfo="state.bestRoomList[i - 1]"
       @click="clickConference(state.bestRoomList[i - 1].id)"
     />
-  </el-row> -->
+  </el-row>
 
-  <div class="head-label">최신 라이브</div>
+  <div class="head-label"><mark class="purple">Latest</mark> LIVE</div>
   <el-row class="conference-row">
     <Conference
-      v-for="i in state.count"
+      v-for="i in state.recentRoomCount"
       :key="i"
       v-cloak
       :roomInfo="state.recentRoomList[i - 1]"
@@ -49,19 +31,24 @@
 </template>
 
 <style>
-  .header-space {
-    height: 400px;
-    background-color: #d3c4ed;
-  }
   .head-label {
     font-size: 20px;
     font-weight: bold;
-    margin: 20px 0 20px 50px;
+    margin: 120px 0 20px 135px;
   }
+
+  .head-label .purple {
+    color: rgb(236, 58, 58);
+    font-weight: bold;
+    background: none;
+  }
+
   .conference-row {
     justify-content: center;
     align-items: center;
     margin-top: 15px;
+    margin-left: 5%;
+    width: 90%;
   }
 </style>
 <script>
@@ -85,8 +72,8 @@ export default {
     const state = reactive({
       bestRoomList: [],
       recentRoomList: [],
-      count: 0,
-      carouselCount: 1,
+      bestRoomCount: 0,
+      recentRoomCount: 0,
       conferenceDialogOpen: false,
       conferenceDialogNum: 0
     });
@@ -99,10 +86,8 @@ export default {
     store
       .dispatch("root/requestRoomCategoryOrder", payloadBest)
       .then(function(result) {
-        state.bestRoomList = result.data;
-        if (result.data.length > 5) {
-          state.carouselCount = 2;
-        }
+        state.bestRoomList = result.data
+        state.bestRoomCount = result.data.length
       })
       .catch(function(err) {
         alert(err);
@@ -116,8 +101,8 @@ export default {
     store
       .dispatch("root/requestRoomCategoryOrder", payloadRecent)
       .then(function(result) {
-        state.count = result.data.length;
-        state.recentRoomList = result.data;
+        state.recentRoomList = result.data
+        state.recentRoomCount = result.data.length
       })
       .catch(function(err) {
         alert(err);

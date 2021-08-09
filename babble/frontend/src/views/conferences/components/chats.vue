@@ -1,9 +1,9 @@
 <template>
   <div class="chatlog" id="messages">
     <div v-for="(m, idx) in state.prevChat" :key="idx">
-      <div v-bind:class="m.style">
-        <h5>{{ m.nickname }}</h5>
-        {{ m.content }}
+      <div class="chatbubble" :class="m.style" >
+        <span>{{ m.nickname }}</span>
+        <p class="chatmsg">{{ m.content }}</p>
       </div>
     </div>
   </div>
@@ -36,7 +36,8 @@ export default {
     });
 
     // socket 연결
-    let socket = new SockJS("https://localhost:8443/ws")
+    // let socket = new SockJS("https://localhost:8443/ws")
+    let socket = new SockJS("http://localhost:8080/ws")
     state.stompClient = Stomp.over(socket)
     state.stompClient.connect({}, frame=>{
       console.log("success", frame)
@@ -105,11 +106,37 @@ export default {
   bottom: 0;
   position: fixed;
 }
-.myMsg {
-  text-align: right;
-  color: gray;
+.chatbubble {
+  background-color: white;
+  margin-bottom: 8px;
+  display: flex;
+  padding: 10px 10px 0 10px;
+  border-radius: 0 6px 6px 0;
+  max-width: 60%;
+  width: auto;
+  box-shadow: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 50px);
 }
-.otherMsg {
-  text-align: left;
+
+.chatbubble .chatmsg {
+  display: inline-block;
+  text-align: start;
+  font-size: 11pt;
+  line-height: 13pt;
+  margin: 0 0 10px;
+}
+.chatbubble > span {
+  font-size: 8pt;
+  margin-bottom: 10px;
+}
+
+.myMsg {
+  float: right;
+  border-radius: 6px 0 0 6px;
+  color: gray;
+  text-align: right;
 }
 </style>
