@@ -62,7 +62,6 @@ export default {
     });
 
     const getConnectionNum = function(roomInfo) {
-      console.log(roomInfo);
       axios
         .get(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${roomInfo.id}`, {
           auth: {

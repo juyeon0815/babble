@@ -1,5 +1,5 @@
 <template>
-	<video ref="el" autoplay/>
+	<video class="vid" ref="el" autoplay/>
 </template>
 
 <script>
@@ -23,3 +23,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+	.vid {
+		width: 100%;
+		height: 100%;
+	}
+</style>
