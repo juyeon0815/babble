@@ -7,7 +7,7 @@
         <!-- <div class="block"></div> -->
       </div>
       <div v-else>
-        <img :src="state.profile" alt="내 프로필" />
+        <img :src="state.profile" alt="내 프로필" class="profile"/>
       </div>
 
       <div>
@@ -352,5 +352,10 @@ export default {
 }
 .alert {
   width: 330px;
+}
+.profile {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 </style>

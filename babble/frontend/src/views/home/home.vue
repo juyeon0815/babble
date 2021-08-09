@@ -1,7 +1,7 @@
 <template>
-  <div class="header-space"></div>
-  <div class="head-label">베스트 라이브</div>
-  
+  <!-- <div class="header-space"></div> -->
+
+  <div class="head-label"><mark class="purple">Best</mark> LIVE</div>
   <el-row class="conference-row">
     <Conference
       v-for="i in state.bestRoomCount"
@@ -12,7 +12,7 @@
     />
   </el-row>
 
-  <div class="head-label">최신 라이브</div>
+  <div class="head-label"><mark class="purple">Latest</mark> LIVE</div>
   <el-row class="conference-row">
     <Conference
       v-for="i in state.recentRoomCount"
@@ -31,15 +31,18 @@
 </template>
 
 <style>
-  .header-space {
-    height: 400px;
-    background-color: #d3c4ed;
-  }
   .head-label {
     font-size: 20px;
     font-weight: bold;
-    margin: 20px 0 20px 50px;
+    margin: 120px 0 20px 135px;
   }
+
+  .head-label .purple {
+    color: rgb(236, 58, 58);
+    font-weight: bold;
+    background: none;
+  }
+
   .conference-row {
     justify-content: center;
     align-items: center;
