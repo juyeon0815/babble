@@ -23,7 +23,6 @@ export function endSpinner(state) {
 }
 
 export function joinRoom(state, payload) {
-  console.log(payload);
   state.roomId = payload;
 }
 

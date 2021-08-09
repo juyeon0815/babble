@@ -3,6 +3,7 @@
     <el-tab-pane label="참여자 정보">
       
       <div v-if="state.publisher" class="people-list">
+        <h3>{{ roomTitle }}</h3>
         <!-- 나 -->
         <div class="list-item">
           <div class="about">
@@ -65,7 +66,15 @@ export default {
   components: {
     Chats
   },
-  setup() {
+  props: {
+    roomTitle: {
+      type: String
+    },
+    hostId: {
+      type: Number
+    }
+  },
+  setup(props) {
     const store = useStore();
 
     const state = reactive({
@@ -79,6 +88,9 @@ export default {
 </script>
 
 <style>
+  .people-list > h3 {
+    margin: 0 0 10px 10px;
+  }
   .people-list ul {
     list-style-type: none;
     padding: 10px;
