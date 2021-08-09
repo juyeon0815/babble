@@ -237,6 +237,11 @@ export default {
     });
 
     const clickEnterRoom = function() {
+      const payload = {
+        email: store.getters["auth/getEmail"],
+        roomId: props.roomId
+      }
+      store.dispatch('root/requestRoomEnter', payload)
       handleClose();
       router.push({
         name: "conference-detail",
