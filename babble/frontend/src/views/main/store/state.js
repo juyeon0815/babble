@@ -38,6 +38,7 @@ export default {
   activeCategory: null,
   searchWord: '',
   roomID: '',
+  userName: '',
   //OpenVidu
   OV: undefined,
   session: undefined,

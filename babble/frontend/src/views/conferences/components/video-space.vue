@@ -91,8 +91,9 @@ export default {
       videoStatus: store.getters["root/getPublisher"],
       audioStatus: store.getters["root/getPublisher"],
 
-      myUserName: store.getters["auth/getEmail"],
-      mySessionId: store.getters["root/getRoomID"],
+
+      myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
+      mySessionId: store.getters["root/getRoomID"]
       myId: '',
 
       maxViewers: 1
@@ -110,9 +111,10 @@ export default {
 
     const getRandomName = function() {
       axios
-        .get("https://nickname.hwanmoo.kr/?format=text&count=1")
+        .get("http://localhost:8080/api/v1/room/random")
         .then(response => {
           state.myUserName = response.data;
+          store.commit("root/setUserName", response.data);
         })
         .catch(error => {
           console.log(error);
