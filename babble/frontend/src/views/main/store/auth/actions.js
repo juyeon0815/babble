@@ -8,6 +8,10 @@ export function requestLogin ({ state }, payload) {
   return $axios.post('/auth/login', payload)
 }
 
+export function requestToken({state}, payload){
+  return $axios.post('/auth/token', payload)
+}
+
 export function requestJoin ({ state }, payload) {
   console.log('requestJoin', state, payload)
   return $axios.post('/users/join', payload)
@@ -28,6 +32,12 @@ export function requestEmailConfirm ({ state }, payload) {
 export function requestLogout ({ state }) {
   console.log('requestLogout', state)
   $axios.defaults.headers.common['Authorization'] = undefined
+  localStorage.removeItem('jwt')
+  return
+}
+
+export function requestKakaoLogout({state}, payload){
+  $axios.post('/auth/logout',payload)
   localStorage.removeItem('jwt')
   return
 }

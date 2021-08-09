@@ -93,7 +93,7 @@ export default {
 
 
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
-      mySessionId: store.getters["root/getRoomID"]
+      mySessionId: store.getters["root/getRoomID"],
       myId: '',
 
       maxViewers: 1

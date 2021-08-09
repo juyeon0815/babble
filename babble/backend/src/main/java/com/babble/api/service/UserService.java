@@ -21,4 +21,6 @@ public interface UserService {
 	void deleteUser(String email);
 	void updateAlarm(String email);
 	List<UserHistoryRes> historyList(List<Tuple> historyInfo, String command);
+
+	void kakaoLogin(String email);
 }

@@ -101,6 +101,12 @@ public class UserServiceImpl implements UserService {
 		return list;
 	}
 
+	@Override
+	public void kakaoLogin(String email) {
+		User user = new User(email);
+		userRepository.save(user);
+	}
+
 
 	@Override
 	public void updatePicture(UserUpdatePictureReq userUpdatePictureReq) {

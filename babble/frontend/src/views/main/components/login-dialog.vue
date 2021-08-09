@@ -31,7 +31,7 @@
             Google
     </a>
     <br>
-   <a id="custom-login-btn" @click="loginWithKakao">
+   <a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
     <img
       src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
       width="222"
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { reactive, computed, ref, defineAsyncComponent, onMounted } from "vue";
+import { reactive, computed, ref} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -84,14 +84,8 @@ export default {
     },
 
 
-  loginWithKakao() {
-    const params = {
-        redirectUri: "http://localhost:8083/account/kakaoLogin",
-    };
-    window.Kakao.Auth.authorize(params);
-  },
-  },
 
+  },
 
   setup(props, { emit }) {
     const store = useStore();
@@ -125,8 +119,6 @@ export default {
         return store.getters["auth/getToken"];
       })
     });
-
-
     const isValid = function() {
       loginForm.value.validate(valid => {
         if (valid) {
@@ -176,27 +168,25 @@ export default {
       emit("closeLoginDialog");
     };
 
-    // const loginWithKakao = function(){
-    //   Kakao.Auth.login({
-    //     success: function (response) {
-    //       Kakao.API.request({
-    //         url: '/v2/user/me',
-    //         success: function (response) {
-    //           console.log(response)
-    //           emit("closeLoginDialog");
-    //         },
-    //         fail: function (error) {
-    //           console.log(error)
-    //         },
-    //       })
-    //     },
-    //     fail: function (error) {
-    //       console.log(error)
-    //     },
-    //   })
-    // };
 
-
+  // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
+    let code = new URL(window.location.href).searchParams.get("code");
+    console.log(code);
+    if(code!=null){
+      store.dispatch("auth/requestToken", code)
+      .then(function(result){
+        console.log("result: ", result.data.accessToken)
+        console.log("email : ",result.data.email )
+        localStorage.setItem("jwt", result.data.accessToken);
+        store.commit("auth/setToken", result.data.accessToken);
+        store.commit("auth/setEmail", result.data.email);
+        store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
+        alert("로그인 성공");
+        emit("closeLoginDialog");
+      }).catch(function(error){
+        console.log(error)
+      })
+    }
 
     return { loginForm, state, isValid, clickLogin, handleClose};
   }

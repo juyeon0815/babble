@@ -42,3 +42,4 @@ export function requestRoomDelete ({ state }, payload) {
 export function requestRoomHost ({ state }, roomId) {
   return $axios.get(`room/host/${roomId}`)
 }
+

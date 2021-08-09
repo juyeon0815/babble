@@ -1,5 +1,7 @@
 package com.babble.api.controller;
 
+import com.babble.api.response.user.KakaoLoginPostRes;
+import com.babble.api.service.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
@@ -33,6 +43,10 @@ public class AuthController {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	KakaoService kakaoService;
+
 
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "<strong>이메일과 패스워드</strong>를 통해 로그인 한다.")
@@ -56,5 +70,67 @@ public class AuthController {
 			// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달) (만료시간 및 secret값)
 			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(email)));
 		}else return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "잘못된 비밀번호 입니다.", "fail"));
+	}
+
+	@PostMapping("/token")
+	@ApiOperation(value = "토큰얻기", notes = "code로 토큰 얻기")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공", response = KakaoLoginPostRes.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<KakaoLoginPostRes> getToken(@RequestBody @ApiParam(value="code", required = true) String code) {
+		System.out.println("code: "+code);
+		String access_Token = kakaoService.getAccessToken(code);
+		HashMap<String, String> userInfo = kakaoService.getUserInfo(access_Token);
+		System.out.println("login Controller : " + userInfo);
+		KakaoLoginPostRes kakaoLoginPostRes = KakaoLoginPostRes.builder()
+				.userInfo(userInfo)
+				.access_Token(access_Token)
+				.build();
+
+		User user = userService.getUserByUserEmail(userInfo.get("email"));
+		if(user==null) userService.kakaoLogin(userInfo.get("email"));
+		return ResponseEntity.status(200).body(kakaoLoginPostRes);
+	}
+
+	@PostMapping("/logout")
+	@ApiOperation(value = "카카오 로그아웃", notes = "카카오 로그아웃하기")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공", response = KakaoLoginPostRes.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+	})
+	public void kakaoLogout(@RequestBody @ApiParam(value="code", required = true) String access_token) {
+
+		String reqURL ="https://kapi.kakao.com/v1/user/logout";
+		try {
+			URL url = new URL(reqURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+
+			conn.setRequestProperty("Authorization", "Bearer " + access_token);
+			int responseCode = conn.getResponseCode();
+			System.out.println("responseCode : " + responseCode);
+
+			if(responseCode ==400)
+				throw new RuntimeException("카카오 로그아웃 도중 오류 발생");
+
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+			String br_line = "";
+			String result = "";
+			while ((br_line = br.readLine()) != null) {
+				result += br_line;
+			}
+			System.out.println("결과");
+			System.out.println(result);
+		}catch(IOException e) {
+
+		}
+
 	}
 }
