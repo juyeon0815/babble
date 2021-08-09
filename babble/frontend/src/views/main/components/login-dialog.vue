@@ -74,32 +74,24 @@ export default {
         console.log("4",GoogleUser.getBasicProfile().getEmail());
         console.log("5",GoogleUser.Zb.access_token);
         console.log("6",GoogleUser.Zb.idpId);
+        useStore.dispatch("auth/requestUserInfo", GoogleUser.Zb.access_token)
+      .then(function(result) {
+        console.log(result);
+      });
       } catch (e) {
         console.error(e);
       }
     },
 
-  //   loginWithKakao() {
-  //    Kakao.Auth.login({
-  //     success: function (response) {
-  //       Kakao.API.request({
-  //         url: '/v2/user/me',
-  //         success: function (response) {
-  //       	  console.log(response)
-  //         },
-  //         fail: function (error) {
-  //           console.log(error)
-  //         },
-  //       })
-  //     },
-  //     fail: function (error) {
-  //       console.log(error)
-  //     },
-  //   })
-  //   this.handleClose()
-  //   console.log("여기는오지?")
-  //   }
+
+  loginWithKakao() {
+    const params = {
+        redirectUri: "http://localhost:8083/account/kakaoLogin",
+    };
+    window.Kakao.Auth.authorize(params);
   },
+  },
+
 
   setup(props, { emit }) {
     const store = useStore();
@@ -184,29 +176,29 @@ export default {
       emit("closeLoginDialog");
     };
 
-    const loginWithKakao = function(){
-      Kakao.Auth.login({
-        success: function (response) {
-          Kakao.API.request({
-            url: '/v2/user/me',
-            success: function (response) {
-              console.log(response)
-              emit("closeLoginDialog");
-            },
-            fail: function (error) {
-              console.log(error)
-            },
-          })
-        },
-        fail: function (error) {
-          console.log(error)
-        },
-      })
-    };
+    // const loginWithKakao = function(){
+    //   Kakao.Auth.login({
+    //     success: function (response) {
+    //       Kakao.API.request({
+    //         url: '/v2/user/me',
+    //         success: function (response) {
+    //           console.log(response)
+    //           emit("closeLoginDialog");
+    //         },
+    //         fail: function (error) {
+    //           console.log(error)
+    //         },
+    //       })
+    //     },
+    //     fail: function (error) {
+    //       console.log(error)
+    //     },
+    //   })
+    // };
 
 
 
-    return { loginForm, state, isValid, clickLogin, handleClose,loginWithKakao};
+    return { loginForm, state, isValid, clickLogin, handleClose};
   }
 };
 </script>

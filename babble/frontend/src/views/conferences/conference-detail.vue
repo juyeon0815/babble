@@ -1,11 +1,16 @@
 <template>
   <el-container>
     <el-main>
-      {{ state.conferenceId }}
-      <VideoSpace :conferenceId="state.conferenceId" />
+      <VideoSpace 
+        :roomTitle="state.roomTitle"
+        :hostId="state.hostId"
+      />
     </el-main>
     <el-aside class="side-bar">
-      <Sidebar />
+      <Sidebar 
+        :roomTitle="state.roomTitle"
+        :hostId="state.hostId"
+      />
     </el-aside>
   </el-container>
 </template>
@@ -35,13 +40,24 @@ export default {
     const route = useRoute();
 
     const state = reactive({
-      conferenceId: ""
+      conferenceId: "",
+      hostId: null,
+      roomTitle: ""
     });
     store.commit("root/joinRoom", route.params.conferenceId);
+    
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       state.conferenceId = route.params.conferenceId;
+      store.dispatch("root/requestRoomHost", route.params.conferenceId)
+      .then(result => {
+        state.hostId = result.data.hostId
+        state.roomTitle = result.data.title
+      })
+      .catch(err => {
+        console.log(err)
+      })
     });
 
     // 페이지 이탈시 불리는 훅

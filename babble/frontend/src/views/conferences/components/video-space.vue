@@ -1,11 +1,13 @@
 <template>
-  <h3>Room title <i class="el-icon-user-solid"></i> 0명</h3>
-  <h3>{{ conferenceId }}</h3>
+  <h3>{{ roomTitle }} <i class="el-icon-user-solid"></i> {{ state.subscribers.length + 1}}명</h3>
+  {{ state.maxViewers }}
   <div class="container">
-    <div class="main-video">
+    <!-- 1차) Main Video 제외 -->
+    <!-- <div class="main-video">
       <UserVideo :streamManager="state.mainStreamManager" />
-    </div>
-    <div class="video-container">
+    </div> -->
+
+    <div class="video-container" :class="state.videoGrid">
       <UserVideo
         :stream-manager="state.publisher"
         @click="updateMainVideoStreamManager(publisher)"
@@ -49,7 +51,7 @@
 </template>
 
 <script>
-import { computed, reactive, onMounted, onUnmounted } from "vue";
+import { computed, reactive, onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
@@ -63,11 +65,18 @@ const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
   name: "video-space",
-
+  props: {
+    roomTitle: {
+      type: String
+    },
+    hostId: {
+      type: Number
+    }
+  },
   components: {
     UserVideo
   },
-  setup() {
+  setup(props) {
     const router = useRouter();
     const store = useStore();
 
@@ -81,18 +90,31 @@ export default {
       subscribers: computed(() => store.getters["root/getSubscribers"]),
       videoStatus: store.getters["root/getPublisher"],
       audioStatus: store.getters["root/getPublisher"],
-      // videoStatus: true,
-      // audioStatus: false,
 
-      myUserName: store.getters["auth/getEmail"], // DB 동물이름으로 교체
+
+      myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"]
+      myId: '',
+
+      maxViewers: 1
+      // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
     });
+
+    watch(
+      () => state.subscribers.length,
+      (newCount, prev) => {
+        if (state.maxViewers < newCount + 1) {
+          state.maxViewers = newCount + 1
+        }
+      }
+    )
 
     const getRandomName = function() {
       axios
-        .get("https://nickname.hwanmoo.kr/?format=text&count=1")
+        .get("http://localhost:8080/api/v1/room/random")
         .then(response => {
           state.myUserName = response.data;
+          store.commit("root/setUserName", response.data);
         })
         .catch(error => {
           console.log(error);
@@ -113,6 +135,11 @@ export default {
         state.audioStatus =
           store.getters["root/getPublisher"].stream.audioActive;
       }
+
+      store.dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      .then(function(result) {
+        state.myId = result.data.id
+      })
 
       store.commit("root/setMenuActive", -1);
 
@@ -196,7 +223,6 @@ export default {
       };
 
       const getToken = function(mySessionId) {
-        console.log("@@@@@@@@@@@@@@");
         return createSession(mySessionId).then(sessionId =>
           createToken(sessionId)
         );
@@ -258,6 +284,21 @@ export default {
     });
 
     const leaveSession = function() {
+      // 호스트일 경우 방 삭제(max 보내기)
+      if (props.hostId == state.myId) {
+        const payload = {
+          roomId: state.mySessionId,
+          maxViewers: state.maxViewers
+        }
+        store.dispatch('root/requestRoomDelete', payload)
+      } else {
+        const payload = {
+          email: store.getters["auth/getEmail"],
+          roomId: state.mySessionId
+        }
+        store.dispatch('root/requestRoomExit', payload)
+      }
+
       store.commit("root/setActiveCategory", null);
       store.commit("root/setMenuActive", 0);
       const MenuItems = store.getters["root/getMenus"];
@@ -359,5 +400,17 @@ export default {
 .container {
   display: flex;
   justify-content: center;
+  /* display: grid;
+  height: 80vh; */
 }
+/* .less4 {
+  grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr;
+  gap: 20px;
+}
+.more4 {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+} */
 </style>
