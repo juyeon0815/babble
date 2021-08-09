@@ -1,5 +1,8 @@
 <template>
-  <h3>{{ roomTitle }} <i class="el-icon-user-solid"></i> {{ state.subscribers.length + 1}}명</h3>
+  <h3>
+    {{ roomTitle }} <i class="el-icon-user-solid"></i>
+    {{ state.subscribers.length + 1 }}명
+  </h3>
   {{ state.maxViewers }}
   <div class="container">
     <!-- 1차) Main Video 제외 -->
@@ -91,10 +94,9 @@ export default {
       videoStatus: store.getters["root/getPublisher"],
       audioStatus: store.getters["root/getPublisher"],
 
-
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
-      mySessionId: store.getters["root/getRoomID"]
-      myId: '',
+      mySessionId: store.getters["root/getRoomID"],
+      myId: "",
 
       maxViewers: 1
       // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
@@ -104,21 +106,19 @@ export default {
       () => state.subscribers.length,
       (newCount, prev) => {
         if (state.maxViewers < newCount + 1) {
-          state.maxViewers = newCount + 1
+          state.maxViewers = newCount + 1;
         }
       }
-    )
+    );
 
     const getRandomName = function() {
-      axios
-        .get("http://localhost:8080/api/v1/room/random")
-        .then(response => {
-          state.myUserName = response.data;
-          store.commit("root/setUserName", response.data);
+      store
+        .dispatch("root/requestRandomName")
+        .then(result => {
+          store.commit("root/setUserName", result.data);
         })
-        .catch(error => {
-          console.log(error);
-          state.myUserName = "ERROR";
+        .catch(err => {
+          console.log(err);
         });
     };
     getRandomName();
@@ -136,10 +136,11 @@ export default {
           store.getters["root/getPublisher"].stream.audioActive;
       }
 
-      store.dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        state.myId = result.data.id
-      })
+      store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function(result) {
+          state.myId = result.data.id;
+        });
 
       store.commit("root/setMenuActive", -1);
 
@@ -289,14 +290,14 @@ export default {
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
-        }
-        store.dispatch('root/requestRoomDelete', payload)
+        };
+        store.dispatch("root/requestRoomDelete", payload);
       } else {
         const payload = {
           email: store.getters["auth/getEmail"],
           roomId: state.mySessionId
-        }
-        store.dispatch('root/requestRoomExit', payload)
+        };
+        store.dispatch("root/requestRoomExit", payload);
       }
 
       store.commit("root/setActiveCategory", null);
