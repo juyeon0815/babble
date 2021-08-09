@@ -99,7 +99,10 @@ public class UserController {
 		BabbleUserDetails babbleUserDetails = (BabbleUserDetails) authentication.getDetails();
 		String email = babbleUserDetails.getUsername();
 		User user = userService.getUserByUserEmail(email);
-		return ResponseEntity.status(200).body(UserRes.of(user));
+		UserRes userRes = UserRes.builder()
+				.user(user)
+				.build();
+		return ResponseEntity.status(200).body(userRes);
 	}
 
 	@GetMapping("/{email}")

@@ -77,9 +77,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void roomClose(Long roomId) {
+    public void roomClose(Long roomId, Long maxView) {
         Room room = roomRepositorySupport.findRoomByRoomId(roomId);
-        room.roomClose();
+        room.roomClose(maxView);
         roomRepository.save(room);
     }
 

@@ -17,7 +17,7 @@ public interface RoomService {
     List<Tuple> getRecentRoomInfo(int pageNum);
     List<Tuple> getCategoryBestRoomInfo(String categoryName,int pageNum);
     List<Tuple> getCategoryRecentRoomInfo(String categoryName, int pageNum);
-    void roomClose(Long roomId);
+    void roomClose(Long roomId, Long maxView);
     List<RoomRes> roomList(List<Tuple> roomInfo);
     List<Tuple> searchRoomList(String searchName, int pageNum);
 }

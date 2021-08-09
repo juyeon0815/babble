@@ -200,7 +200,7 @@ public class RoomController {
     }
 
     @Transactional
-    @PatchMapping("/{roomId}")
+    @PostMapping("/{roomId}")
     @ApiOperation(value = "방 종료", notes = "화상회의 방 종료하기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -208,8 +208,9 @@ public class RoomController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity roomClose(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
-        roomService.roomClose(roomId);
+    public ResponseEntity roomClose(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId,
+                                    @RequestBody @ApiParam(value="퇴장", required = true) Long maxView) {
+        roomService.roomClose(roomId, maxView);
         userRoomService.deleteUserRoom(roomId);
         roomHashtagService.deleteRoomHashtag(roomId);
         roomHistoryService.updateEndTime(roomId);
