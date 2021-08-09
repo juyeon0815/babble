@@ -13,7 +13,6 @@ import java.util.List;
 public interface RoomService {
     Room createRoom(Category category, User user, RoomCreateReq roomCreateReq);
     Room getRoomByRoomId(Long roomId);
-    List<Tuple> getRoomInfo();
     List<Tuple> getBestRoomInfo(int pageNum);
     List<Tuple> getRecentRoomInfo(int pageNum);
     List<Tuple> getCategoryBestRoomInfo(String categoryName,int pageNum);

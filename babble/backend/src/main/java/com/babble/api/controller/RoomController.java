@@ -3,6 +3,7 @@ package com.babble.api.controller;
 
 import com.babble.api.request.room.RoomCreateReq;
 import com.babble.api.request.room.RoomRelationReq;
+import com.babble.api.response.room.RoomHostRes;
 import com.babble.api.response.room.RoomRes;
 import com.babble.api.response.room.RoomWaitRes;
 import com.babble.api.service.*;
@@ -118,24 +119,6 @@ public class RoomController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @GetMapping(value = "/list")
-    @ApiOperation(value = "방 정보", notes = "모든 방의 정보를 보여준다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity roomList() {
-
-        List<Tuple> roomInfo = roomService.getRoomInfo();
-        System.out.println(roomInfo.size());
-        List<RoomRes> roomList = roomService.roomList(roomInfo);
-        System.out.println(roomList.size());
-        return ResponseEntity.status(200).body(roomList);
-    }
-
-
     @GetMapping("/{categoryName}/best/{pageNum}")
     @ApiOperation(value = "카테고리별 인기 방 정보", notes = "카테고리별 인기순으로 방의 정보를 보여준다.")
     @ApiResponses({
@@ -190,7 +173,7 @@ public class RoomController {
 
 
     @Transactional
-    @DeleteMapping("/{roomId}")
+    @PatchMapping("/{roomId}")
     @ApiOperation(value = "방 종료", notes = "화상회의 방 종료하기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -224,5 +207,23 @@ public class RoomController {
                 .build();
 
         return ResponseEntity.status(200).body(roomWaitRes);
+    }
+
+    @GetMapping("/host/{roomId}")
+    @ApiOperation(value = "호스트포함 방정보", notes = "호스트 및 방 제목 보여주기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity hostRoomInfo(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
+        Room room = roomService.getRoomByRoomId(roomId);
+        RoomHostRes roomHostRes = RoomHostRes.builder()
+                .hostId(room.getHostId())
+                .title(room.getTitle())
+                .build();
+
+        return ResponseEntity.status(200).body(roomHostRes);
     }
 }

@@ -11,6 +11,13 @@ import router from './common/lib/vue-router'
 
 import 'element-plus/packages/theme-chalk/src/base.scss'
 
+import googleAuth from './authentification';
+
+import VueKakaoSdk from 'vue-kakao-sdk'
+
+
+
+
 // Element UI Components [시작]
 import {
   ElAlert,
@@ -210,3 +217,20 @@ plugins.forEach(plugin => {
 })
 
 app.mount('#app')
+
+app.use(googleAuth, {
+  clientId: process.env.VUE_APP_OAUTH_CLIENT,
+  scope: 'profile email https://www.googleapis.com/auth/plus.login'
+});
+// set auth config
+const prompt = 'select_account'
+const GoogleAuthConfig = Object.assign({ scope: 'profile email' }, {
+  clientId: process.env.VUE_APP_OAUTH_CLIENT,
+  scope: 'profile email https://www.googleapis.com/auth/plus.login',
+});
+
+// Install Vue plugin
+app.config.globalProperties.$gAuth = googleAuth;
+app.config.globalProperties.$gAuth.load(GoogleAuthConfig, prompt)
+
+window.Kakao.init('22983c36b6067d5dbe46e18066fc6f59');
