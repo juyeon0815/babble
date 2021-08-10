@@ -36,21 +36,21 @@
         />
       </el-form-item>
       <el-form-item prop="category" label="카테고리">
-        <el-select
-          v-model="state.form.category"
-          placeholder="카테고리 하나를 골라주세요!"
+        <select
+        v-model="state.form.category"
+        placeholder="카테고리 하나를 골라주세요!"
         >
-          <el-option label="sports" value="sports"></el-option>
-          <el-option label="cooking" value="cooking"></el-option>
-          <el-option label="handcraft" value="handcraft"></el-option>
-          <el-option label="music" value="music"></el-option>
-          <el-option label="finance" value="finance"></el-option>
-          <el-option label="game" value="game"></el-option>
-          <el-option label="movie" value="movie"></el-option>
-          <el-option label="drawing" value="drawing"></el-option>
-          <el-option label="book" value="book"></el-option>
-          <el-option label="pet" value="pet"></el-option>
-        </el-select>
+          <option label="sports" value="sports"></option>
+          <option label="cooking" value="cooking"></option>
+          <option label="handcraft" value="handcraft"></option>
+          <option label="music" value="music"></option>
+          <option label="finance" value="finance"></option>
+          <option label="game" value="game"></option>
+          <option label="movie" value="movie"></option>
+          <option label="drawing" value="drawing"></option>
+          <option label="book" value="book"></option>
+          <option label="pet" value="pet"></option>
+        </select>
       </el-form-item>
       <el-form-item prop="hashtag" label="해시태그">
         <div class="inputGroup">

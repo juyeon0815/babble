@@ -29,16 +29,6 @@ public class RoomRepositorySupport {
         return room;
     }
 
-    public List<Tuple> roomInfo(){
-        List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
-                .from(qRoom).leftJoin(qCategory).on(qRoom.category.id.eq(qCategory.id))
-                .leftJoin(qUserRoom).on(qRoom.id.eq(qUserRoom.room.id))
-                .where(qRoom.isActivate.eq(true))
-                .groupBy(qUserRoom.room.id)
-                .fetch();
-        return list;
-    }
-
 
     public List<Tuple> bestRoomInfo(int pageNum){
         List<Tuple> list = jpaQueryFactory.select(qRoom.id, qRoom.title, qRoom.thumbnailUrl, qCategory.name, qUserRoom.room.id.count())
