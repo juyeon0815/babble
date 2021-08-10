@@ -28,15 +28,6 @@ export function getRoomID(state) { // 입장하는 방 이름
 	return state.roomId
 }
 
-export function getOV(state) {
-	return state.OV
-}
-export function getSession(state) {
-	return state.session
-}
-export function getMainStreamManager(state) {
-	return state.mainStreamManager
-}
 export function getPublisher(state) {
 	return state.publisher
 }
@@ -46,3 +37,10 @@ export function getSubscribers(state) {
 export function getUserName(state) {
 	return state.userName
 }
+export function getUserVideoStatus(state) {
+	return state.userVideoStatus
+}
+export function getUserAudioStatus(state) {
+	return state.userAudioStatus
+}
+
