@@ -25,7 +25,6 @@ export default {
 </script>
 <style scoped>
 	.vid {
-		width: 100%;
-		height: 100%;
+		width: 90%
 	}
 </style>

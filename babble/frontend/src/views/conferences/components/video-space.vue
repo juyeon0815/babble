@@ -13,17 +13,127 @@
     <div class="video-container" :class="state.videoGrid">
       <UserVideo
         :stream-manager="state.publisher"
-        @click="updateMainVideoStreamManager(publisher)"
-      />
-      <UserVideo
-        v-for="sub in state.subscribers"
-        :key="sub.stream.connection.connectionId"
-        :stream-manager="sub"
-        @click="unpublish(sub)"
+        @toMain="updateMainVideoStreamManager(state.publisher)"
       />
     </div>
+    <!-- 2인 -->
+    <div v-if="state.videoGrid == 'less2'" class="video-container less2">
+      <el-row>
+        <el-col :span="12">
+          <UserVideo
+            :stream-manager="state.publisher"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-col>
+        <el-col :span="12" v-if="state.subscribers.length != 0">
+          <UserVideo
+            :stream-manager="state.subscribers[0]"
+            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
+            @unpublishMe="unpublish(state.subscribers[0])"
+          />
+        </el-col>
+      </el-row>
+    </div>
+    <!-- 3-4인 -->
+    <div v-if="state.videoGrid == 'less4'" class="video-container">
+      <el-row class="video-row">
+        <el-col :offset="3" :span="8">
+          <UserVideo
+            :stream-manager="state.publisher"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-col>
+        <el-col :offset="1" :span="8">
+          <UserVideo
+            :stream-manager="state.subscribers[0]"
+            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
+            @unpublishMe="unpublish(state.subscribers[0])"
+          />
+        </el-col>
+      </el-row>
+      <el-row class="video-row">
+        <el-col :offset="3" :span="8">
+          <UserVideo
+            :stream-manager="state.subscribers[1]"
+            @toMain="updateMainVideoStreamManager(state.subscribers[1])"
+            @unpublishMe="unpublish(state.subscribers[1])"
+          />
+        </el-col>
+        <el-col :offset="1" :span="8">
+          <UserVideo
+            v-if="state.subscribers.length == 3"
+            :stream-manager="state.subscribers[2]"
+            @toMain="updateMainVideoStreamManager(state.subscribers[2])"
+            @unpublishMe="unpublish(state.subscribers[2])"
+          />
+        </el-col>
+      </el-row>
+    </div>
+    <!-- 5-6인 -->
+    <div v-if="state.videoGrid == 'less6'" class="video-container">
+      <el-row class="video-row">
+        <el-col :span="8">
+          <UserVideo
+            :stream-manager="state.publisher"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-col>
+        <el-col :span="8" 
+          v-for="sub in state.subscribers.slice(0, 2)" 
+          :key="sub.stream.connection.connectionId">
+          <UserVideo
+            :stream-manager="sub"
+            @toMain="updateMainVideoStreamManager(sub)"
+            @unpublishMe="unpublish(sub)"
+          />
+        </el-col>
+      </el-row>
+      <el-row class="video-row">
+        <el-col :span="8" 
+          v-for="sub in state.subscribers.slice(2)" 
+          :key="sub.stream.connection.connectionId">
+          <UserVideo
+            :stream-manager="sub"
+            @toMain="updateMainVideoStreamManager(sub)"
+            @unpublishMe="unpublish(sub)"
+          />
+        </el-col>
+      </el-row>
+    </div>
   </div>
+  
+  <!-- 메인 비디오 크게보기  -->
+  <div v-if="state.showMainVideo" class="video-container main-video">
+    <el-row>
+      <el-col :span="15">
+        <UserVideo 
+          :streamManager="state.mainStreamManager"
+          @click="state.showMainVideo = false"
+        />
+      </el-col>
+      <el-col :offset="1" :span="8">
+        <el-row>
+          <UserVideo
+            :stream-manager="state.publisher"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-row>
+        <el-row v-if="state.subscribers.length != 0">
+          <UserVideo
+            :stream-manager="state.subscribers[0]"
+            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
+            @unpublishMe="unpublish(state.subscribers[0])"
+          />
+        </el-row>
+      </el-col>
+    </el-row>
+    
+  </div>
+ 
+  <!-- 6인 이상 추가 예정 -->
 
+
+  <!-- 버튼 -->
   <div class="nav-icons">
     <el-button-group>
       <el-button type="info" plain @click="onOffAudio">
@@ -43,30 +153,12 @@
         <i v-else type="danger" class="el-icon-video-camera" />
       </el-button>
       <el-button type="info" plain @click="findStreamIdBySessionId">
-        <i class="el-icon-thumb"></i
-      ></el-button>
-      <el-popover class="emoji-balloon" :width="280" placement="top-start" trigger="click" :visible="state.visible">
-        <template #reference>
-          <el-button type="info" plain @click="state.visible = !state.visible">
-            <i
-              v-if="state.visible"
-              style="color:yellow"
-              class="el-icon-star-on"
-            />
-            <i v-else type="warning" class="el-icon-star-on" />
-          </el-button>
-        </template>
-        <div class="emoji-row">
-          <button class="btn" @click="clickLike"><img class="small like" :src="require('@/assets/images/emoji_like.png')"></button>
-          <button class="btn" @click="clickJoy"><img class="small joy" :src="require('@/assets/images/emoji_joy.png')"></button>
-          <button class="btn" @click="clickWow"><img class="medium wow" :src="require('@/assets/images/emoji_wow.png')"></button>
-          <button class="btn heart" @click="clickHeart"><img class="small" :src="require('@/assets/images/emoji_heart.png')"></button>
-          <button class="btn" @click="clickSad"><img class="medium sad" :src="require('@/assets/images/emoji_sad.png')"></button>
-        </div>
-      </el-popover>
+        <i class="el-icon-thumb"></i>
+      </el-button>
+      <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
       <el-button type="info" plain @click="leaveSession">
-        <i class="el-icon-error"></i
-      ></el-button>
+        <i class="el-icon-error"></i>
+      </el-button>
     </el-button-group>
   </div>
   <div>
@@ -107,6 +199,9 @@ export default {
     },
     hostId: {
       type: Number
+    },
+    myId: {
+      type: String
     }
   },
   components: {
@@ -129,28 +224,28 @@ export default {
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
 
-      maxViewers: 1,
-      visible: false,
-      emoji: "",
-      prevEmoji: [],
-      nickname: computed(() => store.getters["root/getUserName"]),
-      stompClient: null,
-      roomId: store.getters["root/getRoomID"],
-      isLoggedin: computed(() => {
-        return store.getters["auth/getToken"];
-      }),
-      // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
-      stompClient: null, // 추가
-      isLoggedin: computed(() => {
-        return store.getters["auth/getToken"];
-      }), // 추가
-   });
+      videoGrid: 'alone',
+      showMainVideo: false  
+    });
 
     watch(
       () => state.subscribers.length,
       (newCount, prev) => {
+        // maxViewers
         if (state.maxViewers < newCount + 1) {
           state.maxViewers = newCount + 1;
+        }
+        // videoGrid
+        if (newCount == 0) {
+          state.videoGrid = 'alone'
+        } else if (newCount == 1) {
+          state.videoGrid = 'less2'
+        } else if (newCount >= 2 && newCount <= 3) {
+          state.videoGrid = 'less4'
+        } else if (newCount >= 4 && newCount <= 5) {
+          state.videoGrid = 'less6'
+        } else {
+          state.videoGrid = 'more6'
         }
       }
     );
@@ -169,11 +264,6 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       getRandomName();
-      store
-        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-        .then(function(result) {
-          state.myId = result.data.id;
-        });
 
       store.commit("root/setMenuActive", -1);
       state.OV = new OpenVidu();
@@ -316,7 +406,8 @@ export default {
 
     const leaveSession = function() {
       // 호스트일 경우 방 삭제(max 보내기)
-      if (props.hostId == state.myId) {
+      
+      if (props.hostId == props.myId) {
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
@@ -339,12 +430,12 @@ export default {
       });
     };
 
-    //메인 화면으로 옮기기 // 아직 비활성화임.
     const updateMainVideoStreamManager = function(stream) {
-      // if (state.mainStreamManager === stream) return;
-      // state.mainStreamManager = stream;
-      console.log(stream);
-    };
+      store.commit('root/setMainStreamManager', stream)
+      console.log('***********')
+      console.log(stream)
+      state.showMainVideo = true
+    }
 
     // 내 영상 끄기
     const onOffVideo = function() {
@@ -506,53 +597,17 @@ export default {
   font-size: 25px;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  /* display: grid;
-  height: 80vh; */
+.video-container {
+  width: 100%;
+  height: 80vh;
 }
-/* .less4 {
-  grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
-  gap: 20px;
-}
-.more4 {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr 1fr;
-  gap: 10px;
-} */
-
-.emoji-row {
+.less2 {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-.btn {
-  border: none;
-  background: transparent;
-  width: 50px;
-  height: 50px;
-  overflow: hidden;
-  transition: all 0.2s linear;
+.video-container .video-row {
+  height: 50%;
 }
 
-.medium {
-  width: 47px;
-}
-
-.small {
-  width: 32px;
-  margin-top: 5px;
-}
-
-.heart {
-  margin-left: 7px;
-}
-
-.btn:hover {
-  transform: scale(1.2);
-  cursor: pointer;
-}
 </style>

@@ -204,12 +204,10 @@ export default {
           if (result.status == 200) {
             alert("사용가능한 이메일입니다.");
             state.isOnlyEmail = true;
-          } else {
-            alert("alert");
           }
         })
         .catch(function(err) {
-          alert(err);
+          alert("이미존재하는 이메일입니다.");
           state.isOnlyEmail = false;
         });
     };
