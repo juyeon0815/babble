@@ -34,15 +34,6 @@ export function setSearchWord(state, searchWord) {
 	state.searchWord = searchWord
 }
 
-export function setOV(state,ov) {
-  state.OV = ov
-}
-export function setSession(state, session) {
-  state.session = session
-}
-export function setMainStreamManager(state,manager) {
-  state.mainStreamManager = manager
-}
 export function setPublisher(state, publisher) {
   state.publisher = publisher
 }
@@ -57,4 +48,12 @@ export function setClearSubscribers(state,subscribers) {
 
 export function setUserName(state,name) {
   state.userName = name;
+}
+
+export function setUserVideoStatus(state,status) {
+  state.userVideoStatus = status;
+}
+
+export function setUserAudioStatus(state,status) {
+  state.userAudioStatus = status;
 }
