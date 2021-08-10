@@ -172,6 +172,19 @@ public class UserController {
 		return ResponseEntity.status(200).body("success");
 	}
 
+	// 이메일로 임시 비밀번호 발급
+	@GetMapping("/findPassword/{email}")
+	public ResponseEntity findPassword(@PathVariable("email") String email) throws Exception {
+		// 존재하는 아이디인지 확인 후 임시 비밀번호 변경
+		String tempPassword = emailService.sendTempPassword(email);
+		// 임시 비밀번호로 변경
+		UserUpdatePasswordReq userUpdateTempPasswordReq = new UserUpdatePasswordReq();
+		userUpdateTempPasswordReq.setEmail(email);
+		userUpdateTempPasswordReq.setPassword(tempPassword);
+		userService.updatePassword(userUpdateTempPasswordReq);
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
+
 	@PostMapping("/hashtag")
 	@ApiOperation(value = "해시태그 추가", notes = "관심 해시태그 추가")
 	@ApiResponses({
