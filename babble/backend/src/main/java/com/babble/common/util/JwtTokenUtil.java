@@ -56,7 +56,7 @@ public class JwtTokenUtil {
      * Jwt Token의 유효성을 체크한다.
      */
     public static boolean validateToken(String jwt) {
-        System.out.println(">>> getClaims(jwt )" + getClaims(jwt));
+//        System.out.println(">>> getClaims(jwt )" + getClaims(jwt));
         return getClaims(jwt) != null;
     }
 
@@ -84,26 +84,6 @@ public class JwtTokenUtil {
             throw ex;
         }
     }
-//    public static Integer getUserIdFromAcessToken(String token) {
-//        return getUserId(token, secretKey);
-//    }
-//
-//    private static Integer getUserId(String token, String secretKey) {
-////        Claims claims = Jwts.parser()
-////                .setSigningKey(secretKey)
-////                .parseClaimsJws(token)
-////                .getBody();
-//
-//        Claims claims = Jwts.parser().
-//                setSigningKey(secretKey.getBytes(Charset.forName("UTF-8"))).
-//                parseClaimsJws(token.replace("{", "")
-//                .replace("}",""))
-//                .getBody();
-//
-//        System.out.println(">>> claims " + claims);
-//        return Integer.parseInt(claims.getSubject());
-//    }
-//    ///
 
     public void setExpirationTime() {
         //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);

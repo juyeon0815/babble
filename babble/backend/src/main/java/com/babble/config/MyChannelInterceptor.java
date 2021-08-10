@@ -36,7 +36,11 @@ public class MyChannelInterceptor implements ChannelInterceptor {
             // 토큰 유효성 검사를 해서, 토큰이 있으면 Member, 없으면 Guest Role 부여
             // Member는 채팅 보내기까지 가능, Guest는 받기만 가능
             // 전달받은 토큰이 제대로 생성된 것인지 확인
-            System.out.println(">>> 사용 가능한 토큰??? " + JwtTokenUtil.validateToken(jwt));
+            boolean valid = JwtTokenUtil.validateToken(jwt);
+            System.out.println(">>> 사용 가능한 토큰??? " + valid);
+            if(!valid) {
+
+            }
 
         } else if (command.compareTo(StompCommand.DISCONNECT) == 0) {
             System.out.println("사용자 연결 해제");
