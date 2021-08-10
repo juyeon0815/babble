@@ -9,12 +9,14 @@ import lombok.ToString;
 @Getter
 @ToString
 public class EmojiReq {
-    Long chatroomId;
-    int emojiType;
+    Long roomId;
+    String img;
+    String nickname;
 
     @Builder
-    public EmojiReq(Long chatroomId, int emojiType) {
-        this.chatroomId = chatroomId;
-        this.emojiType = emojiType;
+    public EmojiReq(Long roomId, String img, String nickname) {
+        this.roomId = roomId;
+        this.img = img;
+        this.nickname = nickname;
     }
 }

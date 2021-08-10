@@ -60,6 +60,8 @@ import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "./user-video";
 import axios from "axios";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -67,6 +69,7 @@ const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
+
   name: "video-space",
   props: {
     roomTitle: {
@@ -97,10 +100,13 @@ export default {
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
-
-      maxViewers: 1
+      maxViewers: 1,
       // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
-    });
+      stompClient: null, // 추가
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }), // 추가
+   });
 
     watch(
       () => state.subscribers.length,
@@ -110,6 +116,26 @@ export default {
         }
       }
     );
+
+    // socket 연결
+    // let socket = new SockJS("https://localhost:8443/ws")
+    let socket = new SockJS("http://localhost:8080/ws")
+    let authorization = state.isLoggedin;
+    state.stompClient = Stomp.over(socket)
+    console.log(">>>>>>>>>>>>> 토큰  ", authorization);
+    state.stompClient.connect({authorization}, frame=>{
+      console.log(">>>>>>>>>> video-space success", frame)
+      state.stompClient.subscribe("/sub/emoji/"+ state.chatroomId, res=>{
+        let jsonBody = JSON.parse(res.body)
+        let m={
+          'nickname': jsonBody.nickname,
+          'img': jsonBody.img
+        }
+      })
+    }, err=>{
+      console.log("fail", err)
+    })
+    // 추가
 
     const getRandomName = function() {
       store

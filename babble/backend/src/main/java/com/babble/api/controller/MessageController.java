@@ -28,6 +28,6 @@ public class MessageController {
     @MessageMapping("/emoji")
     public void sendEmoji(@Payload EmojiReq emojiReq) {
         System.out.println(">>>>> 전달 이모지 타입 " + emojiReq);
-        template.convertAndSend("/sub/emoji/" + emojiReq.getChatroomId(), emojiReq);
+        template.convertAndSend("/sub/emoji/" + emojiReq.getRoomId(), emojiReq);
     }
 }

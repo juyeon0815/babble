@@ -23,7 +23,6 @@ import SockJS from "sockjs-client";
 import { reactive, watch, nextTick, computed } from "vue";
 import { useStore } from "vuex";
 
-
 export default {
   setup() {
     const store = useStore();
@@ -44,10 +43,10 @@ export default {
     let socket = new SockJS("http://localhost:8080/ws")
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket)
-    console.log(">>>>>>>>>>>>> 토큰  ", authorization);
+    console.log(">>>> 토큰  ", authorization);
     state.stompClient.connect({authorization}, frame=>{
       console.log("success", frame)
-      state.stompClient.subscribe("/sub/"+ state.chatroomId, res=>{
+      state.stompClient.subscribe("/sub/message/"+ state.chatroomId, res=>{
         let jsonBody = JSON.parse(res.body)
         let m={
           'nickname':jsonBody.nickname,

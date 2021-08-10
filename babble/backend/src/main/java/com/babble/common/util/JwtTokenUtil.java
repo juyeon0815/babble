@@ -44,18 +44,7 @@ public class JwtTokenUtil {
         this.expirationTime = expirationTime;
     }
 
-    // websocket 보안용 security
-    /**
-     * Jwt Token을 복호화 하여 이름을 얻는다.
-     */
-    public static String getUserNameFromJwt(String jwt) {
-        return getClaims(jwt).getBody().getSubject();
-    }
-
-    /**
-     * Jwt Token의 유효성을 체크한다.
-     */
-    public static boolean validateToken(String jwt) {
+    public static boolean validateToken(String jwt) { // Jwt Token의 유효성을 체크
 //        System.out.println(">>> getClaims(jwt )" + getClaims(jwt));
         return getClaims(jwt) != null;
     }
@@ -83,6 +72,20 @@ public class JwtTokenUtil {
             log.error("JWT claims string is empty.");
             throw ex;
         }
+    }
+
+    // 토큰에서 회원 정보 추출
+    public static String getUserInfo(String jwt) {
+//        return Jwts.parser()
+//                .setSigningKey(secretKey.getBytes(Charset.forName("UTF-8")))
+//                .parseClaimsJws(jwt.replace("{", "")
+//                .replace("}",""))
+//                .getBody()
+//                .getSubject();
+        return Jwts.parser()
+                .setSigningKey(secretKey.getBytes(Charset.forName("UTF-8")))
+                .parseClaimsJws(jwt.replace("{", "")
+                .replace("}","")).toString();
     }
 
     public void setExpirationTime() {
