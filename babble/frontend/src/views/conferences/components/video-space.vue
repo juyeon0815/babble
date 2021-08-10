@@ -411,26 +411,48 @@ export default {
     let socket = new SockJS("http://localhost:8080/ws");
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
-    state.stompClient.connect(
-      {authorization},
-      frame => {
-        console.log(">>>>>>>>>> video-space success", frame)
-        state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
-          let jsonBody = JSON.parse(res.body);
-          let e = {
-            nickname: jsonBody.nickname,
-            img: jsonBody.img
-            // content: jsonBody.content,
-            // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
-          };
-          state.prevEmoji.push(e);
-          // changeScroll();
-        });
-      },
-      err => {
-        console.log("fail", err);
-      }
-    );
+    if(!authorization) {
+        state.stompClient.connect({},frame => {
+          console.log(">>>>>>>>>> video-space success", frame)
+          state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+            let jsonBody = JSON.parse(res.body);
+            let e = {
+              nickname: jsonBody.nickname,
+              img: jsonBody.img
+              // content: jsonBody.content,
+              // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+            };
+            state.prevEmoji.push(e);
+            // changeScroll();
+          });
+        },
+        err => {
+          console.log("fail", err);
+        }
+      );
+    } else {
+      state.stompClient.connect(
+        {authorization},
+        frame => {
+          console.log(">>>>>>>>>> video-space success", frame)
+          state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+            let jsonBody = JSON.parse(res.body);
+            let e = {
+              nickname: jsonBody.nickname,
+              img: jsonBody.img
+              // content: jsonBody.content,
+              // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+            };
+            state.prevEmoji.push(e);
+            // changeScroll();
+          });
+        },
+        err => {
+          console.log("fail", err);
+        }
+      );
+
+    }
 
     const clickLike = function () {
       let emoji = document.querySelector(".like")
