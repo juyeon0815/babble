@@ -56,6 +56,8 @@ export default {
     store
       .dispatch("auth/requestViewHistory1", { email: state.email })
       .then(function(result) {
+        console.log('********************')
+        console.log(result.data)
         let data = result.data;
         // console.log(data, '처음 받아온 데이터')
         // console.log(result.data[0].viewDate)

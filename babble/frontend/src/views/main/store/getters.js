@@ -43,3 +43,6 @@ export function getPublisher(state) {
 export function getSubscribers(state) {
 	return state.subscribers
 }
+export function getUserName(state) {
+	return state.userName
+}

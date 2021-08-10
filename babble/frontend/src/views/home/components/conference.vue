@@ -10,16 +10,13 @@
         <div v-else class="image-cover">
           <img :src="roomInfo.thumbnailUrl" class="image">
         </div>
-        <p class="text">대기실로 이동</p>
-
+        <p class="text"> Let's Ba:bble</p>
       </div>
 
       <div class="card-bottom">
-
         <div class="stringcut">{{ roomInfo.title }}</div>
         <div>
           <el-tag class="tag" @click.stop="clickCategory(roomInfo.category)">{{ roomInfo.category }}</el-tag>
-
         </div>
         <div v-if="roomInfo.hashtag && roomInfo.hashtag[0] !== ''">
           <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
@@ -62,7 +59,6 @@ export default {
     });
 
     const getConnectionNum = function(roomInfo) {
-      console.log(roomInfo);
       axios
         .get(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${roomInfo.id}`, {
           auth: {
@@ -97,6 +93,16 @@ export default {
         }
       })
     }
+
+    // if (props.roomInfo.id %= 1) {
+    //   console.log(propss.roomInfo.id)
+    //   let card = document.querySelector(".conference-card")
+    //   card.classList.add('change-color')
+    // } else {
+    //   card.classList.remove('change-color')
+    // }
+
+
     return { state, clickCategory, getConnectionNum, clickHashtag };
   }
 };
@@ -115,6 +121,15 @@ export default {
   border-width: 3px;
   border-style: solid;
   border-color: #A0A0FF;
+}
+
+.conference-card:hover.change-color {
+  margin: 0 10px 0;
+  transform: scale(1.05);
+  border-width: 3px;
+  border-style: solid;
+  border-color: #9f05ff69;
+
 }
 
 /* .hide-show {
@@ -151,7 +166,7 @@ export default {
 }
 
 .conference-card:hover .image-cover {
-  background-color: rgb(95, 93, 93);
+  background-color: #A0A0FF;;
 }
 
 .conference-card:hover img {
