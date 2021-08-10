@@ -43,3 +43,6 @@ export function requestRoomHost ({ state }, roomId) {
   return $axios.get(`room/host/${roomId}`)
 }
 
+export function requestRandomName ({ state }) {
+  return $axios.get(`room/random`)
+}

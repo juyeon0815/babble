@@ -1,5 +1,8 @@
 <template>
-  <h3>{{ roomTitle }} <i class="el-icon-user-solid"></i> {{ state.subscribers.length + 1}}명</h3>
+  <h3>
+    {{ roomTitle }} <i class="el-icon-user-solid"></i>
+    {{ state.subscribers.length + 1 }}명
+  </h3>
   {{ state.maxViewers }}
   <div class="container">
     <!-- 1차) Main Video 제외 -->
@@ -81,20 +84,17 @@ export default {
     const store = useStore();
 
     const state = reactive({
-      OV: computed(() => store.getters["root/getOV"]),
-      session: computed(() => store.getters["root/getSession"]),
-      mainStreamManager: computed(
-        () => store.getters["root/getMainStreamManager"]
-      ),
-      publisher: computed(() => store.getters["root/getPublisher"]),
+      OV: undefined,
+      session: undefined,
+      mainStreamManager: undefined,
+      publisher: undefined,
       subscribers: computed(() => store.getters["root/getSubscribers"]),
-      videoStatus: store.getters["root/getPublisher"],
-      audioStatus: store.getters["root/getPublisher"],
-
+      videoStatus: computed(() => store.getters["root/getUserVideoStatus"]),
+      audioStatus: computed(() => store.getters["root/getUserAudioStatus"]),
 
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"],
-      myId: '',
+      myId: "",
 
       maxViewers: 1
       // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
@@ -104,52 +104,38 @@ export default {
       () => state.subscribers.length,
       (newCount, prev) => {
         if (state.maxViewers < newCount + 1) {
-          state.maxViewers = newCount + 1
+          state.maxViewers = newCount + 1;
         }
       }
-    )
+    );
 
-    const getRandomName = function() {
-      axios
-        .get("http://localhost:8080/api/v1/room/random")
-        .then(response => {
-          state.myUserName = response.data;
-          store.commit("root/setUserName", response.data);
+    const getRandomName = async function() {
+      await store
+        .dispatch("root/requestRandomName")
+        .then(result => {
+          store.commit("root/setUserName", result.data);
         })
-        .catch(error => {
-          console.log(error);
-          state.myUserName = "ERROR";
+        .catch(err => {
+          store.commit("root/setUserName", "요상한 놈");
         });
     };
-    getRandomName();
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
-      // 새로고침 방지
-      if (state.videoStatus === undefined) {
-        state.videoStatus = true;
-        state.audioStatus = true;
-      } else {
-        state.videoStatus =
-          store.getters["root/getPublisher"].stream.videoActive;
-        state.audioStatus =
-          store.getters["root/getPublisher"].stream.audioActive;
-      }
-
-      store.dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        state.myId = result.data.id
-      })
+      getRandomName();
+      store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function(result) {
+          state.myId = result.data.id;
+        });
 
       store.commit("root/setMenuActive", -1);
+      state.OV = new OpenVidu();
+      state.session = state.OV.initSession();
 
-      store.commit("root/setOV", new OpenVidu());
-
-      store.commit("root/setSession", state.OV.initSession());
-
+      // 스트림이 생성 되었을 때 -> 기존 참가자 정보 받아오기.
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
-        // state.subscribers.push(subscriber);
         store.commit("root/setSubscribers", subscriber);
       });
 
@@ -232,24 +218,25 @@ export default {
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
+            // 새로 들어온 참가자
             if (state.publisher === undefined) {
               let publisher = state.OV.initPublisher(undefined, {
                 audioSource: undefined, // The source of audio. If undefined default microphone
                 videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                publishAudio: state.audioStatus, // Whether you want to start publishing with your audio unmuted or not
+                publishVideo: state.videoStatus, // Whether you want to start publishing with your video enabled or not
                 resolution: "640x480", // The resolution of your video
                 frameRate: 30, // The frame rate of your video
                 insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
                 mirror: false // Whether to mirror your local video or not
               });
 
-              // state.mainStreamManager = publisher;
-              store.commit("root/setMainStreamManager", publisher);
-
-              // state.publisher = publisher;
+              state.mainStreamManager = publisher;
+              state.publisher = publisher;
               store.commit("root/setPublisher", publisher);
 
+              console.log("%%%%%%%%%%%%%");
+              console.log(state.session);
               // --- Publish your stream ---
               state.session.publish(publisher);
             } else {
@@ -273,14 +260,12 @@ export default {
       state.session = undefined;
       state.mainStreamManager = undefined;
       state.publisher = undefined;
-      state.subscribers = [];
       state.OV = undefined;
 
-      store.commit("root/setSession", undefined);
-      store.commit("root/setMainStreamManager", undefined);
-      store.commit("root/setPublisher", undefined);
+      // vueX 초기화
+      store.commit("root/setUserVideoStatus", true);
+      store.commit("root/setUserAudioStatus", true);
       store.commit("root/setClearSubscribers", []);
-      store.commit("root/setOV", undefined);
     });
 
     const leaveSession = function() {
@@ -289,14 +274,14 @@ export default {
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
-        }
-        store.dispatch('root/requestRoomDelete', payload)
+        };
+        store.dispatch("root/requestRoomDelete", payload);
       } else {
         const payload = {
           email: store.getters["auth/getEmail"],
           roomId: state.mySessionId
-        }
-        store.dispatch('root/requestRoomExit', payload)
+        };
+        store.dispatch("root/requestRoomExit", payload);
       }
 
       store.commit("root/setActiveCategory", null);
@@ -315,23 +300,25 @@ export default {
       console.log(stream);
     };
 
+    // 내 영상 끄기
     const onOffVideo = function() {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
-        state.videoStatus = false;
+        store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
-        state.videoStatus = true;
+        store.commit("root/setUserVideoStatus", true);
       }
     };
 
+    // 내 음성 끄기
     const onOffAudio = function() {
       if (state.audioStatus) {
         state.publisher.publishAudio(false);
-        state.audioStatus = false;
+        store.commit("root/setUserAudioStatus", false);
       } else {
         state.publisher.publishAudio(true);
-        state.audioStatus = true;
+        store.commit("root/setUserAudioStatus", true);
       }
     };
 
