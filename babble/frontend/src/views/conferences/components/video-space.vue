@@ -45,11 +45,41 @@
       <el-button type="info" plain @click="findStreamIdBySessionId">
         <i class="el-icon-thumb"></i
       ></el-button>
-      <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
+      <el-popover class="emoji-balloon" :width="280" placement="top-start" trigger="click" :visible="state.visible">
+        <template #reference>
+          <el-button type="info" plain @click="state.visible = !state.visible">
+            <i
+              v-if="state.visible"
+              style="color:yellow"
+              class="el-icon-star-on"
+            />
+            <i v-else type="warning" class="el-icon-star-on" />
+          </el-button>
+        </template>
+        <div class="emoji-row">
+          <button class="btn" @click="clickLike"><img class="small like" :src="require('@/assets/images/emoji_like.png')"></button>
+          <button class="btn" @click="clickJoy"><img class="small joy" :src="require('@/assets/images/emoji_joy.png')"></button>
+          <button class="btn" @click="clickWow"><img class="medium wow" :src="require('@/assets/images/emoji_wow.png')"></button>
+          <button class="btn heart" @click="clickHeart"><img class="small" :src="require('@/assets/images/emoji_heart.png')"></button>
+          <button class="btn" @click="clickSad"><img class="medium sad" :src="require('@/assets/images/emoji_sad.png')"></button>
+        </div>
+      </el-popover>
       <el-button type="info" plain @click="leaveSession">
         <i class="el-icon-error"></i
       ></el-button>
     </el-button-group>
+  </div>
+  <div>
+    <img class="small" :src="state.emoji">
+    <span>User</span>
+  </div>
+  <div class="emojilog" id="emojis">
+    <div v-for="(e, idx) in state.prevEmoji" :key="idx">
+      <div class="emojibubble" :class="e.style">
+        <img class="small" :src="e.img">
+        <span>{{ e.nickname }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -60,6 +90,8 @@ import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "./user-video";
 import axios from "axios";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -96,7 +128,16 @@ export default {
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
 
-      maxViewers: 1
+      maxViewers: 1,
+      visible: false,
+      emoji: "",
+      prevEmoji: [],
+      nickname: computed(() => store.getters["root/getUserName"]),
+      stompClient: null,
+      roomId: store.getters["root/getRoomID"],
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }),
       // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
     });
 
@@ -361,6 +402,57 @@ export default {
         .catch(error => console.log(error));
     };
 
+
+    let socket = new SockJS("http://localhost:8080/ws");
+    let authorization = state.isLoggedin;
+    state.stompClient = Stomp.over(socket);
+    state.stompClient.connect(
+      {authorization},
+      frame => {
+        console.log(">>>>>>>>>> video-space success", frame)
+        state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+          let jsonBody = JSON.parse(res.body);
+          let e = {
+            nickname: jsonBody.nickname,
+            img: jsonBody.img
+            // content: jsonBody.content,
+            // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+          };
+          state.prevEmoji.push(e);
+          // changeScroll();
+        });
+      },
+      err => {
+        console.log("fail", err);
+      }
+    );
+
+    const clickLike = function () {
+      let emoji = document.querySelector(".like")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+    const clickJoy = function () {
+      let emoji = document.querySelector(".joy")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+
+    const sendEmoji = function() {
+      if (state.stompClient != null) {
+        let emojiBox = {
+          img: state.emoji,
+          roomId: state.roomId,
+          nickname: state.nickname
+        };
+        state.stompClient.send("/pub/emoji", JSON.stringify(emojiBox), {});
+        state.emoji = "";
+      }
+    };
+
+
     return {
       state,
       leaveSession,
@@ -369,7 +461,10 @@ export default {
       onOffAudio,
       unpublish,
       patchRole,
-      getRandomName
+      getRandomName,
+      clickLike,
+      clickJoy,
+      sendEmoji
     };
   }
 };
@@ -400,4 +495,37 @@ export default {
 	grid-template-rows: 1fr 1fr 1fr 1fr;
   gap: 10px;
 } */
+
+.emoji-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  border: none;
+  background: transparent;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  transition: all 0.2s linear;
+}
+
+.medium {
+  width: 47px;
+}
+
+.small {
+  width: 32px;
+  margin-top: 5px;
+}
+
+.heart {
+  margin-left: 7px;
+}
+
+.btn:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
 </style>
