@@ -64,9 +64,10 @@ public class User extends BaseEntity{
         this.password = password;
     }
 
-    public User(String email){
+    public User(String email, int num){
         this.email = email;
-        this.provider = "kakao";
+        if(num==1) this.provider ="kakao";
+        else this.provider = "google";
         this.picture = "default";
         this.alarm=false;
     }

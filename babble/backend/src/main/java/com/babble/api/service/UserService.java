@@ -23,4 +23,5 @@ public interface UserService {
 	List<UserHistoryRes> historyList(List<Tuple> historyInfo, String command);
 
 	void kakaoLogin(String email);
+	void googleLogin(String email);
 }

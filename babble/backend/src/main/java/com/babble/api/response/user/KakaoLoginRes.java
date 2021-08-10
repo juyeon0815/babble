@@ -13,14 +13,14 @@ import java.util.HashMap;
  */
 @Getter
 @ApiModel("KakaoResponse")
-public class KakaoLoginPostRes {
+public class KakaoLoginRes {
     @ApiModelProperty(name="User email", example="example@example.com")
     String email;
     @ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
     String accessToken;
 
     @Builder
-    public KakaoLoginPostRes(HashMap<String, String> userInfo, String access_Token){
+    public KakaoLoginRes(HashMap<String, String> userInfo, String access_Token){
         this.email = userInfo.get("email");
         this.accessToken = access_Token;
     }

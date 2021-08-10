@@ -8,8 +8,12 @@ export function requestLogin ({ state }, payload) {
   return $axios.post('/auth/login', payload)
 }
 
-export function requestToken({state}, payload){
-  return $axios.post('/auth/token', payload)
+export function requestKakaoToken({state}, payload){
+  return $axios.post('/auth/kakaoToken', payload)
+}
+
+export function requestGoogleToken({state},payload){
+  return $axios.post('/auth/googleToken',payload)
 }
 
 export function requestJoin ({ state }, payload) {

@@ -103,7 +103,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void kakaoLogin(String email) {
-		User user = new User(email);
+		User user = new User(email, 1);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void googleLogin(String email) {
+		User user = new User(email, 2);
 		userRepository.save(user);
 	}
 

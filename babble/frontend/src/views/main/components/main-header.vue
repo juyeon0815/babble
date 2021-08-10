@@ -356,6 +356,14 @@ export default {
         .then(()=> store.commit("auth/setLogout"))
         .then(()=>router.push("/"));
       }
+      // else if(state.provider==="google"){
+      //   console.log("구글로그아웃");
+      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
+
+      //   store.dispatch("auth/requestLogout")
+      //   .then(()=> store.commit("auth/setLogout"))
+      //   .then(()=>router.push("/"));
+      // }
       else{
         store
         .dispatch("auth/requestLogout")
