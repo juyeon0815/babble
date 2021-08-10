@@ -1,11 +1,4 @@
 <template>
-<<<<<<< babble/frontend/src/views/conferences/components/video-space.vue
-  <h3>{{ roomTitle }} <i class="el-icon-user-solid"></i> {{ state.subscribers.length + 1}}명</h3>
-  
-  <div v-if="!state.showMainVideo">
-    <!-- 1인 -->
-    <div v-if="state.videoGrid == 'alone'" class="video-container less2">
-=======
   <h3>
     {{ roomTitle }} <i class="el-icon-user-solid"></i>
     {{ state.subscribers.length + 1 }}명
@@ -18,7 +11,6 @@
     </div> -->
 
     <div class="video-container" :class="state.videoGrid">
->>>>>>> babble/frontend/src/views/conferences/components/video-space.vue
       <UserVideo
         :stream-manager="state.publisher"
         @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -169,6 +161,18 @@
       </el-button>
     </el-button-group>
   </div>
+  <div>
+    <img class="small" :src="state.emoji">
+    <span>User</span>
+  </div>
+  <div class="emojilog" id="emojis">
+    <div v-for="(e, idx) in state.prevEmoji" :key="idx">
+      <div class="emojibubble" :class="e.style">
+        <img class="small" :src="e.img">
+        <span>{{ e.nickname }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -178,6 +182,8 @@ import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "./user-video";
 import axios from "axios";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -185,6 +191,7 @@ const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
+
   name: "video-space",
   props: {
     roomTitle: {
@@ -215,11 +222,7 @@ export default {
 
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"],
-<<<<<<< babble/frontend/src/views/conferences/components/video-space.vue
-      maxViewers: 1,
-=======
       myId: "",
->>>>>>> babble/frontend/src/views/conferences/components/video-space.vue
 
       videoGrid: 'alone',
       showMainVideo: false  
@@ -495,6 +498,79 @@ export default {
         .catch(error => console.log(error));
     };
 
+
+    let socket = new SockJS("http://localhost:8080/ws");
+    let authorization = state.isLoggedin;
+    state.stompClient = Stomp.over(socket);
+    if(!authorization) {
+        state.stompClient.connect({},frame => {
+          console.log(">>>>>>>>>> video-space success", frame)
+          state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+            let jsonBody = JSON.parse(res.body);
+            let e = {
+              nickname: jsonBody.nickname,
+              img: jsonBody.img
+              // content: jsonBody.content,
+              // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+            };
+            state.prevEmoji.push(e);
+            // changeScroll();
+          });
+        },
+        err => {
+          console.log("fail", err);
+        }
+      );
+    } else {
+      state.stompClient.connect(
+        {authorization},
+        frame => {
+          console.log(">>>>>>>>>> video-space success", frame)
+          state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+            let jsonBody = JSON.parse(res.body);
+            let e = {
+              nickname: jsonBody.nickname,
+              img: jsonBody.img
+              // content: jsonBody.content,
+              // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+            };
+            state.prevEmoji.push(e);
+            // changeScroll();
+          });
+        },
+        err => {
+          console.log("fail", err);
+        }
+      );
+
+    }
+
+    const clickLike = function () {
+      let emoji = document.querySelector(".like")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+    const clickJoy = function () {
+      let emoji = document.querySelector(".joy")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+
+    const sendEmoji = function() {
+      if (state.stompClient != null) {
+        let emojiBox = {
+          img: state.emoji,
+          roomId: state.roomId,
+          nickname: state.nickname
+        };
+        state.stompClient.send("/pub/emoji", JSON.stringify(emojiBox), {});
+        state.emoji = "";
+      }
+    };
+
+
     return {
       state,
       leaveSession,
@@ -503,7 +579,10 @@ export default {
       onOffAudio,
       unpublish,
       patchRole,
-      getRandomName
+      getRandomName,
+      clickLike,
+      clickJoy,
+      sendEmoji
     };
   }
 };
