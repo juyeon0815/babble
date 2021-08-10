@@ -289,6 +289,12 @@ export default {
       searchWord: "",
       activeMenuIndex: computed(() => {
         return store.getters["root/getActiveMenuIndex"];
+      }),
+      provider : computed(()=>{
+        return store.getters["auth/getProvider"]
+      }),
+      token: computed(() => {
+        return store.getters["auth/getToken"];
       })
     });
 
@@ -341,13 +347,30 @@ export default {
       }
     };
 
+    //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
     const clickLogout = function() {
       console.log("clickLogout");
-      store
+      console.log(state.provider)
+      if(state.provider === "kakao"){
+        store.dispatch("auth/requestKakaoLogout", state.token)
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=>router.push("/"));
+      }
+      // else if(state.provider==="google"){
+      //   console.log("구글로그아웃");
+      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
+
+      //   store.dispatch("auth/requestLogout")
+      //   .then(()=> store.commit("auth/setLogout"))
+      //   .then(()=>router.push("/"));
+      // }
+      else{
+        store
         .dispatch("auth/requestLogout")
-        .then(() => store.commit("auth/setLogout"))
-        .then(() => router.push("/"));
-      console.log(state.isLoggedin);
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=>router.push("/"));
+      }
+
     };
 
     const enterSearch = function() {

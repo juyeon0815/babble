@@ -31,10 +31,6 @@ public class RoomHistoryRepositorySupport {
     }
 
     public List<Tuple> getUserViewHistory(User user){
-//        StringTemplate formattedDate = Expressions.stringTemplate(
-//                "DATE_FORMAT({0}, {1})"
-//                , qRoom.createTime
-//                , ConstantImpl.create("%Y-%m-%d"));
         List<Tuple> userHistory = jpaQueryFactory.select(qRoom.title,qCategory.name, qRoom.createTime,
                 qRoomHistory.startTime,qRoomHistory.endTime,qRoom.maxView)
                 .from(qRoom).join(qCategory).on(qRoom.category.id.eq(qCategory.id))

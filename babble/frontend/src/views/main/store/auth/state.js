@@ -7,5 +7,5 @@ export default {
   alarmValue: false,
   email: '',
   profile: 'default',
-  
+  provider : '',
 }
