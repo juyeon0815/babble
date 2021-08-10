@@ -1,12 +1,14 @@
 <template>
   <el-tabs stretch="true" type="card" @tab-click="handleClick">
     <el-tab-pane label="참여자 정보">
-      
+      {{hostId}}
+      {{myId}}
       <div v-if="state.publisher" class="people-list">
         <h3>{{ roomTitle }}</h3>
         <!-- 나 -->
         <div class="list-item">
           <div class="about">
+            <i class="fas fa-crown" style="color: gold;" v-if="hostId == myId"></i>
             <div class="name">{{ JSON.parse(state.publisher.stream.connection.data).clientData }} (나)</div>
             <div class="status">
               <i
@@ -72,6 +74,9 @@ export default {
     },
     hostId: {
       type: Number
+    },
+    myId: {
+      type: String
     }
   },
   setup(props) {
