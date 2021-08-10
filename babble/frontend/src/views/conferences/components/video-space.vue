@@ -45,11 +45,41 @@
       <el-button type="info" plain @click="findStreamIdBySessionId">
         <i class="el-icon-thumb"></i
       ></el-button>
-      <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
+      <el-popover class="emoji-balloon" :width="280" placement="top-start" trigger="click" :visible="state.visible">
+        <template #reference>
+          <el-button type="info" plain @click="state.visible = !state.visible">
+            <i
+              v-if="state.visible"
+              style="color:yellow"
+              class="el-icon-star-on"
+            />
+            <i v-else type="warning" class="el-icon-star-on" />
+          </el-button>
+        </template>
+        <div class="emoji-row">
+          <button class="btn" @click="clickLike"><img class="small like" :src="require('@/assets/images/emoji_like.png')"></button>
+          <button class="btn" @click="clickJoy"><img class="small joy" :src="require('@/assets/images/emoji_joy.png')"></button>
+          <button class="btn" @click="clickWow"><img class="medium wow" :src="require('@/assets/images/emoji_wow.png')"></button>
+          <button class="btn heart" @click="clickHeart"><img class="small" :src="require('@/assets/images/emoji_heart.png')"></button>
+          <button class="btn" @click="clickSad"><img class="medium sad" :src="require('@/assets/images/emoji_sad.png')"></button>
+        </div>
+      </el-popover>
       <el-button type="info" plain @click="leaveSession">
         <i class="el-icon-error"></i
       ></el-button>
     </el-button-group>
+  </div>
+  <div>
+    <img class="small" :src="state.emoji">
+    <span>User</span>
+  </div>
+  <div class="emojilog" id="emojis">
+    <div v-for="(e, idx) in state.prevEmoji" :key="idx">
+      <div class="emojibubble" :class="e.style">
+        <img class="small" :src="e.img">
+        <span>{{ e.nickname }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -87,20 +117,28 @@ export default {
     const store = useStore();
 
     const state = reactive({
-      OV: computed(() => store.getters["root/getOV"]),
-      session: computed(() => store.getters["root/getSession"]),
-      mainStreamManager: computed(
-        () => store.getters["root/getMainStreamManager"]
-      ),
-      publisher: computed(() => store.getters["root/getPublisher"]),
+      OV: undefined,
+      session: undefined,
+      mainStreamManager: undefined,
+      publisher: undefined,
       subscribers: computed(() => store.getters["root/getSubscribers"]),
-      videoStatus: store.getters["root/getPublisher"],
-      audioStatus: store.getters["root/getPublisher"],
+      videoStatus: computed(() => store.getters["root/getUserVideoStatus"]),
+      audioStatus: computed(() => store.getters["root/getUserAudioStatus"]),
 
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
+
       maxViewers: 1,
+      visible: false,
+      emoji: "",
+      prevEmoji: [],
+      nickname: computed(() => store.getters["root/getUserName"]),
+      stompClient: null,
+      roomId: store.getters["root/getRoomID"],
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }),
       // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
       stompClient: null, // 추가
       isLoggedin: computed(() => {
@@ -117,51 +155,20 @@ export default {
       }
     );
 
-    // socket 연결
-    // let socket = new SockJS("https://localhost:8443/ws")
-    let socket = new SockJS("http://localhost:8080/ws")
-    let authorization = state.isLoggedin;
-    state.stompClient = Stomp.over(socket)
-    console.log(">>>>>>>>>>>>> 토큰  ", authorization);
-    state.stompClient.connect({authorization}, frame=>{
-      console.log(">>>>>>>>>> video-space success", frame)
-      state.stompClient.subscribe("/sub/emoji/"+ state.chatroomId, res=>{
-        let jsonBody = JSON.parse(res.body)
-        let m={
-          'nickname': jsonBody.nickname,
-          'img': jsonBody.img
-        }
-      })
-    }, err=>{
-      console.log("fail", err)
-    })
-    // 추가
-
-    const getRandomName = function() {
-      store
+    const getRandomName = async function() {
+      await store
         .dispatch("root/requestRandomName")
         .then(result => {
           store.commit("root/setUserName", result.data);
         })
         .catch(err => {
-          console.log(err);
+          store.commit("root/setUserName", "요상한 놈");
         });
     };
-    getRandomName();
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
-      // 새로고침 방지
-      if (state.videoStatus === undefined) {
-        state.videoStatus = true;
-        state.audioStatus = true;
-      } else {
-        state.videoStatus =
-          store.getters["root/getPublisher"].stream.videoActive;
-        state.audioStatus =
-          store.getters["root/getPublisher"].stream.audioActive;
-      }
-
+      getRandomName();
       store
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
         .then(function(result) {
@@ -169,14 +176,12 @@ export default {
         });
 
       store.commit("root/setMenuActive", -1);
+      state.OV = new OpenVidu();
+      state.session = state.OV.initSession();
 
-      store.commit("root/setOV", new OpenVidu());
-
-      store.commit("root/setSession", state.OV.initSession());
-
+      // 스트림이 생성 되었을 때 -> 기존 참가자 정보 받아오기.
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
-        // state.subscribers.push(subscriber);
         store.commit("root/setSubscribers", subscriber);
       });
 
@@ -259,24 +264,25 @@ export default {
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
+            // 새로 들어온 참가자
             if (state.publisher === undefined) {
               let publisher = state.OV.initPublisher(undefined, {
                 audioSource: undefined, // The source of audio. If undefined default microphone
                 videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                publishAudio: state.audioStatus, // Whether you want to start publishing with your audio unmuted or not
+                publishVideo: state.videoStatus, // Whether you want to start publishing with your video enabled or not
                 resolution: "640x480", // The resolution of your video
                 frameRate: 30, // The frame rate of your video
                 insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
                 mirror: false // Whether to mirror your local video or not
               });
 
-              // state.mainStreamManager = publisher;
-              store.commit("root/setMainStreamManager", publisher);
-
-              // state.publisher = publisher;
+              state.mainStreamManager = publisher;
+              state.publisher = publisher;
               store.commit("root/setPublisher", publisher);
 
+              console.log("%%%%%%%%%%%%%");
+              console.log(state.session);
               // --- Publish your stream ---
               state.session.publish(publisher);
             } else {
@@ -300,14 +306,12 @@ export default {
       state.session = undefined;
       state.mainStreamManager = undefined;
       state.publisher = undefined;
-      state.subscribers = [];
       state.OV = undefined;
 
-      store.commit("root/setSession", undefined);
-      store.commit("root/setMainStreamManager", undefined);
-      store.commit("root/setPublisher", undefined);
+      // vueX 초기화
+      store.commit("root/setUserVideoStatus", true);
+      store.commit("root/setUserAudioStatus", true);
       store.commit("root/setClearSubscribers", []);
-      store.commit("root/setOV", undefined);
     });
 
     const leaveSession = function() {
@@ -342,23 +346,25 @@ export default {
       console.log(stream);
     };
 
+    // 내 영상 끄기
     const onOffVideo = function() {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
-        state.videoStatus = false;
+        store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
-        state.videoStatus = true;
+        store.commit("root/setUserVideoStatus", true);
       }
     };
 
+    // 내 음성 끄기
     const onOffAudio = function() {
       if (state.audioStatus) {
         state.publisher.publishAudio(false);
-        state.audioStatus = false;
+        store.commit("root/setUserAudioStatus", false);
       } else {
         state.publisher.publishAudio(true);
-        state.audioStatus = true;
+        store.commit("root/setUserAudioStatus", true);
       }
     };
 
@@ -401,6 +407,57 @@ export default {
         .catch(error => console.log(error));
     };
 
+
+    let socket = new SockJS("http://localhost:8080/ws");
+    let authorization = state.isLoggedin;
+    state.stompClient = Stomp.over(socket);
+    state.stompClient.connect(
+      {authorization},
+      frame => {
+        console.log(">>>>>>>>>> video-space success", frame)
+        state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+          let jsonBody = JSON.parse(res.body);
+          let e = {
+            nickname: jsonBody.nickname,
+            img: jsonBody.img
+            // content: jsonBody.content,
+            // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+          };
+          state.prevEmoji.push(e);
+          // changeScroll();
+        });
+      },
+      err => {
+        console.log("fail", err);
+      }
+    );
+
+    const clickLike = function () {
+      let emoji = document.querySelector(".like")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+    const clickJoy = function () {
+      let emoji = document.querySelector(".joy")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+
+    const sendEmoji = function() {
+      if (state.stompClient != null) {
+        let emojiBox = {
+          img: state.emoji,
+          roomId: state.roomId,
+          nickname: state.nickname
+        };
+        state.stompClient.send("/pub/emoji", JSON.stringify(emojiBox), {});
+        state.emoji = "";
+      }
+    };
+
+
     return {
       state,
       leaveSession,
@@ -409,7 +466,10 @@ export default {
       onOffAudio,
       unpublish,
       patchRole,
-      getRandomName
+      getRandomName,
+      clickLike,
+      clickJoy,
+      sendEmoji
     };
   }
 };
@@ -440,4 +500,37 @@ export default {
 	grid-template-rows: 1fr 1fr 1fr 1fr;
   gap: 10px;
 } */
+
+.emoji-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  border: none;
+  background: transparent;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  transition: all 0.2s linear;
+}
+
+.medium {
+  width: 47px;
+}
+
+.small {
+  width: 32px;
+  margin-top: 5px;
+}
+
+.heart {
+  margin-left: 7px;
+}
+
+.btn:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
 </style>

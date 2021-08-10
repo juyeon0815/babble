@@ -40,9 +40,9 @@ export default {
   roomID: '',
   userName: '',
   //OpenVidu
-  OV: undefined,
-  session: undefined,
-  mainStreamManager: undefined,
+
   publisher: undefined,
   subscribers: [],
+  userVideoStatus: true,
+  userAudioStatus: true,
 }
