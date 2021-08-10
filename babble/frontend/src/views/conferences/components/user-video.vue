@@ -1,6 +1,12 @@
 <template>
   <div v-if="streamManager">
-    <OvVideo :stream-manager="streamManager" />
+    <div v-if="streamManager.stream.videoActive">
+      <OvVideo :stream-manager="streamManager" />
+    </div>
+    <div v-else>
+      카메라 꺼짐 이미지 대체
+    </div>
+
     <div>
       <p>{{ state.clientData.clientData }}</p>
     </div>

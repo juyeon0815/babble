@@ -45,7 +45,9 @@
       <el-button type="info" plain @click="findStreamIdBySessionId">
         <i class="el-icon-thumb"></i
       ></el-button>
-      <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
+      <el-button type="info" plain @click="videoFilter">
+        <i class="el-icon-star-on"></i
+      ></el-button>
       <el-button type="info" plain @click="leaveSession">
         <i class="el-icon-error"></i
       ></el-button>
@@ -139,11 +141,30 @@ export default {
         store.commit("root/setSubscribers", subscriber);
       });
 
+      // 누군가 나갈 때
       state.session.on("streamDestroyed", ({ stream }) => {
         const index = state.subscribers.indexOf(stream.streamManager, 0);
+        console.log("나가~");
         if (index >= 0) {
           state.subscribers.splice(index, 1);
         }
+      });
+
+      // 강퇴 당했을 때
+      state.session.on("sessionDisconnected", ({ stream }) => {
+        console.log("강티당함..");
+        const MenuItems = store.getters["root/getMenus"];
+        let keys = Object.keys(MenuItems);
+        router.push({
+          name: keys[0]
+        });
+      });
+
+      // 다른사람이 마이크나 카메라를 변경했을 때
+      state.session.on("streamPropertyChanged", ({ stream }) => {
+        const index = state.subscribers.indexOf(stream.streamManager, 0);
+
+        console.log("누군가 상태가 바뀜!");
       });
 
       state.session.on("exception", ({ exception }) => {
@@ -361,6 +382,19 @@ export default {
         .catch(error => console.log(error));
     };
 
+    const videoFilter = function() {
+      state.publisher.stream
+        .applyFilter("GStreamerFilter", {
+          command: "gdkpixbufoverlay location=/img.png"
+        })
+        .then(() => {
+          console.log("Video rotated!");
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
+
     return {
       state,
       leaveSession,
@@ -369,7 +403,8 @@ export default {
       onOffAudio,
       unpublish,
       patchRole,
-      getRandomName
+      getRandomName,
+      videoFilter
     };
   }
 };
