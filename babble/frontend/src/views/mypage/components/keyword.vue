@@ -27,7 +27,7 @@
     >
       {{ tag }}
     </el-tag>
-    <div>
+    <div class="alarm">
       <h5 class="text">해당 키워드로 알림을 받아보시겠습니까?</h5>
       <el-switch
         v-model="state.alarmValue"
@@ -121,7 +121,7 @@ export default {
     const clickAlarm = function() {
       store.commit("auth/setAlarm");
       store
-        .dispatch("root/requestChangeAlarm", { email: state.email })
+        .dispatch("auth/requestChangeAlarm", { email: state.email })
         .then(function(result) {
           console.log(result, "알림 설정 상태가 바뀌었다!");
         });
@@ -153,5 +153,9 @@ export default {
 .text {
   display: inline;
   padding-right: 20px;
+}
+
+.alarm {
+  margin-top: 50px;
 }
 </style>

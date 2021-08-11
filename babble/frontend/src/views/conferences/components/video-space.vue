@@ -80,6 +80,7 @@
       <el-row class="video-row">
         <el-col :span="8">
           <UserVideo
+            v-if="state.publisher"
             :stream-manager="state.publisher"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -313,10 +314,6 @@ export default {
       }
     );
 
-    const getRandomName = async function() {
-      
-    }; 
-
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       store.dispatch("root/requestRandomName")
@@ -359,14 +356,13 @@ export default {
           }
         });
 
-        // 강퇴 당했을 때
-        state.session.on("sessionDisconnected", ({ stream }) => {
-          console.log("강티당함..");
-          const MenuItems = store.getters["root/getMenus"];
-          let keys = Object.keys(MenuItems);
-          router.push({
-            name: keys[0]
-          });
+      // 강퇴 당했을 때
+      state.session.on("sessionDisconnected", ({ stream }) => {
+        console.log("강티당함..");
+        const MenuItems = store.getters["menu/getMenus"];
+        let keys = Object.keys(MenuItems);
+        router.push({
+          name: keys[0]
         });
 
         // 누군가의 음성이 감지되었을 때
@@ -526,9 +522,10 @@ export default {
         }
         store.dispatch("root/requestRoomExit", payload);
       }
-      store.commit("root/setActiveCategory", null);
-      store.commit("root/setMenuActive", 0);
-      const MenuItems = store.getters["root/getMenus"];
+
+      store.commit("menu/setActiveCategory", null);
+      store.commit("menu/setMenuActive", 0);
+      const MenuItems = store.getters["menu/getMenus"];
       let keys = Object.keys(MenuItems);
       router.push({
         name: keys[0]
@@ -536,11 +533,7 @@ export default {
     };
 
     const updateMainVideoStreamManager = function(stream) {
-      console.log('****************')
-      console.log(state.mainStreamManager)
-      console.log(stream)
       store.commit("root/setMainStreamManager", stream);
-      console.log(state.mainStreamManager)
       state.showMainVideo = true;
     };
 
@@ -699,7 +692,6 @@ export default {
       onOffAudio,
       unpublish,
       patchRole,
-      getRandomName,
       clickLike,
       clickJoy,
       clickWow,

@@ -84,7 +84,7 @@ export default {
       pageNum: 1
     };
     store
-      .dispatch("root/requestRoomCategoryOrder", payloadBest)
+      .dispatch("menu/requestRoomCategoryOrder", payloadBest)
       .then(function(result) {
         state.bestRoomList = result.data
         state.bestRoomCount = result.data.length
@@ -99,7 +99,7 @@ export default {
       pageNum: 1
     };
     store
-      .dispatch("root/requestRoomCategoryOrder", payloadRecent)
+      .dispatch("menu/requestRoomCategoryOrder", payloadRecent)
       .then(function(result) {
         state.recentRoomList = result.data
         state.recentRoomCount = result.data.length
@@ -118,7 +118,7 @@ export default {
     };
 
     onMounted(() => {
-      store.commit("root/setMenuActiveMenuName", "home");
+      store.commit("menu/setMenuActiveMenuName", "home");
     });
 
     return { state, clickConference, onCloseConferenceDialog };

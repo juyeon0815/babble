@@ -14,7 +14,7 @@ export default {
     const store = useStore()
     const state = reactive ({
       activeMenuIndex: computed(() => {
-        return store.getters['root/getActiveMenuIndex']
+        return store.getters['menu/getActiveMenuIndex']
       })
     })
     return { state }
