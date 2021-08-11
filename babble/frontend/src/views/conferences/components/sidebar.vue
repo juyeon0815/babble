@@ -1,8 +1,6 @@
 <template>
   <el-tabs stretch="true" type="card" @tab-click="handleClick">
     <el-tab-pane label="참여자 정보">
-      {{hostId}}
-      {{myId}}
       <div v-if="state.publisher" class="people-list">
         <h3>{{ roomTitle }}</h3>
         <!-- 나 -->

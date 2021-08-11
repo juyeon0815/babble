@@ -7,7 +7,6 @@ export function requestChangeAlarm ({ state }, payload) {
   return $axios.patch('/users/hashtag', payload.email)
 }
 
-
 // 방 생성, 정보(카테고리, 검색), 대기실
 export function requestRoomCreate ({ state }, payload) {
   console.log('requestRoomCreate', state, payload)
@@ -35,7 +34,9 @@ export function requestRoomExit ({ state }, payload) {
   return $axios.patch('room/exit', payload)
 }
 
-export function requestRoomDelete ({ state }, payload) {
+export function requestRoomDelete({ state }, payload) {
+  console.log("DDDDDDDDDDD");
+  console.log(payload);
   return $axios.post(`room/${payload.roomId}`, payload.maxViewers)
 }
 
