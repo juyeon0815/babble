@@ -3,6 +3,7 @@ package com.babble.config;
 import com.babble.api.service.UserService;
 import com.babble.common.auth.JwtAuthenticationFilter;
 import com.babble.common.auth.BabbleUserDetailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +25,14 @@ import org.springframework.http.HttpMethod;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+
     @Autowired
     private BabbleUserDetailService BabbleUserDetailService;
 
     @Autowired
     private UserService userService;
+
 
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     // 암호화에 필요한 passwordEncoder bean등록
@@ -63,14 +67,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-                .authorizeRequests() // 요청에 대한 사용권한 체크
+                .authorizeRequests() // 요청에 대한 사용권한 체크 (url별 권한 관리를 설정하는 옵션의 시작점)
+                //antMathcers : 권한 관리 대상을 지정하는 옵션으로 url/http 메소드별로 관리가 가능
                 .antMatchers("/api/v1/users/me").authenticated()   // api/v1/uesrs/me 요청은 인증되어야함
-                //.antMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
+//                .antMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
                 .antMatchers(HttpMethod.PATCH,"/api/v1/users/**").authenticated() // 회원 정보 수정
                 .antMatchers(HttpMethod.DELETE,"/api/v1/users/**").authenticated() // 회원 탈퇴
-                //.antMatchers("/api/v1/room/create").authenticated() // 방 생성
+                .antMatchers("/api/v1/room/create").authenticated() // 방 생성
                 .antMatchers("/ws/pub/**").authenticated()
                 .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
                 .and().cors();
+
     }
 }

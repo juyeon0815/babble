@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="로그인" v-model="state.dialogVisible" @close="handleClose">
+  <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose">
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -147,7 +147,7 @@ export default {
     };
 
 
-  // // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
+  // // // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
   //   let kakaoCode = new URL(window.location.href).searchParams.get("code");
   //   console.log(kakaoCode);
   //   if(kakaoCode!=null){
@@ -166,7 +166,7 @@ export default {
   //     })
   //   }
 
-  //구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
+  // 구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
     let googleCode = new URL(window.location.href).searchParams.get("code");
     console.log(googleCode);
     if(googleCode!=null){
