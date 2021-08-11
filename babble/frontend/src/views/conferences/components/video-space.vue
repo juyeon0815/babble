@@ -40,7 +40,7 @@
           style="color:red"
           class="el-icon-video-camera"
         />
-        <i v-else type="danger" class="el-icon-video-camera" />
+        <i v-else class="el-icon-video-camera" />
       </el-button>
       <el-button type="info" plain @click="findStreamIdBySessionId">
         <i class="el-icon-thumb"></i
@@ -53,14 +53,14 @@
               style="color:yellow"
               class="el-icon-star-on"
             />
-            <i v-else type="warning" class="el-icon-star-on" />
+            <i v-else class="el-icon-star-on" />
           </el-button>
         </template>
         <div class="emoji-row">
           <button class="btn" @click="clickLike"><img class="small like" :src="require('@/assets/images/emoji_like.png')"></button>
           <button class="btn" @click="clickJoy"><img class="small joy" :src="require('@/assets/images/emoji_joy.png')"></button>
           <button class="btn" @click="clickWow"><img class="medium wow" :src="require('@/assets/images/emoji_wow.png')"></button>
-          <button class="btn heart" @click="clickHeart"><img class="small" :src="require('@/assets/images/emoji_heart.png')"></button>
+          <button class="btn heart-btn" @click="clickHeart"><img class="small heart" :src="require('@/assets/images/emoji_heart.png')"></button>
           <button class="btn" @click="clickSad"><img class="medium sad" :src="require('@/assets/images/emoji_sad.png')"></button>
         </div>
       </el-popover>
@@ -69,15 +69,11 @@
       ></el-button>
     </el-button-group>
   </div>
-  <div>
-    <img class="small" :src="state.emoji">
-    <span>User</span>
-  </div>
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
-      <div class="emojibubble" :class="e.style">
-        <img class="small" :src="e.img">
-        <span>{{ e.nickname }}</span>
+      <div class="emoji-bubble">
+        <div class="circle"><img :class="e.style" :src="e.img"></div>
+        <span class="nickname"><p class="text">{{ e.nickname }}</p></span>
       </div>
     </div>
   </div>
@@ -414,12 +410,16 @@ export default {
           let jsonBody = JSON.parse(res.body);
           let e = {
             nickname: jsonBody.nickname,
-            img: jsonBody.img
-            // content: jsonBody.content,
-            // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+            img: jsonBody.img,
+            style: jsonBody.img.includes("wow") || jsonBody.img.includes("sad") ? "medium2" : "small2",
           };
+          // console.log(e.img, '주소가어디보자')
           state.prevEmoji.push(e);
-          // changeScroll();
+          // console.log(state.prevEmoji, '여기서확인')
+          setTimeout(() => {
+            state.prevEmoji.shift()
+            // console.log(state.prevEmoji, '지워졌니')
+          }, 5000)
         });
       },
       err => {
@@ -431,10 +431,29 @@ export default {
       let emoji = document.querySelector(".like")
       state.emoji = emoji.src
       sendEmoji()
+      // videoFilter()
     }
 
     const clickJoy = function () {
       let emoji = document.querySelector(".joy")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+    const clickWow = function () {
+      let emoji = document.querySelector(".wow")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+    const clickHeart = function () {
+      let emoji = document.querySelector(".heart")
+      state.emoji = emoji.src
+      sendEmoji()
+    }
+
+    const clickSad = function () {
+      let emoji = document.querySelector(".sad")
       state.emoji = emoji.src
       sendEmoji()
     }
@@ -452,6 +471,19 @@ export default {
       }
     };
 
+    // const videoFilter = function() {
+    //   state.publisher.stream
+    //     .applyFilter("GStreamerFilter", {
+    //       command: "textoverlay text='&#129409' valignment=top halignment=right font-desc='Cantarell 25'"
+    //     })
+    //     .then(() => {
+    //       console.log("Video rotated!");
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // };
+
 
     return {
       state,
@@ -464,7 +496,11 @@ export default {
       getRandomName,
       clickLike,
       clickJoy,
-      sendEmoji
+      clickWow,
+      clickHeart,
+      clickSad,
+      sendEmoji,
+      // videoFilter
     };
   }
 };
@@ -511,8 +547,13 @@ export default {
   transition: all 0.2s linear;
 }
 
-.medium {
-  width: 47px;
+.btn:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.heart-btn {
+  margin-left: 7px;
 }
 
 .small {
@@ -520,12 +561,49 @@ export default {
   margin-top: 5px;
 }
 
-.heart {
-  margin-left: 7px;
+.medium {
+  width: 47px;
 }
 
-.btn:hover {
-  transform: scale(1.2);
-  cursor: pointer;
+.emojilog {
+  position: absolute;
+  top: 75vh;
 }
+
+.emoji-bubble {
+  display: flex;
+  align-items: center;
+}
+
+.small2 {
+  width: 32px;
+  margin-top: 5px;
+  padding-left: 9px;
+}
+
+.medium2 {
+  width: 47px;
+  object-fit: cover;
+}
+
+.nickname {
+  background: #9f05ff69;
+  opacity: 60%;
+  border-radius: 0 10px 10px 0;
+  padding-left: 7px;
+}
+
+.text {
+  font-size: 89%;
+  color: white;
+}
+
+.circle {
+  padding: 0px;
+  width: 40px;
+  height: 40px;
+  border-radius: 70%;
+  overflow: hidden;
+}
+
 </style>

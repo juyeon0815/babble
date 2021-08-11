@@ -1,13 +1,13 @@
 <template>
   <el-container>
     <el-main>
-      <VideoSpace 
+      <VideoSpace
         :roomTitle="state.roomTitle"
         :hostId="state.hostId"
       />
     </el-main>
     <el-aside class="side-bar">
-      <Sidebar 
+      <Sidebar
         :roomTitle="state.roomTitle"
         :hostId="state.hostId"
       />
@@ -17,7 +17,7 @@
 
 <style>
   .side-bar {
-    background-color: #C1C8E4;
+    background-image: linear-gradient(-30deg, #9f05ff69 10%, #4a63cfc2 100%);
     height: 100vh;
   }
 </style>
@@ -45,7 +45,7 @@ export default {
       roomTitle: ""
     });
     store.commit("root/joinRoom", route.params.conferenceId);
-    
+
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
