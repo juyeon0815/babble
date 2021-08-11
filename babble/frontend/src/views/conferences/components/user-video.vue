@@ -1,8 +1,12 @@
 <template>
-
   <div v-if="streamManager" class="user-video">
-    <OvVideo :stream-manager="streamManager" />
-    
+    <div v-if="streamManager.stream.videoActive">
+      <OvVideo :stream-manager="streamManager" />
+    </div>
+    <div v-else>
+      카메라 꺼짐 이미지 대체
+    </div>
+
     <el-popover
       placement="top"
       :width="160"
@@ -32,7 +36,23 @@ export default {
     streamManager: Object
   },
 
+<<<<<<< babble/frontend/src/views/conferences/components/user-video.vue
+  setup(props) {
+    console.log("가즈아");
+    console.log(props.streamManager);
+    // props.streamManager.on("publisherStopSpeaking", event => {
+    //   console.log("User " + event.connection.connectionId + " stop speaking");
+    // });
+    // console.log(props.streamManager);
+    // if (props.streamManager != undefined) {
+    //   props.streamManager.on("publisherStopSpeaking", event => {
+    //     console.log("User " + event.connection.connectionId + " stop speaking");
+    //   });
+    // }
+
+=======
   setup(props, { emit }) {
+>>>>>>> babble/frontend/src/views/conferences/components/user-video.vue
     const state = reactive({
       popupVisible: false,
       clientData: computed(() => {

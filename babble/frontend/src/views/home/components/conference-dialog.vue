@@ -96,6 +96,8 @@ export default {
     watch(
       () => state.dialogVisible,
       (dialogVisible, prev) => {
+        state.videoStatus = true;
+        state.audioStatus = true;
         if (state.dialogVisible) {
           const payload = {
             roomId: props.roomId
