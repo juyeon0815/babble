@@ -1,10 +1,14 @@
 <template>
-  <h3>{{ roomTitle }} <i class="el-icon-user-solid"></i> {{ state.subscribers.length + 1}}명</h3>
+  <h3>
+    {{ roomTitle }} <i class="el-icon-user-solid"></i>
+    {{ state.subscribers.length + 1 }}명
+  </h3>
 
   <div v-if="!state.showMainVideo">
     <!-- 1인 -->
     <div v-if="state.videoGrid == 'alone'" class="video-container less2">
       <UserVideo
+        v-if="state.publisher"
         :stream-manager="state.publisher"
         :id="state.publisher.stream.connection.connectionId"
         @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -15,6 +19,7 @@
       <el-row>
         <el-col :span="12">
           <UserVideo
+            v-if="state.publisher"
             :stream-manager="state.publisher"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -35,6 +40,7 @@
       <el-row class="video-row">
         <el-col :offset="3" :span="8">
           <UserVideo
+            v-if="state.publisher"
             :stream-manager="state.publisher"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -79,9 +85,11 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
         </el-col>
-        <el-col :span="8" 
-          v-for="sub in state.subscribers.slice(0, 2)" 
-          :key="sub.stream.connection.connectionId">
+        <el-col
+          :span="8"
+          v-for="sub in state.subscribers.slice(0, 2)"
+          :key="sub.stream.connection.connectionId"
+        >
           <UserVideo
             :stream-manager="sub"
             :id="sub.stream.connection.connectionId"
@@ -91,9 +99,11 @@
         </el-col>
       </el-row>
       <el-row class="video-row">
-        <el-col :span="8" 
-          v-for="sub in state.subscribers.slice(2)" 
-          :key="sub.stream.connection.connectionId">
+        <el-col
+          :span="8"
+          v-for="sub in state.subscribers.slice(2)"
+          :key="sub.stream.connection.connectionId"
+        >
           <UserVideo
             :stream-manager="sub"
             :id="sub.stream.connection.connectionId"
@@ -104,12 +114,12 @@
       </el-row>
     </div>
   </div>
-  
+
   <!-- 메인 비디오 크게보기  -->
   <div v-if="state.showMainVideo" class="video-container main-video">
     <el-row>
       <el-col :span="15">
-        <UserVideo 
+        <UserVideo
           :streamManager="state.mainStreamManager"
           :id="state.mainStreamManager.stream.connection.connectionId"
           @click="state.showMainVideo = false"
@@ -133,11 +143,9 @@
         </el-row>
       </el-col>
     </el-row>
-    
   </div>
- 
-  <!-- 6인 이상 추가 예정 -->
 
+  <!-- 6인 이상 추가 예정 -->
 
   <!-- 버튼 -->
   <div class="nav-icons">
@@ -168,13 +176,13 @@
     </el-button-group>
   </div>
   <div>
-    <img class="small" :src="state.emoji">
+    <img class="small" :src="state.emoji" />
     <span>User</span>
   </div>
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emojibubble" :class="e.style">
-        <img class="small" :src="e.img">
+        <img class="small" :src="e.img" />
         <span>{{ e.nickname }}</span>
       </div>
     </div>
@@ -197,7 +205,6 @@ const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
-
   name: "video-space",
   props: {
     roomTitle: {
@@ -230,8 +237,8 @@ export default {
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
 
-      videoGrid: 'alone',
-      showMainVideo: false  
+      videoGrid: "alone",
+      showMainVideo: false
     });
 
     watch(
@@ -243,15 +250,15 @@ export default {
         }
         // videoGrid
         if (newCount == 0) {
-          state.videoGrid = 'alone'
+          state.videoGrid = "alone";
         } else if (newCount == 1) {
-          state.videoGrid = 'less2'
+          state.videoGrid = "less2";
         } else if (newCount >= 2 && newCount <= 3) {
-          state.videoGrid = 'less4'
+          state.videoGrid = "less4";
         } else if (newCount >= 4 && newCount <= 5) {
-          state.videoGrid = 'less6'
+          state.videoGrid = "less6";
         } else {
-          state.videoGrid = 'more6'
+          state.videoGrid = "more6";
         }
       }
     );
@@ -451,7 +458,7 @@ export default {
 
     const leaveSession = function() {
       // 호스트일 경우 방 삭제(max 보내기)
-      
+
       if (props.hostId == props.myId) {
         const payload = {
           roomId: state.mySessionId,
@@ -476,11 +483,11 @@ export default {
     };
 
     const updateMainVideoStreamManager = function(stream) {
-      store.commit('root/setMainStreamManager', stream)
-      console.log('***********')
-      console.log(stream)
-      state.showMainVideo = true
-    }
+      store.commit("root/setMainStreamManager", stream);
+      console.log("***********");
+      console.log(stream);
+      state.showMainVideo = true;
+    };
 
     // 내 영상 끄기
     const onOffVideo = function() {
@@ -543,7 +550,6 @@ export default {
         .catch(error => console.log(error));
     };
 
-<<<<<<< babble/frontend/src/views/conferences/components/video-space.vue
     const videoFilter = function() {
       state.publisher.stream
         .applyFilter("GStreamerFilter", {
@@ -557,81 +563,6 @@ export default {
         });
     };
 
-=======
-
-    let socket = new SockJS("http://localhost:8080/ws");
-    let authorization = state.isLoggedin;
-    state.stompClient = Stomp.over(socket);
-    if(!authorization) {
-        state.stompClient.connect({},frame => {
-          console.log(">>>>>>>>>> video-space success", frame)
-          state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
-            let jsonBody = JSON.parse(res.body);
-            let e = {
-              nickname: jsonBody.nickname,
-              img: jsonBody.img
-              // content: jsonBody.content,
-              // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
-            };
-            state.prevEmoji.push(e);
-            // changeScroll();
-          });
-        },
-        err => {
-          console.log("fail", err);
-        }
-      );
-    } else {
-      state.stompClient.connect(
-        {authorization},
-        frame => {
-          console.log(">>>>>>>>>> video-space success", frame)
-          state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
-            let jsonBody = JSON.parse(res.body);
-            let e = {
-              nickname: jsonBody.nickname,
-              img: jsonBody.img
-              // content: jsonBody.content,
-              // style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
-            };
-            state.prevEmoji.push(e);
-            // changeScroll();
-          });
-        },
-        err => {
-          console.log("fail", err);
-        }
-      );
-
-    }
-
-    const clickLike = function () {
-      let emoji = document.querySelector(".like")
-      state.emoji = emoji.src
-      sendEmoji()
-    }
-
-    const clickJoy = function () {
-      let emoji = document.querySelector(".joy")
-      state.emoji = emoji.src
-      sendEmoji()
-    }
-
-
-    const sendEmoji = function() {
-      if (state.stompClient != null) {
-        let emojiBox = {
-          img: state.emoji,
-          roomId: state.roomId,
-          nickname: state.nickname
-        };
-        state.stompClient.send("/pub/emoji", JSON.stringify(emojiBox), {});
-        state.emoji = "";
-      }
-    };
-
-
->>>>>>> babble/frontend/src/views/conferences/components/video-space.vue
     return {
       state,
       leaveSession,
@@ -641,13 +572,7 @@ export default {
       unpublish,
       patchRole,
       getRandomName,
-<<<<<<< babble/frontend/src/views/conferences/components/video-space.vue
       videoFilter
-=======
-      clickLike,
-      clickJoy,
-      sendEmoji
->>>>>>> babble/frontend/src/views/conferences/components/video-space.vue
     };
   }
 };
@@ -674,5 +599,4 @@ export default {
 .video-container .video-row {
   height: 50%;
 }
-
 </style>
