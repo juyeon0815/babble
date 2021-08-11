@@ -89,6 +89,11 @@ export function requestUserHashtagDelete ({ state }, payload) {
   return $axios.delete('/users/hashtag', {data: payload})
 }
 
+export function requestChangeAlarm ({ state }, payload) {
+  console.log('requestChangeAlarm', state, payload)
+  return $axios.patch('/users/hashtag', payload.email)
+}
+
 export function requestUpdateProfile ({ state }, payload) {
   console.log('requestUpdateProfile', state)
   console.log('payload 프사 바뀐다 여기 주목:', payload)

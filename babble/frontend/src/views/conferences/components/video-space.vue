@@ -335,7 +335,7 @@ export default {
     onMounted(() => {
       getRandomName();
 
-      store.commit("root/setMenuActive", -1);
+      store.commit("menu/setMenuActive", -1);
       state.OV = new OpenVidu();
 
       // 음성감지 초기 설정
@@ -365,7 +365,7 @@ export default {
       // 강퇴 당했을 때
       state.session.on("sessionDisconnected", ({ stream }) => {
         console.log("강티당함..");
-        const MenuItems = store.getters["root/getMenus"];
+        const MenuItems = store.getters["menu/getMenus"];
         let keys = Object.keys(MenuItems);
         router.push({
           name: keys[0]
@@ -532,10 +532,10 @@ export default {
 
         store.dispatch("root/requestRoomExit", payload);
       }
-      console.log("CCCCCCCCCCCC");
-      store.commit("root/setActiveCategory", null);
-      store.commit("root/setMenuActive", 0);
-      const MenuItems = store.getters["root/getMenus"];
+
+      store.commit("menu/setActiveCategory", null);
+      store.commit("menu/setMenuActive", 0);
+      const MenuItems = store.getters["menu/getMenus"];
       let keys = Object.keys(MenuItems);
       router.push({
         name: keys[0]

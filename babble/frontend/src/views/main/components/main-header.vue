@@ -288,7 +288,7 @@ export default {
       }),
       searchWord: "",
       activeMenuIndex: computed(() => {
-        return store.getters["root/getActiveMenuIndex"];
+        return store.getters["menu/getActiveMenuIndex"];
       }),
       provider : computed(()=>{
         return store.getters["auth/getProvider"]
@@ -306,9 +306,9 @@ export default {
       });
 
     const clickLogo = () => {
-      store.commit("root/setActiveCategory", null);
-      store.commit("root/setMenuActive", 0);
-      const MenuItems = store.getters["root/getMenus"];
+      store.commit("menu/setActiveCategory", null);
+      store.commit("menu/setMenuActive", 0);
+      const MenuItems = store.getters["menu/getMenus"];
       let keys = Object.keys(MenuItems);
       router.push({
         name: keys[0]
@@ -330,17 +330,17 @@ export default {
     };
 
     const clickCategory = function() {
-      store.commit("root/setMenuActive", 1);
-      store.commit("root/setActiveCategory", "all");
+      store.commit("menu/setMenuActive", 1);
+      store.commit("menu/setActiveCategory", "all");
       router.push({
         path: "/category/all"
       });
     };
 
     const clickMyPage = function() {
-      let nowIndex = store.getters["root/getActiveMenuIndex"];
+      let nowIndex = store.getters["menu/getActiveMenuIndex"];
       if (nowIndex != 2) {
-        store.commit("root/setMenuActive", 2);
+        store.commit("menu/setMenuActive", 2);
         router.push({
           path: "/mypage/keyword"
         });
@@ -374,12 +374,10 @@ export default {
     };
 
     const enterSearch = function() {
-      store.commit("root/setSearchWord", state.searchWord);
+      store.commit("menu/setMenuActive", 3)
+      store.commit("menu/setSearchWord", state.searchWord);
       router.push({
-        name: "search-result",
-        params: {
-          searchWord: state.searchWord
-        }
+        path: `/search/${state.searchWord}`
       });
       state.searchWord = "";
     };
