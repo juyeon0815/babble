@@ -14,15 +14,15 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button type="danger" plain @click="clickOut">강퇴</el-button>
+        <el-button v-if="state.isHost" type="danger" plain @click="clickOut">강퇴</el-button>
       </div>
       <template #reference>
         <el-button
-          type="text"
           @click="state.popupVisible = true"
+          type="text"
           class="user-name"
-          >{{ state.clientData.clientData }}</el-button
-        >
+          >{{ state.clientData.clientData }}
+        </el-button>
       </template>
     </el-popover>
   </div>
@@ -30,6 +30,7 @@
 
 <script>
 import { reactive, computed } from "vue";
+import { useStore } from 'vuex'
 import OvVideo from "./ov-video";
 
 export default {
@@ -54,11 +55,14 @@ export default {
     //   });
     // }
 
+    const store = useStore()
     const state = reactive({
       popupVisible: false,
       clientData: computed(() => {
         return getConnectionData();
-      })
+      }),
+      isHost: computed(() => store.getters["root/getIsHost"]),
+      clientName: ''
     });
 
     const getConnectionData = function() {
@@ -84,6 +88,9 @@ export default {
 <style>
 .user-video {
   text-align: center;
+  /* font-size: 20px; */
+  border: none;
+  background-color: white;
 }
 .user-name {
   margin: 0;

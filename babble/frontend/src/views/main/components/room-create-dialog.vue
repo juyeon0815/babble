@@ -243,6 +243,7 @@ export default {
             }
           })
         );
+        store.commit('root/setIsHost', true)
         handleClose();
       } else {
         let upload = new AWS.S3.ManagedUpload({
@@ -281,6 +282,7 @@ export default {
                 }
               })
             );
+            store.commit('root/setIsHost', true)
             handleClose();
           },
           function(err) {
@@ -291,6 +293,7 @@ export default {
           }
         );
       }
+      
     };
 
     const handleClose = function() {

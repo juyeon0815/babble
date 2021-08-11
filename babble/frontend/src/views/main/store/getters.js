@@ -24,6 +24,10 @@ export function getSearchWord (state) {
 	return state.searchWord
 }
 
+export function getMainStreamManager (state) {
+	return state.mainStreamManager
+}
+
 export function getRoomID(state) { // 입장하는 방 이름
 	return state.roomId
 }
@@ -43,4 +47,6 @@ export function getUserVideoStatus(state) {
 export function getUserAudioStatus(state) {
 	return state.userAudioStatus
 }
-
+export function getIsHost(state) {
+	return state.isHost
+}

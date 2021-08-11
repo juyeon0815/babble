@@ -67,3 +67,7 @@ export function setUserVideoStatus(state,status) {
 export function setUserAudioStatus(state,status) {
   state.userAudioStatus = status;
 }
+
+export function setIsHost(state,status) {
+  state.isHost = status;
+}
