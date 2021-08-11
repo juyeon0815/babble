@@ -34,7 +34,9 @@ export function requestRoomExit ({ state }, payload) {
   return $axios.patch('room/exit', payload)
 }
 
-export function requestRoomDelete ({ state }, payload) {
+export function requestRoomDelete({ state }, payload) {
+  console.log("DDDDDDDDDDD");
+  console.log(payload);
   return $axios.post(`room/${payload.roomId}`, payload.maxViewers)
 }
 

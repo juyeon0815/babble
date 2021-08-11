@@ -169,7 +169,13 @@
       <el-button type="info" plain @click="findStreamIdBySessionId">
         <i class="el-icon-thumb"></i
       ></el-button>
-      <el-popover class="emoji-balloon" :width="280" placement="top-start" trigger="click" :visible="state.visible">
+      <el-popover
+        class="emoji-balloon"
+        :width="280"
+        placement="top-start"
+        trigger="click"
+        :visible="state.visible"
+      >
         <template #reference>
           <el-button type="info" plain @click="state.visible = !state.visible">
             <i
@@ -181,11 +187,36 @@
           </el-button>
         </template>
         <div class="emoji-row">
-          <button class="btn" @click="clickLike"><img class="small like" :src="require('@/assets/images/emoji_like.png')"></button>
-          <button class="btn" @click="clickJoy"><img class="small joy" :src="require('@/assets/images/emoji_joy.png')"></button>
-          <button class="btn" @click="clickWow"><img class="medium wow" :src="require('@/assets/images/emoji_wow.png')"></button>
-          <button class="btn heart-btn" @click="clickHeart"><img class="small heart" :src="require('@/assets/images/emoji_heart.png')"></button>
-          <button class="btn" @click="clickSad"><img class="medium sad" :src="require('@/assets/images/emoji_sad.png')"></button>
+          <button class="btn" @click="clickLike">
+            <img
+              class="small like"
+              :src="require('@/assets/images/emoji_like.png')"
+            />
+          </button>
+          <button class="btn" @click="clickJoy">
+            <img
+              class="small joy"
+              :src="require('@/assets/images/emoji_joy.png')"
+            />
+          </button>
+          <button class="btn" @click="clickWow">
+            <img
+              class="medium wow"
+              :src="require('@/assets/images/emoji_wow.png')"
+            />
+          </button>
+          <button class="btn heart-btn" @click="clickHeart">
+            <img
+              class="small heart"
+              :src="require('@/assets/images/emoji_heart.png')"
+            />
+          </button>
+          <button class="btn" @click="clickSad">
+            <img
+              class="medium sad"
+              :src="require('@/assets/images/emoji_sad.png')"
+            />
+          </button>
         </div>
       </el-popover>
       <el-button type="info" plain @click="leaveSession">
@@ -196,8 +227,10 @@
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emoji-bubble">
-        <div class="circle"><img :class="e.style" :src="e.img"></div>
-        <span class="nickname"><p class="text">{{ e.nickname }}</p></span>
+        <div class="circle"><img :class="e.style" :src="e.img" /></div>
+        <span class="nickname"
+          ><p class="text">{{ e.nickname }}</p></span
+        >
       </div>
     </div>
   </div>
@@ -250,6 +283,7 @@ export default {
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
+      maxViewers: 1,
 
       videoGrid: "alone",
       showMainVideo: false,
@@ -260,7 +294,7 @@ export default {
       stompClient: null,
       isLoggedin: computed(() => {
         return store.getters["auth/getToken"];
-      }),
+      })
     });
 
     watch(
@@ -486,15 +520,18 @@ export default {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
         };
+        console.log("AAAAAAAAAAAAA");
         store.dispatch("root/requestRoomDelete", payload);
       } else {
         const payload = {
           email: store.getters["auth/getEmail"],
           roomId: state.mySessionId
         };
+        console.log("BBBBBBBBBBB");
+
         store.dispatch("root/requestRoomExit", payload);
       }
-
+      console.log("CCCCCCCCCCCC");
       store.commit("root/setActiveCategory", null);
       store.commit("root/setMenuActive", 0);
       const MenuItems = store.getters["root/getMenus"];
@@ -505,9 +542,9 @@ export default {
     };
 
     const updateMainVideoStreamManager = function(stream) {
-      store.commit('root/setMainStreamManager', stream)
-      state.showMainVideo = true
-    }
+      store.commit("root/setMainStreamManager", stream);
+      state.showMainVideo = true;
+    };
 
     // 내 영상 끄기
     const onOffVideo = function() {
@@ -570,25 +607,27 @@ export default {
         .catch(error => console.log(error));
     };
 
-
     let socket = new SockJS("http://localhost:8080/ws");
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
     state.stompClient.connect(
-      {authorization},
+      { authorization },
       frame => {
-        console.log(">>>>>>>>>> video-space success", frame)
+        console.log(">>>>>>>>>> video-space success", frame);
         state.stompClient.subscribe("/sub/emoji/" + state.mySessionId, res => {
           let jsonBody = JSON.parse(res.body);
           let e = {
             nickname: jsonBody.nickname,
             img: jsonBody.img,
-            style: jsonBody.img.includes("wow") || jsonBody.img.includes("sad") ? "medium2" : "small2",
+            style:
+              jsonBody.img.includes("wow") || jsonBody.img.includes("sad")
+                ? "medium2"
+                : "small2"
           };
           state.prevEmoji.push(e);
           setTimeout(() => {
-            state.prevEmoji.shift()
-          }, 5000)
+            state.prevEmoji.shift();
+          }, 5000);
         });
       },
       err => {
@@ -596,37 +635,36 @@ export default {
       }
     );
 
-    const clickLike = function () {
-      let emoji = document.querySelector(".like")
-      state.emoji = emoji.src
-      sendEmoji()
+    const clickLike = function() {
+      let emoji = document.querySelector(".like");
+      state.emoji = emoji.src;
+      sendEmoji();
       // videoFilter()
-    }
+    };
 
-    const clickJoy = function () {
-      let emoji = document.querySelector(".joy")
-      state.emoji = emoji.src
-      sendEmoji()
-    }
+    const clickJoy = function() {
+      let emoji = document.querySelector(".joy");
+      state.emoji = emoji.src;
+      sendEmoji();
+    };
 
-    const clickWow = function () {
-      let emoji = document.querySelector(".wow")
-      state.emoji = emoji.src
-      sendEmoji()
-    }
+    const clickWow = function() {
+      let emoji = document.querySelector(".wow");
+      state.emoji = emoji.src;
+      sendEmoji();
+    };
 
-    const clickHeart = function () {
-      let emoji = document.querySelector(".heart")
-      state.emoji = emoji.src
-      sendEmoji()
-    }
+    const clickHeart = function() {
+      let emoji = document.querySelector(".heart");
+      state.emoji = emoji.src;
+      sendEmoji();
+    };
 
-    const clickSad = function () {
-      let emoji = document.querySelector(".sad")
-      state.emoji = emoji.src
-      sendEmoji()
-    }
-
+    const clickSad = function() {
+      let emoji = document.querySelector(".sad");
+      state.emoji = emoji.src;
+      sendEmoji();
+    };
 
     const sendEmoji = function() {
       if (state.stompClient != null) {
@@ -653,7 +691,6 @@ export default {
     //     });
     // };
 
-
     return {
       state,
       leaveSession,
@@ -668,7 +705,7 @@ export default {
       clickWow,
       clickHeart,
       clickSad,
-      sendEmoji,
+      sendEmoji
       // videoFilter
     };
   }
@@ -761,5 +798,4 @@ export default {
   border-radius: 70%;
   overflow: hidden;
 }
-
 </style>
