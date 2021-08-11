@@ -29,8 +29,6 @@ public class Room extends BaseEntity{
 
     String thumbnailUrl;
 
-    boolean speak;
-
     Date createTime;
 
     Long maxView;
@@ -54,7 +52,6 @@ public class Room extends BaseEntity{
         this.thumbnailUrl = roomCreateReq.getThumbnailUrl();
         this.category = category;
         this.isActivate = true;
-        this.speak = roomCreateReq.isSpeak();
         this.hostId = user.id;
         this.createTime = now;
         this.maxView =0l;

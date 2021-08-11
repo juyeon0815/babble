@@ -87,6 +87,7 @@ public class AuthController {
 	public ResponseEntity<KakaoLoginRes> getKakaoToken(@RequestBody @ApiParam(value="code", required = true) String code) {
 		System.out.println("code: "+code);
 		String access_Token = kakaoService.getAccessToken(code);
+		System.out.println("access: "+ access_Token);
 		HashMap<String, String> userInfo = kakaoService.getUserInfo(access_Token);
 		System.out.println("login Controller : " + userInfo);
 		KakaoLoginRes kakaoLoginPostRes = KakaoLoginRes.builder()
