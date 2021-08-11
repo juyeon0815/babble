@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
 
 /**
  * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
@@ -64,6 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests() // 요청에 대한 사용권한 체크
                 .antMatchers("/api/v1/users/me").authenticated()   // api/v1/uesrs/me 요청은 인증되어야함
+                //.antMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
+                .antMatchers(HttpMethod.PATCH,"/api/v1/users/**").authenticated() // 회원 정보 수정
+                .antMatchers(HttpMethod.DELETE,"/api/v1/users/**").authenticated() // 회원 탈퇴
+                //.antMatchers("/api/v1/room/create").authenticated() // 방 생성
+                .antMatchers("/ws/pub/**").authenticated()
                 .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
                 .and().cors();
     }

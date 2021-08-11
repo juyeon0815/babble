@@ -62,8 +62,9 @@ public class Room extends BaseEntity{
 
     public Room(){}
 
-    public void roomClose(){
+    public void roomClose(Long maxView){
         this.isActivate = false;
+        this.maxView = maxView;
     }
 
 }

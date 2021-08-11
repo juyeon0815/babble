@@ -32,32 +32,58 @@ export default {
       chatText: "",
       count: 0,
       stompClient: null,
-      chatroomId: store.getters["root/getRoomID"]
+      chatroomId: store.getters["root/getRoomID"],
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }),
     });
 
     // socket 연결
-    // let socket = new SockJS("https://localhost:8443/ws")
     let socket = new SockJS("http://localhost:8080/ws");
+    let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
-    state.stompClient.connect(
-      {},
-      frame => {
-        console.log("success", frame);
-        state.stompClient.subscribe("/sub/" + state.chatroomId, res => {
+    console.log(">>>> authorization " + authorization);
+    if(!authorization) {
+      state.stompClient.connect({},frame => {
+        console.log(">>> socket connect success", frame);
+        state.stompClient.subscribe("/sub/message/" + state.chatroomId, res => {
           let jsonBody = JSON.parse(res.body);
           let m = {
             nickname: jsonBody.nickname,
             content: jsonBody.content,
             style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
           };
-          state.prevChat.push(m);
-          changeScroll();
-        });
-      },
-      err => {
-        console.log("fail", err);
-      }
-    );
+            state.prevChat.push(m);
+            changeScroll();
+          });
+        },
+        err => {
+          console.log("fail", err);
+        }
+      );
+    } else {
+      state.stompClient.connect(
+        {authorization},
+        frame => {
+          console.log(">>> socket connect success", frame);
+          state.stompClient.subscribe("/sub/message/" + state.chatroomId, res => {
+            let jsonBody = JSON.parse(res.body);
+            let m = {
+              nickname: jsonBody.nickname,
+              content: jsonBody.content,
+              style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+            };
+            state.prevChat.push(m);
+            changeScroll();
+          });
+        },
+        err => {
+          console.log("fail", err);
+        }
+      );
+    }
+
+
 
     const enterChat = function() {
       if (state.chatText.trim() != "" && state.stompClient != null) {

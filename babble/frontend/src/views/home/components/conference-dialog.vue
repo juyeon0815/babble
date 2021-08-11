@@ -96,6 +96,8 @@ export default {
     watch(
       () => state.dialogVisible,
       (dialogVisible, prev) => {
+        state.videoStatus = true;
+        state.audioStatus = true;
         if (state.dialogVisible) {
           const payload = {
             roomId: props.roomId
@@ -185,11 +187,11 @@ export default {
             );
           };
 
+          // 방 생성시 호출되지 않음.
           getToken().then(token => {
             state.session
               .connect(token, { clientData: state.myUserName })
               .then(() => {
-                console.log("############");
                 console.log(token);
                 // --- Get your own camera stream with the desired properties ---
 
@@ -205,13 +207,12 @@ export default {
                 });
 
                 state.mainStreamManager = publisher;
-                store.commit("root/setMainStreamManager", publisher);
-
                 state.publisher = publisher;
-                store.commit("root/setPublisher", publisher);
 
                 // --- Publish your stream ---
                 state.session.publish(state.publisher);
+
+                console.log(state.session);
               })
               .catch(error => {
                 console.log(
@@ -237,8 +238,8 @@ export default {
       const payload = {
         email: store.getters["auth/getEmail"],
         roomId: props.roomId
-      }
-      store.dispatch('root/requestRoomEnter', payload)
+      };
+      store.dispatch("root/requestRoomEnter", payload);
       handleClose();
       router.push({
         name: "conference-detail",
@@ -262,9 +263,11 @@ export default {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
         state.videoStatus = false;
+        store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
         state.videoStatus = true;
+        store.commit("root/setUserVideoStatus", true);
       }
     };
 
@@ -272,9 +275,11 @@ export default {
       if (state.audioStatus) {
         state.publisher.publishAudio(false);
         state.audioStatus = false;
+        store.commit("root/setUserAudioStatus", false);
       } else {
         state.publisher.publishAudio(true);
         state.audioStatus = true;
+        store.commit("root/setUserAudioStatus", true);
       }
     };
 

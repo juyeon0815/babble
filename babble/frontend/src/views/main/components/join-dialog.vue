@@ -204,12 +204,10 @@ export default {
           if (result.status == 200) {
             alert("사용가능한 이메일입니다.");
             state.isOnlyEmail = true;
-          } else {
-            alert("alert");
           }
         })
         .catch(function(err) {
-          alert(err);
+          alert("이미존재하는 이메일입니다.");
           state.isOnlyEmail = false;
         });
     };
@@ -217,7 +215,7 @@ export default {
     const checkConfirm = function() {
       alert("인증번호가 해당 메일로 전송되었습니다.");
       store
-        .dispatch("auth/requestEmailConfirm", state.form.email)
+        .h("auth/requestEmailConfirm", state.form.email)
         .then(function(result) {
           console.log(result);
           console.log(result.data.message);

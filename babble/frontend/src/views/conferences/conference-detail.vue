@@ -1,14 +1,14 @@
 <template>
   <el-container>
     <el-main>
-      <VideoSpace 
+      <VideoSpace
         :roomTitle="state.roomTitle"
         :hostId="state.hostId"
         :myId="state.myId"
       />
     </el-main>
     <el-aside class="side-bar">
-      <Sidebar 
+      <Sidebar
         :roomTitle="state.roomTitle"
         :hostId="state.hostId"
         :myId="state.myId"
@@ -19,7 +19,7 @@
 
 <style>
   .side-bar {
-    background-color: #C1C8E4;
+    background-image: linear-gradient(-30deg, #9f05ff69 10%, #4a63cfc2 100%);
     height: 100vh;
   }
 </style>
