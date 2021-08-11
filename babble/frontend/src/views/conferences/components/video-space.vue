@@ -428,8 +428,6 @@ export default {
 
     const updateMainVideoStreamManager = function(stream) {
       store.commit('root/setMainStreamManager', stream)
-      console.log('***********')
-      console.log(stream)
       state.showMainVideo = true
     }
 
