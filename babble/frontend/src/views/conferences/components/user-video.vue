@@ -9,6 +9,7 @@
 
     <div>
       <p>{{ state.clientData.clientData }}</p>
+      {{ streamManager.stream.connection.connectionId }}
     </div>
   </div>
 </template>
@@ -27,6 +28,18 @@ export default {
   },
 
   setup(props) {
+    console.log("가즈아");
+    console.log(props.streamManager);
+    // props.streamManager.on("publisherStopSpeaking", event => {
+    //   console.log("User " + event.connection.connectionId + " stop speaking");
+    // });
+    // console.log(props.streamManager);
+    // if (props.streamManager != undefined) {
+    //   props.streamManager.on("publisherStopSpeaking", event => {
+    //     console.log("User " + event.connection.connectionId + " stop speaking");
+    //   });
+    // }
+
     const state = reactive({
       clientData: computed(() => {
         return getConnectionData();

@@ -12,13 +12,17 @@
 
     <div class="video-container" :class="state.videoGrid">
       <UserVideo
+        v-if="state.publisher"
         :stream-manager="state.publisher"
+        :id="state.publisher.stream.connection.connectionId"
         @click="updateMainVideoStreamManager(publisher)"
       />
       <UserVideo
         v-for="sub in state.subscribers"
+        :id="sub.stream.connection.connectionId"
         :key="sub.stream.connection.connectionId"
         :stream-manager="sub"
+        style="border:sold"
         @click="unpublish(sub)"
       />
     </div>
@@ -45,9 +49,7 @@
       <el-button type="info" plain @click="findStreamIdBySessionId">
         <i class="el-icon-thumb"></i
       ></el-button>
-      <el-button type="info" plain @click="videoFilter">
-        <i class="el-icon-star-on"></i
-      ></el-button>
+      <el-button type="info" plain> <i class="el-icon-star-on"></i></el-button>
       <el-button type="info" plain @click="leaveSession">
         <i class="el-icon-error"></i
       ></el-button>
@@ -133,6 +135,14 @@ export default {
 
       store.commit("root/setMenuActive", -1);
       state.OV = new OpenVidu();
+
+      // 음성감지 초기 설정
+      state.OV.setAdvancedConfiguration({
+        publisherSpeakingEventsOptions: {
+          interval: 50, // Frequency of the polling of audio streams in ms (default 100)
+          threshold: -50 // Threshold volume in dB (default -50)
+        }
+      });
       state.session = state.OV.initSession();
 
       // 스트림이 생성 되었을 때 -> 기존 참가자 정보 받아오기.
@@ -160,11 +170,21 @@ export default {
         });
       });
 
-      // 다른사람이 마이크나 카메라를 변경했을 때
-      state.session.on("streamPropertyChanged", ({ stream }) => {
-        const index = state.subscribers.indexOf(stream.streamManager, 0);
+      // 누군가의 음성이 감지되었을 때
+      state.session.on("publisherStartSpeaking", event => {
+        console.log(
+          document.querySelector(`#${event.connection.connectionId}`).style
+        );
+        document.querySelector(
+          `#${event.connection.connectionId}`
+        ).style.border = "solid";
+      });
 
-        console.log("누군가 상태가 바뀜!");
+      // 누군가의 음성이 멈췄을 때
+      state.session.on("publisherStopSpeaking", event => {
+        document.querySelector(
+          `#${event.connection.connectionId}`
+        ).style.border = "none";
       });
 
       state.session.on("exception", ({ exception }) => {
@@ -254,6 +274,7 @@ export default {
 
               state.mainStreamManager = publisher;
               state.publisher = publisher;
+
               store.commit("root/setPublisher", publisher);
 
               console.log("%%%%%%%%%%%%%");
@@ -385,7 +406,7 @@ export default {
     const videoFilter = function() {
       state.publisher.stream
         .applyFilter("GStreamerFilter", {
-          command: "gdkpixbufoverlay location=/img.png"
+          command: "streaktv"
         })
         .then(() => {
           console.log("Video rotated!");

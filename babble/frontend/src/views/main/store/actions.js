@@ -7,7 +7,6 @@ export function requestChangeAlarm ({ state }, payload) {
   return $axios.patch('/users/hashtag', payload.email)
 }
 
-
 // 방 생성, 정보(카테고리, 검색), 대기실
 export function requestRoomCreate ({ state }, payload) {
   console.log('requestRoomCreate', state, payload)
