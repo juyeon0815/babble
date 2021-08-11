@@ -252,7 +252,15 @@ export default {
       myId: "",
 
       videoGrid: "alone",
-      showMainVideo: false
+      showMainVideo: false,
+      visible: false,
+
+      emoji: "",
+      prevEmoji: [],
+      stompClient: null,
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }),
     });
 
     watch(
@@ -570,19 +578,16 @@ export default {
       {authorization},
       frame => {
         console.log(">>>>>>>>>> video-space success", frame)
-        state.stompClient.subscribe("/sub/emoji/" + state.roomId, res => {
+        state.stompClient.subscribe("/sub/emoji/" + state.mySessionId, res => {
           let jsonBody = JSON.parse(res.body);
           let e = {
             nickname: jsonBody.nickname,
             img: jsonBody.img,
             style: jsonBody.img.includes("wow") || jsonBody.img.includes("sad") ? "medium2" : "small2",
           };
-          // console.log(e.img, '주소가어디보자')
           state.prevEmoji.push(e);
-          // console.log(state.prevEmoji, '여기서확인')
           setTimeout(() => {
             state.prevEmoji.shift()
-            // console.log(state.prevEmoji, '지워졌니')
           }, 5000)
         });
       },
@@ -627,8 +632,8 @@ export default {
       if (state.stompClient != null) {
         let emojiBox = {
           img: state.emoji,
-          roomId: state.roomId,
-          nickname: state.nickname
+          roomId: state.mySessionId,
+          nickname: state.myUserName
         };
         state.stompClient.send("/pub/emoji", JSON.stringify(emojiBox), {});
         state.emoji = "";
