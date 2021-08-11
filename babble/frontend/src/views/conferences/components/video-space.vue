@@ -497,11 +497,9 @@ export default {
     };
 
     const updateMainVideoStreamManager = function(stream) {
-      store.commit("root/setMainStreamManager", stream);
-      console.log("***********");
-      console.log(stream);
-      state.showMainVideo = true;
-    };
+      store.commit('root/setMainStreamManager', stream)
+      state.showMainVideo = true
+    }
 
     // 내 영상 끄기
     const onOffVideo = function() {
