@@ -22,7 +22,9 @@ export function requestRoomExit ({ state }, payload) {
   return $axios.patch('room/exit', payload)
 }
 
-export function requestRoomDelete ({ state }, payload) {
+export function requestRoomDelete({ state }, payload) {
+  console.log("DDDDDDDDDDD");
+  console.log(payload);
   return $axios.post(`room/${payload.roomId}`, payload.maxViewers)
 }
 
@@ -30,6 +32,6 @@ export function requestRoomHost ({ state }, roomId) {
   return $axios.get(`room/host/${roomId}`)
 }
 
-export function requestRandomName ({ state }) {
-  return $axios.get(`room/random`)
+export async function requestRandomName ({ state }) {
+  return await $axios.get(`room/random`)
 }
