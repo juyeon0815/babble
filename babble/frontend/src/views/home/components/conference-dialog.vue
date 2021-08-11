@@ -1,26 +1,18 @@
 <template>
   <el-dialog title="Ba:bble" v-model="state.dialogVisible" @close="handleClose">
     <el-row class="description">
-      <el-col :offset="1"
-        ><h2>방 제목 : {{ state.title }}</h2></el-col
-      >
-      <el-col :offset="1"
-        ><h2>방 설명 : {{ state.content }}</h2></el-col
-      >
-      <el-col :offset="1"
-        ><h2>방송 시작 시간 : {{ state.createTime }}</h2></el-col
-      >
-      <el-col :offset="1"
-        ><p>아래와 같은 화면으로 방에 입장될 예정입니다.</p></el-col
-      >
-
-      <el-col :offset="3" :span="18">
-        <div id="video-container" class="col-md-6">
-          <UserVideo :stream-manager="state.publisher" /></div
-      ></el-col>
-
-      <div class="nav-icons">
-        <el-button-group>
+      <el-col :offset="1">
+        <h2>방 제목 : {{ state.title }}</h2>
+      </el-col>
+      <el-col :offset="1">
+        <h2>방 설명 : {{ state.content }}</h2>
+      </el-col>
+      <el-col :offset="1">
+        <h2>방송 시작 시간 : {{ state.createTime }}</h2>
+      </el-col>
+      <el-col class="instruction">
+        <p>아래와 같은 화면으로 방에 입장될 예정입니다.</p>
+        <el-button-group class="btn-group">
           <el-button type="info" plain @click="onOffAudio">
             <i
               v-if="state.audioStatus"
@@ -38,15 +30,20 @@
             <i v-else type="danger" class="el-icon-video-camera" />
           </el-button>
         </el-button-group>
-      </div>
+      </el-col>
+
+      <el-col :offset="3" :span="18">
+        <div id="video-container" class="col-md-6">
+          <UserVideo :stream-manager="state.publisher" />
+        </div>
+      </el-col>
+      <el-col :offset="18">
+        <el-button type="primary" plain @click="clickEnterRoom">
+          방 입장하기
+        </el-button>
+      </el-col>
     </el-row>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="clickEnterRoom"
-          >방 입장하기</el-button
-        >
-      </span>
-    </template>
+    
   </el-dialog>
 </template>
 
@@ -292,13 +289,20 @@ export default {
 </script>
 
 <style>
-.testCam {
-  border-radius: 4px;
-  min-height: 300px;
-  background-color: grey;
-}
 .description h2 {
   padding: 0;
   margin-top: 0;
+}
+.description p {
+  font-size: 15px;
+}
+.instruction {
+  display: flex;
+  margin: 5px;
+  justify-content: space-around;
+  text-align: center;
+}
+.btn-group {
+  margin-top: 5px;
 }
 </style>

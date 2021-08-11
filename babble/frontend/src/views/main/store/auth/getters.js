@@ -23,3 +23,7 @@ export function getUserHashtagLength (state) {
 // console.log(state.userHashtag.length)
 	return state.userHashtag.length
 }
+
+export function getProvider (state){
+  return state.provider
+}

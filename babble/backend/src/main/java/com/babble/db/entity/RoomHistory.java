@@ -32,7 +32,8 @@ public class RoomHistory extends BaseEntity {
         this.startTime = date;
     }
 
-    public void roomExit(Date date){
+    public void roomExit(){
+        Date date = new Date();
         this.endTime = date;
     }
 }

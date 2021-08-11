@@ -4,12 +4,14 @@
       <VideoSpace 
         :roomTitle="state.roomTitle"
         :hostId="state.hostId"
+        :myId="state.myId"
       />
     </el-main>
     <el-aside class="side-bar">
       <Sidebar 
         :roomTitle="state.roomTitle"
         :hostId="state.hostId"
+        :myId="state.myId"
       />
     </el-aside>
   </el-container>
@@ -42,9 +44,15 @@ export default {
     const state = reactive({
       conferenceId: "",
       hostId: null,
-      roomTitle: ""
+      roomTitle: "",
+      myId: ""
     });
     store.commit("root/joinRoom", route.params.conferenceId);
+
+    store.dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      .then(function(result) {
+        state.myId = result.data.id
+      })
     
 
     // 페이지 진입시 불리는 훅
