@@ -215,7 +215,7 @@ export default {
     const checkConfirm = function() {
       alert("인증번호가 해당 메일로 전송되었습니다.");
       store
-        .h("auth/requestEmailConfirm", state.form.email)
+        .dispatch("auth/requestEmailConfirm", state.form.email)
         .then(function(result) {
           console.log(result);
           console.log(result.data.message);
