@@ -80,6 +80,7 @@
       <el-row class="video-row">
         <el-col :span="8">
           <UserVideo
+            v-if="state.publisher"
             :stream-manager="state.publisher"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
