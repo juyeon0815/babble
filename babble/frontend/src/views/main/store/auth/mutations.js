@@ -7,6 +7,7 @@ export function setLogout (state) {
   state.activeMenu = 'home'
   state.userHashtag = []
   state.alarmValue = false
+  state.provider = ''
 }
 
 export function setToken (state, token) {
@@ -22,6 +23,10 @@ export function setEmail (state, email) {
   console.log(state.email)
 	state.email = email
   console.log(state.email)
+}
+
+export function setProvider(state, provider){
+  state.provider = provider;
 }
 
 export function setUserHashtagPush (state, input) {

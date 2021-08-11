@@ -5,14 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -22,6 +21,8 @@ import javax.persistence.OneToMany;
 @Entity
 @Getter
 public class User extends BaseEntity{
+
+    @Column(nullable=false)
     String email;
 
     @JsonIgnore
@@ -31,6 +32,8 @@ public class User extends BaseEntity{
     String picture;
 
     boolean alarm;
+
+    String provider;
 
     @OneToMany (mappedBy ="user", cascade = CascadeType.REMOVE)
     List<UserHashtag> userHashtag = new ArrayList<>();
@@ -44,7 +47,7 @@ public class User extends BaseEntity{
         this.email = email;
         this.password = password;
         this.picture = "default";
-        this.alarm = false;
+        this.alarm=false;
     }
 
     public User() { }
@@ -59,5 +62,13 @@ public class User extends BaseEntity{
 
     public void updatePassword(String password){
         this.password = password;
+    }
+
+    public User(String email, int num){
+        this.email = email;
+        if(num==1) this.provider ="kakao";
+        else this.provider = "google";
+        this.picture = "default";
+        this.alarm=false;
     }
 }

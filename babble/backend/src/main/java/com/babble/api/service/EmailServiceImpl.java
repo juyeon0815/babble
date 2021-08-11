@@ -110,7 +110,7 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public String sendHashtagMessage(String to, String hashtag, Long roomId) throws Exception {
+    public void sendHashtagMessage(String to, String hashtag, Long roomId) throws Exception {
         MimeMessage message = createHashTagMessage(to, hashtag, roomId);
         try{ //예외처리
             emailSender.send(message);
@@ -118,6 +118,45 @@ public class EmailServiceImpl implements EmailService{
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return ePw;
     }
+
+    @Override
+    public String sendTempPassword(String email) throws Exception {
+        // 임시 비밀번호 생성
+        String tempPassword = "";
+        for (int i = 0; i < 12; i++) {
+            tempPassword += (char) ((Math.random() * 26) + 97);
+        }
+        MimeMessage message = createTempPasswordMessage(email, tempPassword);
+        try{  //예외처리
+            emailSender.send(message);
+        } catch(MailException es){
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+
+        return tempPassword;
+    }
+
+    private MimeMessage createTempPasswordMessage(String to, String tempPassword) throws Exception{
+        MimeMessage  message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to);//보내는 대상
+        message.setSubject("[Babble] 임시 비밀번호가 발급되었습니다.");//제목
+
+        String msgg="";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 안녕하세요 Babble입니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>회원님 계정에 임시 비밀번호가 발급되었습니다.</p>";
+        msgg+= "<p>아래 비밀번호로 로그인 후 비밀번호를 변경해주세요</p><br>";
+        msgg+= "<h4>" + tempPassword +"</h4>";
+        msgg+= "<br>";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("babble0802@gmail.com","Babble"));//보내는 사람
+
+        return message;
+    }
+
 }

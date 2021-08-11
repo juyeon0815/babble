@@ -52,12 +52,6 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Tuple> getRoomInfo() {
-        List<Tuple> roomRes = roomRepositorySupport.roomInfo();
-        return roomRes;
-    }
-
-    @Override
     public List<Tuple> getBestRoomInfo(int pageNum) {
         List<Tuple> roomRes = roomRepositorySupport.bestRoomInfo(pageNum);
         return roomRes;
@@ -83,9 +77,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void roomClose(Long roomId) {
+    public void roomClose(Long roomId, Long maxView) {
         Room room = roomRepositorySupport.findRoomByRoomId(roomId);
-        room.roomClose();
+        room.roomClose(maxView);
         roomRepository.save(room);
     }
 

@@ -3,27 +3,151 @@
     {{ roomTitle }} <i class="el-icon-user-solid"></i>
     {{ state.subscribers.length + 1 }}명
   </h3>
-  {{ state.maxViewers }}
-  <div class="container">
-    <!-- 1차) Main Video 제외 -->
-    <!-- <div class="main-video">
-      <UserVideo :streamManager="state.mainStreamManager" />
-    </div> -->
 
-    <div class="video-container" :class="state.videoGrid">
+  <div v-if="!state.showMainVideo">
+    <!-- 1인 -->
+    <div v-if="state.videoGrid == 'alone'" class="video-container less2">
       <UserVideo
+        v-if="state.publisher"
         :stream-manager="state.publisher"
-        @click="updateMainVideoStreamManager(publisher)"
+        :id="state.publisher.stream.connection.connectionId"
+        @toMain="updateMainVideoStreamManager(state.publisher)"
       />
-      <UserVideo
-        v-for="sub in state.subscribers"
-        :key="sub.stream.connection.connectionId"
-        :stream-manager="sub"
-        @click="unpublish(sub)"
-      />
+    </div>
+    <!-- 2인 -->
+    <div v-if="state.videoGrid == 'less2'" class="video-container less2">
+      <el-row>
+        <el-col :span="12">
+          <UserVideo
+            v-if="state.publisher"
+            :stream-manager="state.publisher"
+            :id="state.publisher.stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-col>
+        <el-col :span="12" v-if="state.subscribers.length != 0">
+          <UserVideo
+            :stream-manager="state.subscribers[0]"
+            :id="state.subscribers[0].stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
+            @unpublishMe="unpublish(state.subscribers[0])"
+          />
+        </el-col>
+      </el-row>
+    </div>
+    <!-- 3-4인 -->
+    <div v-if="state.videoGrid == 'less4'" class="video-container">
+      <el-row class="video-row">
+        <el-col :offset="3" :span="8">
+          <UserVideo
+            v-if="state.publisher"
+            :stream-manager="state.publisher"
+            :id="state.publisher.stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-col>
+        <el-col :offset="1" :span="8">
+          <UserVideo
+            :stream-manager="state.subscribers[0]"
+            :id="state.subscribers[0].stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
+            @unpublishMe="unpublish(state.subscribers[0])"
+          />
+        </el-col>
+      </el-row>
+      <el-row class="video-row">
+        <el-col :offset="3" :span="8">
+          <UserVideo
+            :stream-manager="state.subscribers[1]"
+            :id="state.subscribers[1].stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.subscribers[1])"
+            @unpublishMe="unpublish(state.subscribers[1])"
+          />
+        </el-col>
+        <el-col :offset="1" :span="8">
+          <UserVideo
+            v-if="state.subscribers.length == 3"
+            :stream-manager="state.subscribers[2]"
+            :id="state.subscribers[2].stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.subscribers[2])"
+            @unpublishMe="unpublish(state.subscribers[2])"
+          />
+        </el-col>
+      </el-row>
+    </div>
+    <!-- 5-6인 -->
+    <div v-if="state.videoGrid == 'less6'" class="video-container">
+      <el-row class="video-row">
+        <el-col :span="8">
+          <UserVideo
+            :stream-manager="state.publisher"
+            :id="state.publisher.stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-col>
+        <el-col
+          :span="8"
+          v-for="sub in state.subscribers.slice(0, 2)"
+          :key="sub.stream.connection.connectionId"
+        >
+          <UserVideo
+            :stream-manager="sub"
+            :id="sub.stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(sub)"
+            @unpublishMe="unpublish(sub)"
+          />
+        </el-col>
+      </el-row>
+      <el-row class="video-row">
+        <el-col
+          :span="8"
+          v-for="sub in state.subscribers.slice(2)"
+          :key="sub.stream.connection.connectionId"
+        >
+          <UserVideo
+            :stream-manager="sub"
+            :id="sub.stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(sub)"
+            @unpublishMe="unpublish(sub)"
+          />
+        </el-col>
+      </el-row>
     </div>
   </div>
 
+  <!-- 메인 비디오 크게보기  -->
+  <div v-if="state.showMainVideo" class="video-container main-video">
+    <el-row>
+      <el-col :span="15">
+        <UserVideo
+          :streamManager="state.mainStreamManager"
+          :id="state.mainStreamManager.stream.connection.connectionId"
+          @click="state.showMainVideo = false"
+        />
+      </el-col>
+      <el-col :offset="1" :span="8">
+        <el-row>
+          <UserVideo
+            :stream-manager="state.publisher"
+            :id="state.publisher.stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.publisher)"
+          />
+        </el-row>
+        <el-row v-if="state.subscribers.length != 0">
+          <UserVideo
+            :stream-manager="state.subscribers[0]"
+            :id="state.subscribers[0].stream.connection.connectionId"
+            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
+            @unpublishMe="unpublish(state.subscribers[0])"
+          />
+        </el-row>
+      </el-col>
+    </el-row>
+  </div>
+
+  <!-- 6인 이상 추가 예정 -->
+
+  <!-- 버튼 -->
   <div class="nav-icons">
     <el-button-group>
       <el-button type="info" plain @click="onOffAudio">
@@ -65,8 +189,8 @@
         </div>
       </el-popover>
       <el-button type="info" plain @click="leaveSession">
-        <i class="el-icon-error"></i
-      ></el-button>
+        <i class="el-icon-error"></i>
+      </el-button>
     </el-button-group>
   </div>
   <div class="emojilog" id="emojis">
@@ -102,6 +226,9 @@ export default {
     },
     hostId: {
       type: Number
+    },
+    myId: {
+      type: String
     }
   },
   components: {
@@ -124,24 +251,28 @@ export default {
       mySessionId: store.getters["root/getRoomID"],
       myId: "",
 
-      maxViewers: 1,
-      visible: false,
-      emoji: "",
-      prevEmoji: [],
-      nickname: computed(() => store.getters["root/getUserName"]),
-      stompClient: null,
-      roomId: store.getters["root/getRoomID"],
-      isLoggedin: computed(() => {
-        return store.getters["auth/getToken"];
-      }),
-      // videoGrid: computed(() => store.getters["root/getSubscribers"]).length <= 3 ? 'less4':'more4'
+      videoGrid: "alone",
+      showMainVideo: false
     });
 
     watch(
       () => state.subscribers.length,
       (newCount, prev) => {
+        // maxViewers
         if (state.maxViewers < newCount + 1) {
           state.maxViewers = newCount + 1;
+        }
+        // videoGrid
+        if (newCount == 0) {
+          state.videoGrid = "alone";
+        } else if (newCount == 1) {
+          state.videoGrid = "less2";
+        } else if (newCount >= 2 && newCount <= 3) {
+          state.videoGrid = "less4";
+        } else if (newCount >= 4 && newCount <= 5) {
+          state.videoGrid = "less6";
+        } else {
+          state.videoGrid = "more6";
         }
       }
     );
@@ -160,14 +291,17 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       getRandomName();
-      store
-        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-        .then(function(result) {
-          state.myId = result.data.id;
-        });
 
       store.commit("root/setMenuActive", -1);
       state.OV = new OpenVidu();
+
+      // 음성감지 초기 설정
+      state.OV.setAdvancedConfiguration({
+        publisherSpeakingEventsOptions: {
+          interval: 50, // Frequency of the polling of audio streams in ms (default 100)
+          threshold: -50 // Threshold volume in dB (default -50)
+        }
+      });
       state.session = state.OV.initSession();
 
       // 스트림이 생성 되었을 때 -> 기존 참가자 정보 받아오기.
@@ -176,10 +310,40 @@ export default {
         store.commit("root/setSubscribers", subscriber);
       });
 
+      // 누군가 나갈 때
       state.session.on("streamDestroyed", ({ stream }) => {
         const index = state.subscribers.indexOf(stream.streamManager, 0);
+        console.log("나가~");
         if (index >= 0) {
           state.subscribers.splice(index, 1);
+        }
+      });
+
+      // 강퇴 당했을 때
+      state.session.on("sessionDisconnected", ({ stream }) => {
+        console.log("강티당함..");
+        const MenuItems = store.getters["root/getMenus"];
+        let keys = Object.keys(MenuItems);
+        router.push({
+          name: keys[0]
+        });
+      });
+
+      // 누군가의 음성이 감지되었을 때
+      state.session.on("publisherStartSpeaking", event => {
+        if (document.querySelector(`#${event.connection.connectionId}`)) {
+          document.querySelector(
+            `#${event.connection.connectionId}`
+          ).style.border = "solid";
+        }
+      });
+
+      // 누군가의 음성이 멈췄을 때
+      state.session.on("publisherStopSpeaking", event => {
+        if (document.querySelector(`#${event.connection.connectionId}`)) {
+          document.querySelector(
+            `#${event.connection.connectionId}`
+          ).style.border = "none";
         }
       });
 
@@ -270,6 +434,7 @@ export default {
 
               state.mainStreamManager = publisher;
               state.publisher = publisher;
+
               store.commit("root/setPublisher", publisher);
 
               console.log("%%%%%%%%%%%%%");
@@ -307,7 +472,8 @@ export default {
 
     const leaveSession = function() {
       // 호스트일 경우 방 삭제(max 보내기)
-      if (props.hostId == state.myId) {
+
+      if (props.hostId == props.myId) {
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
@@ -330,11 +496,11 @@ export default {
       });
     };
 
-    //메인 화면으로 옮기기 // 아직 비활성화임.
     const updateMainVideoStreamManager = function(stream) {
-      // if (state.mainStreamManager === stream) return;
-      // state.mainStreamManager = stream;
+      store.commit("root/setMainStreamManager", stream);
+      console.log("***********");
       console.log(stream);
+      state.showMainVideo = true;
     };
 
     // 내 영상 끄기
@@ -515,24 +681,11 @@ export default {
   font-size: 25px;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  /* display: grid;
-  height: 80vh; */
+.video-container {
+  width: 100%;
+  height: 80vh;
 }
-/* .less4 {
-  grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
-  gap: 20px;
-}
-.more4 {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr 1fr;
-  gap: 10px;
-} */
-
-.emoji-row {
+.less2 {
   display: flex;
   justify-content: center;
   align-items: center;
