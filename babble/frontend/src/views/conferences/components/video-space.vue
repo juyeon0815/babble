@@ -172,19 +172,20 @@ export default {
 
       // 누군가의 음성이 감지되었을 때
       state.session.on("publisherStartSpeaking", event => {
-        console.log(
-          document.querySelector(`#${event.connection.connectionId}`).style
-        );
-        document.querySelector(
-          `#${event.connection.connectionId}`
-        ).style.border = "solid";
+        if (document.querySelector(`#${event.connection.connectionId}`)) {
+          document.querySelector(
+            `#${event.connection.connectionId}`
+          ).style.border = "solid";
+        }
       });
 
       // 누군가의 음성이 멈췄을 때
       state.session.on("publisherStopSpeaking", event => {
-        document.querySelector(
-          `#${event.connection.connectionId}`
-        ).style.border = "none";
+        if (document.querySelector(`#${event.connection.connectionId}`)) {
+          document.querySelector(
+            `#${event.connection.connectionId}`
+          ).style.border = "none";
+        }
       });
 
       state.session.on("exception", ({ exception }) => {
