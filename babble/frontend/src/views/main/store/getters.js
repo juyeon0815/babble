@@ -26,4 +26,6 @@ export function getUserVideoStatus(state) {
 export function getUserAudioStatus(state) {
 	return state.userAudioStatus
 }
-
+export function getIsHost(state) {
+	return state.isHost
+}

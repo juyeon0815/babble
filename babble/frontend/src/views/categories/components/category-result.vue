@@ -186,4 +186,5 @@ export default {
     border-radius: 10px;
     font-size: 18px;
   }
+
 </style>

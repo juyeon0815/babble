@@ -244,6 +244,7 @@ export default {
         roomId: props.roomId
       };
       store.dispatch("root/requestRoomEnter", payload);
+      store.commit('root/setIsHost', false)
       handleClose();
       router.push({
         name: "conference-detail",

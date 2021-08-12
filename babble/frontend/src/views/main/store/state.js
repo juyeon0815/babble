@@ -40,4 +40,5 @@ export default {
   subscribers: [],
   userVideoStatus: true,
   userAudioStatus: true,
+  isHost: false,
 }

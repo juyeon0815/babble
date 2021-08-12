@@ -13,7 +13,6 @@ export default {
   },
 
   setup(props) {
-    console.log("스메");
     console.log(props.streamManager.stream.videoActive);
     const el = ref(null);
 
