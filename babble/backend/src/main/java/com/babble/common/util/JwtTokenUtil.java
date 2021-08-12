@@ -6,13 +6,16 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
 
 import com.auth0.jwt.exceptions.InvalidClaimException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.charset.Charset;
 import java.time.Instant;
@@ -125,31 +128,57 @@ public class JwtTokenUtil {
         return new Date(now.getTime() + expirationTime);
     }
 
-    public static void handleError(String token) {
-        JWTVerifier verifier = JWT
-                .require(Algorithm.HMAC512(secretKey.getBytes()))
-                .withIssuer(ISSUER)
-                .build();
+    public static void handleError(String token) throws Exception {
 
         try {
-            verifier.verify(token.replace(TOKEN_PREFIX, ""));
+            JWTVerifier verifier = JWT
+                    .require(Algorithm.HMAC512(secretKey.getBytes()))
+                    .withIssuer(ISSUER)
+                    .build();
+
+            DecodedJWT jwt = verifier.verify(token.replace(TOKEN_PREFIX, ""));
+
+            System.out.println("=================== test_verifyJwtToken ===================");
+            System.out.println("jwt token         : " + jwt.getToken());
+            System.out.println("jwt algorithm     : " + jwt.getAlgorithm());
+            System.out.println("jwt claims        : " + jwt.getClaims());
+            System.out.println("jwt issuer        : " + jwt.getIssuer());
+            System.out.println("jwt issuer date   : " + jwt.getIssuedAt());
+            System.out.println("jwt expires date  : " + jwt.getExpiresAt());
+            System.out.println("jwt signature     : " + jwt.getSignature());
+            System.out.println("jwt type          : " + jwt.getType());
+            System.out.println("jwt key id        : " + jwt.getKeyId());
+            System.out.println("jwt id            : " + jwt.getId());
+            System.out.println("jwt subject       : " + jwt.getSubject());
+            System.out.println("jwt content type  : " + jwt.getContentType());
+            System.out.println("jwt audience list : " + jwt.getAudience());
+
         } catch (AlgorithmMismatchException ex) {
+            System.out.println("여기들어옴1");
             throw ex;
         } catch (InvalidClaimException ex) {
+            System.out.println("여기들어옴2");
             throw ex;
         } catch (SignatureGenerationException ex) {
+            System.out.println("여기들어옴3");
             throw ex;
         } catch (SignatureVerificationException ex) {
+            System.out.println("여기들어옴4");
             throw ex;
         } catch (TokenExpiredException ex) {
+            System.out.println("여기들어옴4");
             throw ex;
         } catch (JWTCreationException ex) {
+            System.out.println("여기들어옴6");
             throw ex;
         } catch (JWTDecodeException ex) {
+            System.out.println("여기들어옴7");
             throw ex;
         } catch (JWTVerificationException ex) {
+            System.out.println("여기들어옴8");
             throw ex;
         } catch (Exception ex) {
+            System.out.println("여기들어옴9");
             throw ex;
         }
     }

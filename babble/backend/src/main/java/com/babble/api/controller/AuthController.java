@@ -2,15 +2,15 @@ package com.babble.api.controller;
 
 import com.babble.api.response.user.GoogleLoginRes;
 import com.babble.api.response.user.KakaoLoginRes;
+import com.babble.api.response.user.UserRes;
 import com.babble.api.service.GoogleService;
 import com.babble.api.service.KakaoService;
+import com.babble.common.auth.BabbleUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.babble.api.request.user.UserLoginReq;
 import com.babble.api.response.user.UserLoginPostRes;
@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -75,6 +76,7 @@ public class AuthController {
 			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(email)));
 		}else return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "잘못된 비밀번호 입니다.", "fail"));
 	}
+
 
 	@PostMapping("/kakaoToken")
 	@ApiOperation(value = "토큰얻기", notes = "code로 토큰 얻기")

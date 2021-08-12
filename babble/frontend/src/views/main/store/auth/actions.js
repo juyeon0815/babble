@@ -53,8 +53,10 @@ export function requestUserInfo ({ state }, payload) {
   const url = '/users/me'
   return $axios.get(url, {
     headers: {
-        Authorization: `Bearer ${payload}`
-    }
+        Authorization: `Bearer ${payload}`,
+        provider : state.provider
+    },
+
   })
 }
 

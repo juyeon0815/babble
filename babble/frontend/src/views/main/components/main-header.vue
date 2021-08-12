@@ -3,6 +3,9 @@
     <div class="navbar-logo">
       <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
     </div>
+    <div @click="alertTest1">alert tset1</div>
+    <div @click="alertTest2">alert tset2</div>
+    <div @click="alertTest3">alert tset3</div>
     <div class="navbar-search">
       <el-input
         prefix-icon="el-icon-search"
@@ -271,6 +274,7 @@
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { reactive, computed, watch, onMounted } from "vue";
+import swal from 'sweetalert';
 
 export default {
   name: "main-header",
@@ -298,12 +302,37 @@ export default {
       })
     });
 
-    store
-      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        // console.log(result.data.picture)
-        store.commit("auth/setUserProfile", result.data.picture);
-      });
+    // store
+    //   .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+    //   .then(function(result) {
+    //     // console.log(result.data.picture)
+    //     store.commit("auth/setUserProfile", result.data.picture);
+    //   });
+
+    const alertTest1 = function(){
+      swal("alert창꾸미는중");
+    }
+    const alertTest2 = function(){
+      swal(" 인증번호 전송!", "히힛!", "success");
+    }
+    const alertTest3 = function(){
+      swal({
+      title: "정말로 삭제하시겠습니까?",
+      text: "정말루?ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        swal("다음에 또만나 ㅜㅜㅜㅜ", {
+          icon: "success",
+        });
+      } else {
+        swal("취소!");
+      }
+});
+    }
 
     const clickLogo = () => {
       store.commit("root/setActiveCategory", null);
@@ -339,12 +368,12 @@ export default {
 
     const clickMyPage = function() {
       let nowIndex = store.getters["root/getActiveMenuIndex"];
-      if (nowIndex != 2) {
-        store.commit("root/setMenuActive", 2);
-        router.push({
-          path: "/mypage/keyword"
-        });
-      }
+        if (nowIndex != 2) {
+          store.commit("root/setMenuActive", 2);
+          router.push({
+            path: "/mypage/keyword"
+          });
+        }
     };
 
     //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
@@ -356,14 +385,13 @@ export default {
         .then(()=> store.commit("auth/setLogout"))
         .then(()=>router.push("/"));
       }
-      // else if(state.provider==="google"){
-      //   console.log("구글로그아웃");
-      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
-
-      //   store.dispatch("auth/requestLogout")
-      //   .then(()=> store.commit("auth/setLogout"))
-      //   .then(()=>router.push("/"));
-      // }
+      else if(state.provider==="google"){
+        console.log("구글로그아웃");
+        // document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
+        store.dispatch("auth/requestLogout")
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=>router.push("/"));
+      }
       else{
         store
         .dispatch("auth/requestLogout")
@@ -402,6 +430,8 @@ export default {
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
         .then(function(result) {
           store.commit("auth/setUserProfile", result.data.picture);
+        }).catch(function(error){
+          console.error(error)
         });
     };
 
@@ -416,7 +446,10 @@ export default {
       clickLogout,
       enterSearch,
       clickToggle,
-      loadProfile
+      loadProfile,
+      alertTest1,
+      alertTest2,
+      alertTest3
     };
   }
 };
