@@ -53,7 +53,7 @@ export default {
       .then(function(result) {
         state.myId = result.data.id
       })
-    
+
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
