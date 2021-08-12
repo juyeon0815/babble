@@ -1,12 +1,13 @@
 <template>
-  <!-- <div class="head-label">마이페이지</div> -->
-  <el-tabs class="tab" v-model="state.activeName" @tab-click="handleClick">
-    <el-tab-pane label="키워드 알림 설정" name="keyword"></el-tab-pane>
-    <el-tab-pane label="시청 이력" name="history1"></el-tab-pane>
-    <el-tab-pane label="방 생성 이력" name="history2"></el-tab-pane>
-    <el-tab-pane label="회원정보" name="user-info"></el-tab-pane>
-  </el-tabs>
-  <router-view></router-view>
+  <div class="mypage-container">
+    <el-tabs class="tab" v-model="state.activeName" @tab-click="handleClick">
+      <el-tab-pane label="키워드 알림 설정" name="keyword"></el-tab-pane>
+      <el-tab-pane label="시청 이력" name="history1"></el-tab-pane>
+      <el-tab-pane label="방 생성 이력" name="history2"></el-tab-pane>
+      <el-tab-pane label="회원정보" name="user-info"></el-tab-pane>
+    </el-tabs>
+    <router-view></router-view>
+  </div>
 
 </template>
 
@@ -49,10 +50,8 @@ export default {
 </script>
 
 <style>
-  .head-label {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20px 0px 20px 50px;
+  .mypage-container {
+    min-height: 80vh;
   }
 
   .tab {

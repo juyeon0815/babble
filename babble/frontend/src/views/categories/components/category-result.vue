@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <el-row class="result-container">
     <el-col :offset="18">
       <div class="switch-order">
       <el-radio v-model="state.radio" label="best" @change="changetoBest">인기순 정렬</el-radio>
@@ -8,17 +8,21 @@
     </el-col>
     <el-col>
       <el-row class="conference-row" v-if="state.radio == 'best'">
+        <div v-if="state.bestRoomCount == 0">해당 카테고리의 대화중인 방이 없습니다. 만들어보세요!</div>
         <Conference v-for="i in state.bestRoomCount" :key="i" :num="i" v-cloak
         :roomInfo="state.bestRoomList[i-1]"
         @click="clickConference(state.bestRoomList[i-1].id)"/>
       </el-row>
       <el-row class="conference-row" v-if="state.radio == 'recent'">
+        <div v-if="state.recentRoomCount == 0">해당 카테고리의 대화중인 방이 없습니다. 만들어보세요!</div>
         <Conference v-for="i in state.recentRoomCount" :key="i" :num="i" v-cloak
         :roomInfo="state.recentRoomList[i-1]"
         @click="clickConference(state.recentRoomList[i-1].id)"/>
       </el-row>
     </el-col>
-    <el-col :offset="20"><el-button type="success" plain @click="clickMore">더보기</el-button></el-col>
+    <el-col :offset="20">
+      <el-button type="text" @click="clickMore" v-if="state.bestRoomCount >= 10 || state.recentRoomCount >= 10">더보기</el-button>
+    </el-col>
   </el-row>
   <button v-show="state.showBacktop" class="backtop" @click="clickTop">Top</button>
   <ConferenceDialog
@@ -115,10 +119,12 @@ export default {
           state.pageNum += 1
           if (state.radio == 'best') {
             state.bestRoomList.push(...result.data)
+            state.bestRoomCount += result.data.length
+
           } else {
             state.recentRoomList.push(...result.data)
+            state.recentRoomCount += result.data.length
           }
-          state.count += result.data.length
         }
       })
       .catch(function (err) {
@@ -167,6 +173,9 @@ export default {
 </script>
 
 <style>
+  .result-container {
+    min-height: 80vh;
+  }
   .tab {
     margin-left: 50px;
   }
