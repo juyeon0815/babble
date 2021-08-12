@@ -241,16 +241,9 @@
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emoji-bubble">
-<<<<<<< HEAD
         <div class="circle"><img :class="e.style" :src="e.img"></div>
         <p class="nickname"><span class="text">{{ e.nickname }}</span></p>
         <!-- <span class="nickname"><p class="text">{{ e.nickname }}</p></span> -->
-=======
-        <div class="circle"><img :class="e.style" :src="e.img" /></div>
-        <span class="nickname"
-          ><p class="text">{{ e.nickname }}</p></span
-        >
->>>>>>> d40de6ef0d1d84101e14eb9dcf05600c26b6d746
       </div>
     </div>
   </div>
@@ -317,12 +310,8 @@ export default {
       stompClient: null,
       isLoggedin: computed(() => {
         return store.getters["auth/getToken"];
-<<<<<<< HEAD
       }),
       profile: ''
-=======
-      })
->>>>>>> d40de6ef0d1d84101e14eb9dcf05600c26b6d746
     });
 
     watch(
@@ -347,19 +336,14 @@ export default {
       }
     );
 
-<<<<<<< HEAD
     if (!state.videoStatus && state.isLoggedin) {
       state.profile = store.getters["auth/getProfile"]
     }
 
 
-    const getRandomName = async function() {
-      await store
-=======
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       store
->>>>>>> d40de6ef0d1d84101e14eb9dcf05600c26b6d746
         .dispatch("root/requestRandomName")
         .then(result => {
           if (state.isHost) {
