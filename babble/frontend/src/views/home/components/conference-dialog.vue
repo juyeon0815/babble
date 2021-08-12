@@ -35,6 +35,7 @@
       <el-col :offset="3" :span="18">
         <div id="video-container" class="col-md-6">
           <UserVideo :stream-manager="state.publisher" :profile="state.profile" />
+          <!-- <UserVideo :stream-manager="state.publisher" /> -->
         </div>
       </el-col>
       <el-col :offset="18">
@@ -94,7 +95,7 @@ export default {
       isLoggedin: computed(() => {
         return store.getters["auth/getToken"];
       }),
-      profile: ''
+      profile: []
     });
 
     watch(
@@ -265,19 +266,20 @@ export default {
     };
 
     const onOffVideo = function() {
-      if (state.isLoggedin) {
-        const img = store.getters["auth/getProfile"]
-        console.log(img, '프로필 가져왔다')
-        if (state.videoStatus) {
-          state.publisher.publishVideo(false);
-          state.videoStatus = false;
-          state.profile = store.getters["auth/getProfile"]
-          store.commit("root/setUserVideoStatus", false);
-        } else {
-          state.publisher.publishVideo(true);
-          state.videoStatus = true;
-          store.commit("root/setUserVideoStatus", true);
-        }
+      // if (state.isLoggedin) {
+      //   const img = store.getters["auth/getProfile"]
+      //   console.log(img, '프로필 가져왔다')
+      // }
+      if (state.videoStatus) {
+        state.publisher.publishVideo(false);
+        state.videoStatus = false;
+        // state.profile = store.getters["auth/getProfile"]
+        state.profile = {url: require('@/assets/images/icon.png')}
+        store.commit("root/setUserVideoStatus", false);
+      } else {
+        state.publisher.publishVideo(true);
+        state.videoStatus = true;
+        store.commit("root/setUserVideoStatus", true);
       }
     };
 
