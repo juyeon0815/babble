@@ -10,6 +10,7 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
+        :profile="state.profile"
         :id="state.publisher.stream.connection.connectionId"
         @toMain="updateMainVideoStreamManager(state.publisher)"
       />
@@ -21,6 +22,7 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -28,6 +30,7 @@
         <el-col :span="12" v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
             @unpublishMe="unpublish(state.subscribers[0])"
@@ -42,6 +45,7 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -49,6 +53,7 @@
         <el-col :offset="1" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
             @unpublishMe="unpublish(state.subscribers[0])"
@@ -59,6 +64,7 @@
         <el-col :offset="3" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[1]"
+            :profile="state.profile"
             :id="state.subscribers[1].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[1])"
             @unpublishMe="unpublish(state.subscribers[1])"
@@ -68,6 +74,7 @@
           <UserVideo
             v-if="state.subscribers.length == 3"
             :stream-manager="state.subscribers[2]"
+            :profile="state.profile"
             :id="state.subscribers[2].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[2])"
             @unpublishMe="unpublish(state.subscribers[2])"
@@ -82,6 +89,7 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -93,6 +101,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
             @unpublishMe="unpublish(sub)"
@@ -107,6 +116,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
             @unpublishMe="unpublish(sub)"
@@ -122,6 +132,7 @@
       <el-col :span="15">
         <UserVideo
           :streamManager="state.mainStreamManager"
+          :profile="state.profile"
           :id="state.mainStreamManager.stream.connection.connectionId"
           @click="state.showMainVideo = false"
         />
@@ -130,6 +141,7 @@
         <el-row>
           <UserVideo
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -137,6 +149,7 @@
         <el-row v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
             @unpublishMe="unpublish(state.subscribers[0])"
@@ -229,9 +242,10 @@
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emoji-bubble">
         <div class="circle"><img :class="e.style" :src="e.img" /></div>
-        <span class="nickname"
-          ><p class="text">{{ e.nickname }}</p></span
-        >
+        <p class="nickname">
+          <span class="text">{{ e.nickname }}</span>
+        </p>
+        <!-- <span class="nickname"><p class="text">{{ e.nickname }}</p></span> -->
       </div>
     </div>
   </div>
@@ -298,7 +312,8 @@ export default {
       stompClient: null,
       isLoggedin: computed(() => {
         return store.getters["auth/getToken"];
-      })
+      }),
+      profile: ""
     });
 
     watch(
@@ -322,6 +337,10 @@ export default {
         }
       }
     );
+
+    if (!state.videoStatus && state.isLoggedin) {
+      state.profile = store.getters["auth/getProfile"];
+    }
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
@@ -555,9 +574,11 @@ export default {
     const onOffVideo = function() {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
+        // state.profile = store.getters["auth/getProfile"]
         store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
+        // state.profile = ''
         store.commit("root/setUserVideoStatus", true);
       }
     };
@@ -614,7 +635,7 @@ export default {
         .catch(error => console.log(error));
     };
 
-    let socket = new SockJS("https://i5a308.p.ssafy.io:8080/ws");
+    let socket = new SockJS("https://i5a308.p.ssafy.io:8443/ws");
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
     state.stompClient.connect(
@@ -737,6 +758,12 @@ export default {
   align-items: center;
 }
 
+.emoji-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btn {
   border: none;
   background: transparent;
@@ -766,12 +793,15 @@ export default {
 
 .emojilog {
   position: absolute;
-  top: 75vh;
+  bottom: 5vh;
+  width: 300px;
+  overflow: hidden;
 }
 
 .emoji-bubble {
   display: flex;
   align-items: center;
+  height: 40px;
 }
 
 .small2 {

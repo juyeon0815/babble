@@ -46,8 +46,6 @@
           </li>
         </ul>
       </div>
-          
-          
     </el-tab-pane>
     <el-tab-pane label="채팅">
       <Chats />
@@ -112,5 +110,17 @@ export default {
   .people-list i {
     font-size: 20px;
     margin-right: 10px;
+  }
+
+  /* .el-tabs__item.is-active{
+    color: white;
+  }
+
+  .el-tabs__item:hover {
+    color: white;
+  } */
+
+  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+    border-bottom-color: #666fe6c2;
   }
 </style>

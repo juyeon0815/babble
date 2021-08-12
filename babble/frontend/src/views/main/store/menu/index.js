@@ -4,8 +4,6 @@ import * as getters from './getters'
 import * as mutations from './mutations'
 import * as actions from './actions'
 
-
-
 const menu = {
   namespaced: true,
   state,
