@@ -34,7 +34,8 @@
 
       <el-col :offset="3" :span="18">
         <div id="video-container" class="col-md-6">
-          <UserVideo :stream-manager="state.publisher" />
+          <UserVideo :stream-manager="state.publisher" :profile="state.profile" />
+          <!-- <UserVideo :stream-manager="state.publisher" /> -->
         </div>
       </el-col>
       <el-col :offset="18">
@@ -43,7 +44,7 @@
         </el-button>
       </el-col>
     </el-row>
-    
+
   </el-dialog>
 </template>
 
@@ -90,7 +91,11 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       videoStatus: true,
-      audioStatus: true
+      audioStatus: true,
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }),
+      profile: []
     });
 
     watch(
@@ -240,6 +245,7 @@ export default {
         roomId: props.roomId
       };
       store.dispatch("root/requestRoomEnter", payload);
+      store.commit('root/setIsHost', false)
       handleClose();
       router.push({
         name: "conference-detail",
@@ -260,9 +266,15 @@ export default {
     };
 
     const onOffVideo = function() {
+      // if (state.isLoggedin) {
+      //   const img = store.getters["auth/getProfile"]
+      //   console.log(img, '프로필 가져왔다')
+      // }
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
         state.videoStatus = false;
+        // state.profile = store.getters["auth/getProfile"]
+        state.profile = {url: require('@/assets/images/icon.png')}
         store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);

@@ -1,15 +1,17 @@
 <template>
-  <el-row>
+  <el-row class="result-container">
     <el-col :offset="1"><h2>"{{ state.searchWord }}"의 검색 결과</h2></el-col>
-    <el-col :offset="1"><h2>Page : {{ state.pageNum }}</h2></el-col>
     <el-col>
       <el-row class="conference-row">
+        <div v-if="state.roomList.length == 0">검색 결과에 해당하는 방이 없습니다. 다른 키워드를 검색해보세요!</div>
         <Conference v-for="i in state.count" :key="i" :num="i" v-cloak
         :roomInfo="state.roomList[i-1]"
         @click="clickConference(state.roomList[i-1].id)"/>
       </el-row>
     </el-col>
-    <el-col :offset="20"><el-button type="success" plain @click="clickMore">더보기</el-button></el-col>
+    <el-col :offset="20">
+      <el-button type="text" @click="clickMore" v-if="state.roomList.length >= 10">더보기</el-button>
+    </el-col>
   </el-row>
 </template>
 
@@ -33,7 +35,7 @@ export default {
       roomList: [],
       count: 0,
       pageNum: 1,
-      searchWord: computed(() => store.getters['root/getSearchWord']),
+      searchWord: computed(() => store.getters['menu/getSearchWord']),
     })
 
     const loadSearchResult = function () {
@@ -41,7 +43,7 @@ export default {
         searchName: state.searchWord,
         pageNum: 1
       }
-      store.dispatch('root/requestRoomSearch', payload)
+      store.dispatch('menu/requestRoomSearch', payload)
       .then(function (result) {
         state.roomList = result.data
         state.count = result.data.length
@@ -66,7 +68,7 @@ export default {
         searchName: state.searchWord,
         pageNum: state.pageNum + 1
       }
-      store.dispatch('root/requestRoomSearch', payload)
+      store.dispatch('menu/requestRoomSearch', payload)
       .then(function (result) {
         if (result.data.length == 0) {
           alert('추가 데이터가 없습니다.')
@@ -96,6 +98,9 @@ export default {
 </script>
 
 <style>
+  .result-container {
+    min-height: 80vh;
+  }
   .tab {
       margin-left: 50px;
     }

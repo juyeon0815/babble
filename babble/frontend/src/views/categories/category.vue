@@ -71,7 +71,7 @@ export default {
     })
 
     onBeforeRouteUpdate ((to, from) => {
-      store.commit('root/setActiveCategory', to.name)
+      store.commit('menu/setActiveCategory', to.name)
       const newTab = document.getElementById(to.name)
       newTab.classList.add("active")
       const oldTab = document.getElementById(from.name)
@@ -80,7 +80,9 @@ export default {
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
-      store.commit('root/setMenuActiveMenuName', 'category')
+      store.commit('menu/setMenuActiveMenuName', 'category')
+      const allTab = document.getElementById('all')
+      allTab.classList.add("active")
     })
 
     return { state }

@@ -4,16 +4,6 @@ export function setPlatform (state, isDesktop) {
   state.isDesktopPlatform = isDesktop
 }
 
-export function setMenuActive (state, index) {
-	console.log('setMenuActive', state, index)
-	const keys = Object.keys(state.menus)
-	state.activeMenu = keys[index]
-}
-
-export function setMenuActiveMenuName (state, menuName) {
-	state.activeMenu = menuName
-}
-
 export function startSpinner(state) {
 	state.loadingStatus = true;
 }
@@ -24,14 +14,6 @@ export function endSpinner(state) {
 
 export function joinRoom(state, payload) {
   state.roomId = payload;
-}
-
-export function setActiveCategory (state, categoryName) {
-	state.activeCategory = categoryName
-}
-
-export function setSearchWord(state, searchWord) {
-	state.searchWord = searchWord
 }
 
 export function setOV(state,ov) {
@@ -66,4 +48,8 @@ export function setUserVideoStatus(state,status) {
 
 export function setUserAudioStatus(state,status) {
   state.userAudioStatus = status;
+}
+
+export function setIsHost(state,status) {
+  state.isHost = status;
 }

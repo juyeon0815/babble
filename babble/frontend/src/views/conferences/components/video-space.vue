@@ -1,7 +1,7 @@
 <template>
   <h3>
     {{ roomTitle }} <i class="el-icon-user-solid"></i>
-    {{ state.subscribers.length + 1 }}명
+    {{ state.subscribers.length + 1 }}
   </h3>
 
   <div v-if="!state.showMainVideo">
@@ -10,6 +10,7 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
+        :profile="state.profile"
         :id="state.publisher.stream.connection.connectionId"
         @toMain="updateMainVideoStreamManager(state.publisher)"
       />
@@ -21,6 +22,7 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -28,6 +30,7 @@
         <el-col :span="12" v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
             @unpublishMe="unpublish(state.subscribers[0])"
@@ -42,6 +45,7 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -49,6 +53,7 @@
         <el-col :offset="1" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
             @unpublishMe="unpublish(state.subscribers[0])"
@@ -59,6 +64,7 @@
         <el-col :offset="3" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[1]"
+            :profile="state.profile"
             :id="state.subscribers[1].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[1])"
             @unpublishMe="unpublish(state.subscribers[1])"
@@ -68,6 +74,7 @@
           <UserVideo
             v-if="state.subscribers.length == 3"
             :stream-manager="state.subscribers[2]"
+            :profile="state.profile"
             :id="state.subscribers[2].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[2])"
             @unpublishMe="unpublish(state.subscribers[2])"
@@ -80,7 +87,9 @@
       <el-row class="video-row">
         <el-col :span="8">
           <UserVideo
+            v-if="state.publisher"
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -92,6 +101,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
             @unpublishMe="unpublish(sub)"
@@ -106,6 +116,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
             @unpublishMe="unpublish(sub)"
@@ -121,6 +132,7 @@
       <el-col :span="15">
         <UserVideo
           :streamManager="state.mainStreamManager"
+          :profile="state.profile"
           :id="state.mainStreamManager.stream.connection.connectionId"
           @click="state.showMainVideo = false"
         />
@@ -129,6 +141,7 @@
         <el-row>
           <UserVideo
             :stream-manager="state.publisher"
+            :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
@@ -136,6 +149,7 @@
         <el-row v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
             @unpublishMe="unpublish(state.subscribers[0])"
@@ -227,17 +241,23 @@
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emoji-bubble">
-        <div class="circle"><img :class="e.style" :src="e.img" /></div>
-        <span class="nickname"
-          ><p class="text">{{ e.nickname }}</p></span
-        >
+        <div class="circle"><img :class="e.style" :src="e.img"></div>
+        <p class="nickname"><span class="text">{{ e.nickname }}</span></p>
+        <!-- <span class="nickname"><p class="text">{{ e.nickname }}</p></span> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, reactive, onMounted, onUnmounted, watch } from "vue";
+import {
+  computed,
+  reactive,
+  onMounted,
+  onUnmounted,
+  watch,
+  callWithAsyncErrorHandling
+} from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { OpenVidu } from "openvidu-browser";
@@ -256,33 +276,29 @@ export default {
   props: {
     roomTitle: {
       type: String
-    },
-    hostId: {
-      type: Number
-    },
-    myId: {
-      type: String
     }
   },
   components: {
     UserVideo
   },
-  setup(props) {
+  setup() {
     const router = useRouter();
     const store = useStore();
 
     const state = reactive({
       OV: undefined,
       session: undefined,
-      mainStreamManager: undefined,
+      mainStreamManager: computed(
+        () => store.getters["root/getMainStreamManager"]
+      ),
       publisher: undefined,
       subscribers: computed(() => store.getters["root/getSubscribers"]),
       videoStatus: computed(() => store.getters["root/getUserVideoStatus"]),
       audioStatus: computed(() => store.getters["root/getUserAudioStatus"]),
 
+      isHost: computed(() => store.getters["root/getIsHost"]),
       myUserName: computed(() => store.getters["root/getUserName"]), // DB 동물이름으로 교체
       mySessionId: store.getters["root/getRoomID"],
-      myId: "",
       maxViewers: 1,
 
       videoGrid: "alone",
@@ -292,9 +308,10 @@ export default {
       emoji: "",
       prevEmoji: [],
       stompClient: null,
-      isLoggedin: computed(() => {
-        return store.getters["auth/getToken"];
-      })
+      // isLoggedin: computed(() => {
+      //   return store.getters["auth/getToken"];
+      // }),
+      profile: []
     });
 
     watch(
@@ -319,182 +336,197 @@ export default {
       }
     );
 
-    const getRandomName = async function() {
-      await store
-        .dispatch("root/requestRandomName")
-        .then(result => {
-          store.commit("root/setUserName", result.data);
-        })
-        .catch(err => {
-          store.commit("root/setUserName", "요상한 놈");
-        });
-    };
+    // if (!state.videoStatus && state.isLoggedin) {
+    //   state.profile = store.getters["auth/getProfile"]
+    // }
+
+    if (!state.videoStatus) {
+      state.profile =  {url: require('@/assets/images/icon.png')}
+    }
+
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
-      getRandomName();
+      store
+        .dispatch("root/requestRandomName")
+        .then(result => {
+          if (state.isHost) {
+            store.commit("root/setUserName", result.data + "(호스트)");
+          } else {
+            store.commit("root/setUserName", result.data);
+            console.log(result.data);
+          }
+        })
+        .catch(err => {
+          store.commit("root/setUserName", "요상한 놈");
+        })
+        .then(() => {
+          store.commit("menu/setMenuActive", -1);
+          state.OV = new OpenVidu();
 
-      store.commit("root/setMenuActive", -1);
-      state.OV = new OpenVidu();
-
-      // 음성감지 초기 설정
-      state.OV.setAdvancedConfiguration({
-        publisherSpeakingEventsOptions: {
-          interval: 50, // Frequency of the polling of audio streams in ms (default 100)
-          threshold: -50 // Threshold volume in dB (default -50)
-        }
-      });
-      state.session = state.OV.initSession();
-
-      // 스트림이 생성 되었을 때 -> 기존 참가자 정보 받아오기.
-      state.session.on("streamCreated", ({ stream }) => {
-        const subscriber = state.session.subscribe(stream);
-        store.commit("root/setSubscribers", subscriber);
-      });
-
-      // 누군가 나갈 때
-      state.session.on("streamDestroyed", ({ stream }) => {
-        const index = state.subscribers.indexOf(stream.streamManager, 0);
-        console.log("나가~");
-        if (index >= 0) {
-          state.subscribers.splice(index, 1);
-        }
-      });
-
-      // 강퇴 당했을 때
-      state.session.on("sessionDisconnected", ({ stream }) => {
-        console.log("강티당함..");
-        const MenuItems = store.getters["root/getMenus"];
-        let keys = Object.keys(MenuItems);
-        router.push({
-          name: keys[0]
-        });
-      });
-
-      // 누군가의 음성이 감지되었을 때
-      state.session.on("publisherStartSpeaking", event => {
-        if (document.querySelector(`#${event.connection.connectionId}`)) {
-          document.querySelector(
-            `#${event.connection.connectionId}`
-          ).style.border = "solid";
-        }
-      });
-
-      // 누군가의 음성이 멈췄을 때
-      state.session.on("publisherStopSpeaking", event => {
-        if (document.querySelector(`#${event.connection.connectionId}`)) {
-          document.querySelector(
-            `#${event.connection.connectionId}`
-          ).style.border = "none";
-        }
-      });
-
-      state.session.on("exception", ({ exception }) => {
-        console.warn(exception);
-      });
-
-      const createSession = function(sessionId) {
-        return new Promise((resolve, reject) => {
-          axios
-            .post(
-              `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
-              JSON.stringify({
-                customSessionId: sessionId
-              }),
-              {
-                auth: {
-                  username: "OPENVIDUAPP",
-                  password: OPENVIDU_SERVER_SECRET
-                }
-              }
-            )
-            .then(response => response.data)
-            .then(data => resolve(data.id))
-            .catch(error => {
-              if (error.response.status === 409) {
-                resolve(sessionId);
-              } else {
-                console.warn(
-                  `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
-                );
-                if (
-                  window.confirm(
-                    `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
-                  )
-                ) {
-                  location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
-                }
-                reject("createSessionError!!!!!!" + error.response);
-              }
-            });
-        });
-      };
-
-      const createToken = function(sessionId) {
-        return new Promise((resolve, reject) => {
-          axios
-            .post(
-              `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-              {
-                role: "MODERATOR"
-              },
-              {
-                auth: {
-                  username: "OPENVIDUAPP",
-                  password: OPENVIDU_SERVER_SECRET
-                }
-              }
-            )
-            .then(response => response.data)
-            .then(data => resolve(data.token))
-            .catch(error => reject("createTokenError!!!!!!" + error.response));
-        });
-      };
-
-      const getToken = function(mySessionId) {
-        return createSession(mySessionId).then(sessionId =>
-          createToken(sessionId)
-        );
-      };
-
-      getToken(state.mySessionId).then(token => {
-        state.session
-          .connect(token, { clientData: state.myUserName })
-          .then(() => {
-            // 새로 들어온 참가자
-            if (state.publisher === undefined) {
-              let publisher = state.OV.initPublisher(undefined, {
-                audioSource: undefined, // The source of audio. If undefined default microphone
-                videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: state.audioStatus, // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: state.videoStatus, // Whether you want to start publishing with your video enabled or not
-                resolution: "640x480", // The resolution of your video
-                frameRate: 30, // The frame rate of your video
-                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-                mirror: false // Whether to mirror your local video or not
-              });
-
-              state.mainStreamManager = publisher;
-              state.publisher = publisher;
-
-              store.commit("root/setPublisher", publisher);
-
-              console.log("%%%%%%%%%%%%%");
-              console.log(state.session);
-              // --- Publish your stream ---
-              state.session.publish(publisher);
-            } else {
-              state.session.publish(state.publisher);
+          // 음성감지 초기 설정
+          state.OV.setAdvancedConfiguration({
+            publisherSpeakingEventsOptions: {
+              interval: 50, // Frequency of the polling of audio streams in ms (default 100)
+              threshold: -50 // Threshold volume in dB (default -50)
             }
-          })
-          .catch(error => {
-            console.log(
-              "There was an error connecting to the session:",
-              error.code,
-              error.message
-            );
           });
-      });
+          state.session = state.OV.initSession();
+
+          // 스트림이 생성 되었을 때 -> 기존 참가자 정보 받아오기.
+          state.session.on("streamCreated", ({ stream }) => {
+            const subscriber = state.session.subscribe(stream);
+            store.commit("root/setSubscribers", subscriber);
+          });
+
+          // 누군가 나갈 때
+          state.session.on("streamDestroyed", ({ stream }) => {
+            const index = state.subscribers.indexOf(stream.streamManager, 0);
+            console.log("나가~");
+            if (index >= 0) {
+              state.subscribers.splice(index, 1);
+            }
+          });
+
+          // 강퇴 당했을 때
+          state.session.on("sessionDisconnected", ({ stream }) => {
+            console.log("강티당함..");
+            const MenuItems = store.getters["menu/getMenus"];
+            let keys = Object.keys(MenuItems);
+            router.push({
+              name: keys[0]
+            });
+          });
+
+          // 누군가의 음성이 감지되었을 때
+          state.session.on("publisherStartSpeaking", event => {
+            if (document.querySelector(`#${event.connection.connectionId}`)) {
+              document.querySelector(
+                `#${event.connection.connectionId}`
+              ).style.border = "solid";
+            }
+          });
+
+          // 누군가의 음성이 멈췄을 때
+          state.session.on("publisherStopSpeaking", event => {
+            if (document.querySelector(`#${event.connection.connectionId}`)) {
+              document.querySelector(
+                `#${event.connection.connectionId}`
+              ).style.border = "none";
+            }
+          });
+
+          state.session.on("exception", ({ exception }) => {
+            console.warn(exception);
+          });
+
+          const createSession = function(sessionId) {
+            return new Promise((resolve, reject) => {
+              axios
+                .post(
+                  `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
+                  JSON.stringify({
+                    customSessionId: sessionId
+                  }),
+                  {
+                    auth: {
+                      username: "OPENVIDUAPP",
+                      password: OPENVIDU_SERVER_SECRET
+                    }
+                  }
+                )
+                .then(response => response.data)
+                .then(data => resolve(data.id))
+                .catch(error => {
+                  if (error.response.status === 409) {
+                    resolve(sessionId);
+                  } else {
+                    console.warn(
+                      `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
+                    );
+                    if (
+                      window.confirm(
+                        `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
+                      )
+                    ) {
+                      location.assign(
+                        `${OPENVIDU_SERVER_URL}/accept-certificate`
+                      );
+                    }
+                    reject("createSessionError!!!!!!" + error.response);
+                  }
+                });
+            });
+          };
+
+          const createToken = function(sessionId) {
+            return new Promise((resolve, reject) => {
+              axios
+                .post(
+                  `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+                  {
+                    role: "MODERATOR"
+                  },
+                  {
+                    auth: {
+                      username: "OPENVIDUAPP",
+                      password: OPENVIDU_SERVER_SECRET
+                    }
+                  }
+                )
+                .then(response => response.data)
+                .then(data => resolve(data.token))
+                .catch(error =>
+                  reject("createTokenError!!!!!!" + error.response)
+                );
+            });
+          };
+
+          const getToken = function(mySessionId) {
+            return createSession(mySessionId).then(sessionId =>
+              createToken(sessionId)
+            );
+          };
+
+          getToken(state.mySessionId).then(token => {
+            state.session
+              .connect(token, { clientData: state.myUserName })
+              .then(() => {
+                // 새로 들어온 참가자
+                if (state.publisher === undefined) {
+                  let publisher = state.OV.initPublisher(undefined, {
+                    audioSource: undefined, // The source of audio. If undefined default microphone
+                    videoSource: undefined, // The source of video. If undefined default webcam
+                    publishAudio: state.audioStatus, // Whether you want to start publishing with your audio unmuted or not
+                    publishVideo: state.videoStatus, // Whether you want to start publishing with your video enabled or not
+                    resolution: "640x480", // The resolution of your video
+                    frameRate: 30, // The frame rate of your video
+                    insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                    mirror: false // Whether to mirror your local video or not
+                  });
+
+                  state.mainStreamManager = publisher;
+                  state.publisher = publisher;
+
+                  store.commit("root/setPublisher", publisher);
+
+                  console.log("%%%%%%%%%%%%%");
+                  console.log(state.session);
+                  // --- Publish your stream ---
+                  state.session.publish(publisher);
+                } else {
+                  state.session.publish(state.publisher);
+                }
+              })
+              .catch(error => {
+                console.log(
+                  "There was an error connecting to the session:",
+                  error.code,
+                  error.message
+                );
+              });
+          });
+        });
     });
 
     // 페이지 이탈시 불리는 훅
@@ -513,28 +545,23 @@ export default {
     });
 
     const leaveSession = function() {
-      // 호스트일 경우 방 삭제(max 보내기)
-
-      if (props.hostId == props.myId) {
+      if (state.isHost) {
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
         };
-        console.log("AAAAAAAAAAAAA");
         store.dispatch("root/requestRoomDelete", payload);
       } else {
         const payload = {
           email: store.getters["auth/getEmail"],
           roomId: state.mySessionId
         };
-        console.log("BBBBBBBBBBB");
-
         store.dispatch("root/requestRoomExit", payload);
       }
-      console.log("CCCCCCCCCCCC");
-      store.commit("root/setActiveCategory", null);
-      store.commit("root/setMenuActive", 0);
-      const MenuItems = store.getters["root/getMenus"];
+
+      store.commit("menu/setActiveCategory", null);
+      store.commit("menu/setMenuActive", 0);
+      const MenuItems = store.getters["menu/getMenus"];
       let keys = Object.keys(MenuItems);
       router.push({
         name: keys[0]
@@ -550,9 +577,12 @@ export default {
     const onOffVideo = function() {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
+        // state.profile = store.getters["auth/getProfile"]
+        state.profile = {url: require('@/assets/images/icon.png')}
         store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
+        // state.profile = ''
         store.commit("root/setUserVideoStatus", true);
       }
     };
@@ -570,19 +600,21 @@ export default {
 
     // 강퇴
     const unpublish = function(stream) {
-      let cId = stream.stream.connection.connectionId;
-      axios
-        .delete(
-          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/${cId}`,
-          {
-            auth: {
-              username: "OPENVIDUAPP",
-              password: OPENVIDU_SERVER_SECRET
+      if (state.isHost) {
+        let cId = stream.stream.connection.connectionId;
+        axios
+          .delete(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/${cId}`,
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET
+              }
             }
-          }
-        )
-        .then(response => console.log(response))
-        .catch(error => console.log(error));
+          )
+          .then(response => console.log(response))
+          .catch(error => console.log(error));
+      }
     };
 
     // 권한 수정
@@ -699,7 +731,6 @@ export default {
       onOffAudio,
       unpublish,
       patchRole,
-      getRandomName,
       clickLike,
       clickJoy,
       clickWow,
@@ -726,6 +757,12 @@ export default {
   height: 80vh;
 }
 .less2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emoji-row {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -760,12 +797,15 @@ export default {
 
 .emojilog {
   position: absolute;
-  top: 75vh;
+  bottom: 5vh;
+  width:300px;
+  overflow: hidden;
 }
 
 .emoji-bubble {
   display: flex;
   align-items: center;
+  height: 40px;
 }
 
 .small2 {

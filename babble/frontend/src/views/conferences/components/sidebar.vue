@@ -6,7 +6,6 @@
         <!-- 나 -->
         <div class="list-item">
           <div class="about">
-            <i class="fas fa-crown" style="color: gold;" v-if="hostId == myId"></i>
             <div class="name">{{ JSON.parse(state.publisher.stream.connection.data).clientData }} (나)</div>
             <div class="status">
               <i
@@ -28,7 +27,7 @@
         <ul class="list-item">
           <li v-for="sub in state.subs" :key="sub.id">
             <div class="about">
-              <div class="name">{{ JSON.parse(sub.stream.connection.data).clientData }}</div>
+              <div class="name" :id="sub.id">{{ JSON.parse(sub.stream.connection.data).clientData }}</div>
               <div class="status">
                 <i
                   v-if="sub.stream.connection.stream.videoActive == true"
@@ -47,8 +46,6 @@
           </li>
         </ul>
       </div>
-          
-          
     </el-tab-pane>
     <el-tab-pane label="채팅">
       <Chats />
@@ -70,20 +67,14 @@ export default {
     roomTitle: {
       type: String
     },
-    hostId: {
-      type: Number
-    },
-    myId: {
-      type: String
-    }
   },
   setup(props) {
     const store = useStore();
 
     const state = reactive({
       publisher: computed(() => store.getters["root/getPublisher"]),
-      subs: computed(() => store.getters["root/getSubscribers"])
-    });
+      subs: computed(() => store.getters["root/getSubscribers"]),
+    })
 
     return { state };
   }
@@ -119,5 +110,17 @@ export default {
   .people-list i {
     font-size: 20px;
     margin-right: 10px;
+  }
+
+  /* .el-tabs__item.is-active{
+    color: white;
+  }
+
+  .el-tabs__item:hover {
+    color: white;
+  } */
+
+  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+    border-bottom-color: #666fe6c2;
   }
 </style>

@@ -1,7 +1,9 @@
 <template>
-  <div v-if="state.activeMenuIndex != -1">
-    <h3>Footer</h3>
-    {{ state.activeMenuIndex }}
+  <div v-if="state.activeMenuIndex != -1" class="footer-container">
+    <footer class="site-footer">
+      <a href="#"><h6>About Us</h6></a>
+      <p class="copyright-text">Copyright &copy; 2021 All Rights Reserved by Team Ba:bble</p>
+    </footer>
   </div>
 </template>
 
@@ -14,7 +16,7 @@ export default {
     const store = useStore()
     const state = reactive ({
       activeMenuIndex: computed(() => {
-        return store.getters['root/getActiveMenuIndex']
+        return store.getters['menu/getActiveMenuIndex']
       })
     })
     return { state }
@@ -23,5 +25,33 @@ export default {
 </script>
 
 <style>
-
+.site-footer
+{
+  background-color: lightgray;
+  padding:20px 0 20px;
+  font-size:15px;
+  line-height:24px;
+  color:#737373;
+  margin: 80px 0 0;
+}
+.site-footer p {
+  margin: 3px;
+}
+.site-footer h6
+{
+  color:#fff;
+  font-size:16px;
+  text-transform:uppercase;
+  margin:5px 0 20px 0;
+  letter-spacing:2px;
+  text-align: center;
+}
+.site-footer a {
+  text-decoration: none;
+}
+.copyright-text
+{
+  margin: 0;
+  text-align: center;
+}
 </style>

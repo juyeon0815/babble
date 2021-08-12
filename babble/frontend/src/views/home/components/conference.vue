@@ -77,7 +77,7 @@ export default {
 
     const clickCategory = function (tag) {
       // console.log("click category");
-      store.commit('root/setActiveCategory', tag)
+      store.commit('menu/setActiveCategory', tag)
       router.push({
         path: `/category/${tag}`
       })
@@ -85,12 +85,10 @@ export default {
 
     const clickHashtag = function (tag) {
       // console.log(tag)
-      store.commit("root/setSearchWord", tag)
+      store.commit("menu/setMenuActive", 3)
+      store.commit("menu/setSearchWord", tag)
       router.push({
-        name: "search-result",
-        params: {
-          searchWord: tag
-        }
+        path: `/search/${tag}`
       })
     }
 
