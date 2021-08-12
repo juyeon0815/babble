@@ -31,25 +31,25 @@
 </template>
 
 <style>
-  .head-label {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 120px 0 20px 135px;
-  }
+.head-label {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 120px 0 20px 135px;
+}
 
-  .head-label .purple {
-    color: rgb(236, 58, 58);
-    font-weight: bold;
-    background: none;
-  }
+.head-label .purple {
+  color: rgb(236, 58, 58);
+  font-weight: bold;
+  background: none;
+}
 
-  .conference-row {
-    justify-content: center;
-    align-items: center;
-    margin-top: 15px;
-    margin-left: 5%;
-    width: 90%;
-  }
+.conference-row {
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-left: 5%;
+  width: 90%;
+}
 </style>
 <script>
 import { reactive, onMounted } from "vue";
@@ -86,8 +86,8 @@ export default {
     store
       .dispatch("menu/requestRoomCategoryOrder", payloadBest)
       .then(function(result) {
-        state.bestRoomList = result.data
-        state.bestRoomCount = result.data.length
+        state.bestRoomList = result.data;
+        state.bestRoomCount = result.data.length;
       })
       .catch(function(err) {
         alert(err);
@@ -101,8 +101,8 @@ export default {
     store
       .dispatch("menu/requestRoomCategoryOrder", payloadRecent)
       .then(function(result) {
-        state.recentRoomList = result.data
-        state.recentRoomCount = result.data.length
+        state.recentRoomList = result.data;
+        state.recentRoomCount = result.data.length;
       })
       .catch(function(err) {
         alert(err);
