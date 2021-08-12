@@ -308,10 +308,10 @@ export default {
       emoji: "",
       prevEmoji: [],
       stompClient: null,
-      isLoggedin: computed(() => {
-        return store.getters["auth/getToken"];
-      }),
-      profile: ''
+      // isLoggedin: computed(() => {
+      //   return store.getters["auth/getToken"];
+      // }),
+      profile: []
     });
 
     watch(
@@ -336,8 +336,12 @@ export default {
       }
     );
 
-    if (!state.videoStatus && state.isLoggedin) {
-      state.profile = store.getters["auth/getProfile"]
+    // if (!state.videoStatus && state.isLoggedin) {
+    //   state.profile = store.getters["auth/getProfile"]
+    // }
+
+    if (!state.videoStatus) {
+      state.profile =  {url: require('@/assets/images/icon.png')}
     }
 
 
@@ -574,6 +578,7 @@ export default {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
         // state.profile = store.getters["auth/getProfile"]
+        state.profile = {url: require('@/assets/images/icon.png')}
         store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
