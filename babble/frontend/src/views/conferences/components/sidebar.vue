@@ -24,7 +24,7 @@
           </div>
         </div>
         <!-- 다른 참가자 -->
-        <ul class="list-item">
+        <ul v-if="state.subs.length > 0" class="list-item">
           <li v-for="sub in state.subs" :key="sub.id">
             <div class="about">
               <div class="name" :id="sub.id">{{ JSON.parse(sub.stream.connection.data).clientData }}</div>

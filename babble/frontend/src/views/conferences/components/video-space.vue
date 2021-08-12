@@ -159,8 +159,6 @@
     </el-row>
   </div>
 
-  <!-- 6인 이상 추가 예정 -->
-
   <!-- 버튼 -->
   <div class="nav-icons">
     <el-button-group>
@@ -180,9 +178,6 @@
         />
         <i v-else class="el-icon-video-camera" />
       </el-button>
-      <el-button type="info" plain @click="findStreamIdBySessionId">
-        <i class="el-icon-thumb"></i
-      ></el-button>
       <el-popover
         class="emoji-balloon"
         :width="280"
@@ -570,6 +565,8 @@ export default {
 
     const updateMainVideoStreamManager = function(stream) {
       store.commit("root/setMainStreamManager", stream);
+      console.log('***************')
+      console.log(stream)
       state.showMainVideo = true;
     };
 
