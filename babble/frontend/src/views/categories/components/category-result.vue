@@ -7,13 +7,13 @@
       </div>
     </el-col>
     <el-col>
-      <el-row class="conference-row" v-if="state.radio === 'best'">
-        <Conference v-for="i in state.count" :key="i" :num="i" v-cloak
+      <el-row class="conference-row" v-if="state.radio == 'best'">
+        <Conference v-for="i in state.bestRoomCount" :key="i" :num="i" v-cloak
         :roomInfo="state.bestRoomList[i-1]"
         @click="clickConference(state.bestRoomList[i-1].id)"/>
       </el-row>
-      <el-row class="conference-row" v-if="state.radio === 'recent'">
-        <Conference v-for="i in state.count" :key="i" :num="i" v-cloak
+      <el-row class="conference-row" v-if="state.radio == 'recent'">
+        <Conference v-for="i in state.recentRoomCount" :key="i" :num="i" v-cloak
         :roomInfo="state.recentRoomList[i-1]"
         @click="clickConference(state.recentRoomList[i-1].id)"/>
       </el-row>
@@ -49,7 +49,8 @@ export default {
       radio: 'best',
       bestRoomList: [],
       recentRoomList: [],
-      count: 0,
+      bestRoomCount: 0,
+      recentRoomCount: 0,
       pageNum: 1,
       activeCategory: computed(() => store.getters['menu/getActiveCategory']),
       conferenceDialogOpen: false,
@@ -67,8 +68,9 @@ export default {
       .then(function (result) {
         state.pageNum = 1
         state.recentRoomList = []
+        state.recentRoomCount = 0
         state.bestRoomList = result.data
-        state.count = result.data.length
+        state.bestRoomCount = result.data.length
         state.radio = 'best'
       })
       .catch(function (err) {
@@ -88,10 +90,10 @@ export default {
       .then(function (result) {
         state.pageNum = 1
         state.bestRoomList = []
+        state.bestRoomCount = 0
         state.recentRoomList = result.data
-        state.count = result.data.length
+        state.recentRoomCount = result.data.length
         state.radio = 'recent'
-        console.log(state)
       })
       .catch(function (err) {
         alert(err)
