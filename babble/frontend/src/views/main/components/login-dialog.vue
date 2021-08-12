@@ -26,6 +26,19 @@
         ></el-input>
       </el-form-item>
     </el-form>
+   <a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/auth/google/callback">
+    <img
+      :src="require('@/assets/images/btn_google_signin_dark_pressed_web.png')"
+      width="222"
+    />
+  </a>
+    <br>
+   <a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
+    <img
+      src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
+      width="222"
+    />
+  </a>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="clickLogin" :disabled="!state.isVal"
@@ -37,7 +50,7 @@
 </template>
 
 <script>
-import { reactive, computed, ref, watch } from "vue";
+import { reactive, computed, ref} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -50,6 +63,7 @@ export default {
       default: false
     }
   },
+
 
   setup(props, { emit }) {
     const store = useStore();
@@ -77,13 +91,12 @@ export default {
       dialogVisible: computed(() => props.open),
       formLabelWidth: "120px",
       setEmail: computed(() => {
-        return store.getters["root/getEmail"];
+        return store.getters["auth/getEmail"];
       }),
       setToken: computed(() => {
-        return store.getters["root/getToken"];
+        return store.getters["auth/getToken"];
       })
     });
-
     const isValid = function() {
       loginForm.value.validate(valid => {
         if (valid) {
@@ -100,7 +113,7 @@ export default {
         if (valid) {
           console.log("submit");
           store
-            .dispatch("root/requestLogin", {
+            .dispatch("auth/requestLogin", {
               email: state.form.email,
               password: state.form.password
             })
@@ -108,8 +121,8 @@ export default {
               console.log(result);
               localStorage.setItem("jwt", result.data.accessToken);
               console.log("이메일과 토큰 store에 저장");
-              store.commit("root/setEmail", state.form.email);
-              store.commit("root/setToken", result.data.accessToken);
+              store.commit("auth/setEmail", state.form.email);
+              store.commit("auth/setToken", result.data.accessToken);
               alert("로그인 성공");
               emit("closeLoginDialog");
               // router.go()
@@ -127,29 +140,55 @@ export default {
       });
     };
 
-    // const setUserProfile = function () {
-    //   store.dispatch('root/requestUserProfile', {email: state.setEmail})
-    //   .then(function (result) {
-    //     console.log(result, '이미지 로드')
-    //     // store.commit('root/setUserProfile', result)
-    //   })
-    // }
-    // // setUserProfile()
-
-    // watch(
-    //   () => state.setEmail,
-    //   (newValue, prev) => {
-    //   console.log(prev + '--->' + newValue)
-    //   setUserProfile()
-    // })
-
     const handleClose = function() {
       state.form.email = "";
       state.form.password = "";
       emit("closeLoginDialog");
     };
 
-    return { loginForm, state, isValid, clickLogin, handleClose };
+
+  // // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
+  //   let kakaoCode = new URL(window.location.href).searchParams.get("code");
+  //   console.log(kakaoCode);
+  //   if(kakaoCode!=null){
+  //     store.dispatch("auth/requestKakaoToken", kakaoCode)
+  //     .then(function(result){
+  //       console.log("result: ", result.data.accessToken)
+  //       console.log("email : ",result.data.email )
+  //       localStorage.setItem("jwt", result.data.accessToken);
+  //       store.commit("auth/setToken", result.data.accessToken);
+  //       store.commit("auth/setEmail", result.data.email);
+  //       store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
+  //       alert("로그인 성공");
+  //       emit("closeLoginDialog");
+  //     }).catch(function(error){
+  //       console.log(error)
+  //     })
+  //   }
+
+  //구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
+    let googleCode = new URL(window.location.href).searchParams.get("code");
+    console.log(googleCode);
+    if(googleCode!=null){
+      console.log("여기안간거야?");
+       store.dispatch("auth/requestGoogleToken", googleCode)
+      .then(function(result){
+        console.log(result)
+        console.log("result: ", result.data.idToken)
+        console.log("email : ",result.data.email )
+        localStorage.setItem("jwt", result.data.idToken);
+        store.commit("auth/setToken", result.data.idToken);
+        store.commit("auth/setEmail", result.data.email);
+        store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
+        alert("로그인 성공");
+        emit("closeLoginDialog");
+      }).catch(function(error){
+        console.log(error)
+      })
+    }
+
+
+    return { loginForm, state, isValid, clickLogin, handleClose};
   }
 };
 </script>

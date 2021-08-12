@@ -6,8 +6,6 @@
       <el-radio v-model="state.radio" label="recent" @change="changetoRecent">최신순 정렬</el-radio>
       </div>
     </el-col>
-    <el-col :offset="1"><h2>{{ state.activeCategory }}</h2></el-col>
-    <el-col :offset="1"><h2>Page : {{ state.pageNum }}</h2></el-col>
     <el-col>
       <el-row class="conference-row" v-if="state.radio === 'best'">
         <Conference v-for="i in state.count" :key="i" :num="i" v-cloak
@@ -23,7 +21,7 @@
     <el-col :offset="20"><el-button type="success" plain @click="clickMore">더보기</el-button></el-col>
   </el-row>
   <button v-show="state.showBacktop" class="backtop" @click="clickTop">Top</button>
-  <ConferenceDialog 
+  <ConferenceDialog
     :open="state.conferenceDialogOpen"
     :roomId="state.conferenceDialogNum"
     @closeConferenceDialog="onCloseConferenceDialog"/>
@@ -53,7 +51,7 @@ export default {
       recentRoomList: [],
       count: 0,
       pageNum: 1,
-      activeCategory: computed(() => store.getters['root/getActiveCategory']),
+      activeCategory: computed(() => store.getters['menu/getActiveCategory']),
       conferenceDialogOpen: false,
       conferenceDialogNum: 0,
       showBacktop: false
@@ -65,7 +63,7 @@ export default {
         orderName: 'best',
         pageNum: 1
       }
-      store.dispatch('root/requestRoomCategoryOrder', payload)
+      store.dispatch('menu/requestRoomCategoryOrder', payload)
       .then(function (result) {
         state.pageNum = 1
         state.recentRoomList = []
@@ -86,7 +84,7 @@ export default {
         orderName: 'recent',
         pageNum: 1
       }
-      store.dispatch('root/requestRoomCategoryOrder', payload)
+      store.dispatch('menu/requestRoomCategoryOrder', payload)
       .then(function (result) {
         state.pageNum = 1
         state.bestRoomList = []
@@ -107,7 +105,7 @@ export default {
         orderName: state.radio,
         pageNum: state.pageNum + 1
       }
-      store.dispatch('root/requestRoomCategoryOrder', payload)
+      store.dispatch('menu/requestRoomCategoryOrder', payload)
       .then(function (result) {
         if (result.data.length == 0) {
           alert('추가 데이터가 없습니다. 다른 키워드를 검색해보세요!')
@@ -162,7 +160,7 @@ export default {
 
     return { state, changetoBest, changetoRecent, clickMore, clickConference, onCloseConferenceDialog, clickTop }
   },
-  
+
 }
 </script>
 
@@ -175,17 +173,18 @@ export default {
     align-items: center;
   }
   .backtop {
-    position: fixed; 
-    bottom: 20px; 
-    right: 30px; 
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
     z-index: 99;
-    border: none; 
-    outline: none; 
-    background-color: #8860D8; 
-    color: white; 
-    cursor: pointer; 
+    border: none;
+    outline: none;
+    background-color: #8860D8;
+    color: white;
+    cursor: pointer;
     padding: 15px;
-    border-radius: 10px; 
+    border-radius: 10px;
     font-size: 18px;
   }
+
 </style>

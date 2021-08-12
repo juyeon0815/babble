@@ -1,5 +1,4 @@
 // ROOT STATE 변수 정의 및 기본값 대입
-const menuData = require('@/views/main/menu.json')
 
 
 /**
@@ -30,27 +29,16 @@ function getIsDesktop() {
 
 const IsDesktop = getIsDesktop()
 
-
 export default {
   isDesktopPlatform: IsDesktop,
-  activeMenu: 'home',
-  menus: menuData,
-  token: null,
-  userHashtag: [],
-  alarmValue: false,
-  email: '',
-  profile: 'default',
   loadingStatus : false,
-  activeCategory: null,
-  searchWord: '',
   roomID: '',
-  
-  //OpenVid
-  OV: undefined,
-  session: undefined,
-  mainStreamManager: undefined,
+  userName: '',
+  //OpenVidu
+
   publisher: undefined,
   subscribers: [],
-  videoStatus: true,
-  audioStatus: true,
+  userVideoStatus: true,
+  userAudioStatus: true,
+  isHost: false,
 }

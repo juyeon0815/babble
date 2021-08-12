@@ -1,5 +1,5 @@
 <template>
-  <div class="head-label">마이페이지</div>
+  <!-- <div class="head-label">마이페이지</div> -->
   <el-tabs class="tab" v-model="state.activeName" @tab-click="handleClick">
     <el-tab-pane label="키워드 알림 설정" name="keyword"></el-tab-pane>
     <el-tab-pane label="시청 이력" name="history1"></el-tab-pane>
@@ -48,14 +48,27 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   .head-label {
     font-size: 20px;
     font-weight: bold;
     margin: 20px 0px 20px 50px;
   }
+
   .tab {
-    margin-left: 50px;
+    margin-top: 40px;
+  }
+
+  .el-tabs__active-bar {
+    background-color: #8860D8;
+  }
+
+  .el-tabs__item.is-active{
+    color: #8860D8;
+  }
+
+  .el-tabs__item:hover {
+    color: #8860D8;
   }
 
 </style>

@@ -1,31 +1,49 @@
 <template>
   <el-dialog title="Ba:bble" v-model="state.dialogVisible" @close="handleClose">
     <el-row class="description">
-      <el-col :offset="1"
-        ><h2>방 제목 : {{ state.title }}</h2></el-col
-      >
-      <el-col :offset="1"
-        ><h2>방 설명 : {{ state.content }}</h2></el-col
-      >
-      <el-col :offset="1"
-        ><h2>방송 시작 시간 : {{ state.createTime }}</h2></el-col
-      >
-      <el-col :offset="1"
-        ><p>아래와 같은 화면으로 방에 입장될 예정입니다.</p></el-col
-      >
+      <el-col :offset="1">
+        <h2>방 제목 : {{ state.title }}</h2>
+      </el-col>
+      <el-col :offset="1">
+        <h2>방 설명 : {{ state.content }}</h2>
+      </el-col>
+      <el-col :offset="1">
+        <h2>방송 시작 시간 : {{ state.createTime }}</h2>
+      </el-col>
+      <el-col class="instruction">
+        <p>아래와 같은 화면으로 방에 입장될 예정입니다.</p>
+        <el-button-group class="btn-group">
+          <el-button type="info" plain @click="onOffAudio">
+            <i
+              v-if="state.audioStatus"
+              style="color :red"
+              class="el-icon-microphone"
+            />
+            <i v-else class="el-icon-turn-off-microphone" />
+          </el-button>
+          <el-button type="info" plain @click="onOffVideo">
+            <i
+              v-if="state.videoStatus"
+              style="color:red"
+              class="el-icon-video-camera"
+            />
+            <i v-else type="danger" class="el-icon-video-camera" />
+          </el-button>
+        </el-button-group>
+      </el-col>
 
       <el-col :offset="3" :span="18">
         <div id="video-container" class="col-md-6">
-          <UserVideo :stream-manager="state.publisher" /></div
-      ></el-col>
+          <UserVideo :stream-manager="state.publisher" />
+        </div>
+      </el-col>
+      <el-col :offset="18">
+        <el-button type="primary" plain @click="clickEnterRoom">
+          방 입장하기
+        </el-button>
+      </el-col>
     </el-row>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="clickEnterRoom"
-          >방 입장하기</el-button
-        >
-      </span>
-    </template>
+    
   </el-dialog>
 </template>
 
@@ -78,6 +96,8 @@ export default {
     watch(
       () => state.dialogVisible,
       (dialogVisible, prev) => {
+        state.videoStatus = true;
+        state.audioStatus = true;
         if (state.dialogVisible) {
           const payload = {
             roomId: props.roomId
@@ -167,11 +187,11 @@ export default {
             );
           };
 
+          // 방 생성시 호출되지 않음.
           getToken().then(token => {
             state.session
               .connect(token, { clientData: state.myUserName })
               .then(() => {
-                console.log("############");
                 console.log(token);
                 // --- Get your own camera stream with the desired properties ---
 
@@ -190,8 +210,9 @@ export default {
                 state.publisher = publisher;
 
                 // --- Publish your stream ---
-
                 state.session.publish(state.publisher);
+
+                console.log(state.session);
               })
               .catch(error => {
                 console.log(
@@ -214,6 +235,12 @@ export default {
     });
 
     const clickEnterRoom = function() {
+      const payload = {
+        email: store.getters["auth/getEmail"],
+        roomId: props.roomId
+      };
+      store.dispatch("root/requestRoomEnter", payload);
+      store.commit('root/setIsHost', false)
       handleClose();
       router.push({
         name: "conference-detail",
@@ -224,7 +251,6 @@ export default {
     };
 
     const handleClose = function() {
-      console.log("CLOSE DIALOG");
       if (state.session) state.session.disconnect();
       state.session = undefined;
       state.mainStreamManager = undefined;
@@ -234,19 +260,50 @@ export default {
       emit("closeConferenceDialog");
     };
 
-    return { state, clickEnterRoom, handleClose };
+    const onOffVideo = function() {
+      if (state.videoStatus) {
+        state.publisher.publishVideo(false);
+        state.videoStatus = false;
+        store.commit("root/setUserVideoStatus", false);
+      } else {
+        state.publisher.publishVideo(true);
+        state.videoStatus = true;
+        store.commit("root/setUserVideoStatus", true);
+      }
+    };
+
+    const onOffAudio = function() {
+      if (state.audioStatus) {
+        state.publisher.publishAudio(false);
+        state.audioStatus = false;
+        store.commit("root/setUserAudioStatus", false);
+      } else {
+        state.publisher.publishAudio(true);
+        state.audioStatus = true;
+        store.commit("root/setUserAudioStatus", true);
+      }
+    };
+
+    return { state, clickEnterRoom, handleClose, onOffVideo, onOffAudio };
   }
 };
 </script>
 
 <style>
-.testCam {
-  border-radius: 4px;
-  min-height: 300px;
-  background-color: grey;
-}
 .description h2 {
   padding: 0;
   margin-top: 0;
+}
+.description p {
+  font-size: 15px;
+}
+.instruction {
+  display: flex;
+  margin: 5px;
+  justify-content: space-around;
+  text-align: center;
+}
+.btn-group {
+  margin-top: 5px;
 }
 </style>

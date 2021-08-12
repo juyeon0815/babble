@@ -1,54 +1,276 @@
 <template>
-  <el-row class="navbar" v-if="state.activeMenuIndex != -1">
-    <h2 @click="clickLogo">Babble</h2>
-    <el-input prefix-icon="el-icon-search" class="search-bar" @keyup.enter="enterSearch" v-model="state.searchWord"></el-input>
-    <el-button type="info" plain @click="clickCategory">카테고리</el-button>
-    <div v-show="!state.isLoggedin">
-      <el-button type="primary" plain @click="clickJoin">회원가입</el-button>
-      <el-button type="info" plain @click="clickLogin">로그인</el-button>
+  <nav class="navbar" v-if="state.activeMenuIndex != -1">
+    <div class="navbar-logo">
+      <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
     </div>
-    <div v-show="state.isLoggedin">
-      <el-button type="primary" class="circle" @click="clickMyPage">
-        <img class="profile" src="https://picsum.photos/30" />
-      </el-button>
-      <el-button type="primary" plain @click="clickRoomCreate"
-        >방 생성</el-button
-      >
-      <el-button type="info" plain @click="clickLogout">로그아웃</el-button>
+    <div class="navbar-search">
+      <el-input
+        prefix-icon="el-icon-search"
+        class="search-bar"
+        @keyup.enter="enterSearch"
+        v-model="state.searchWord"
+      ></el-input>
     </div>
-  </el-row>
+    <div class="navbar-menu">
+      <ul v-show="!state.isLoggedin">
+        <li><button @click="clickCategory">카테고리</button></li>
+        <li><button @click="clickJoin">회원가입</button></li>
+        <li><button @click="clickLogin">로그인</button></li>
+      </ul>
+      <ul v-show="state.isLoggedin">
+        <li>
+          <button @click="clickCategory" class="textBtn">카테고리</button>
+        </li>
+        <li class="textline">
+          <button @click="clickMyPage">마이페이지</button>
+        </li>
+        <li class="circle-img">
+          <button @click="clickMyPage" class="circle">
+            <img class="profile" :src="state.profile" />
+          </button>
+        </li>
+        <li>
+          <button @click="clickRoomCreate" class="textBtn">방 생성</button>
+        </li>
+        <li><button @click="clickLogout" class="textBtn">로그아웃</button></li>
+      </ul>
+    </div>
+    <button class="navbar-toggleBtn" @click="clickToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="seen-media">
+      <div class="navbar-logo">
+        <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
+      </div>
+      <div class="navbar-search">
+        <el-input
+          prefix-icon="el-icon-search"
+          class="search-bar"
+          @keyup.enter="enterSearch"
+          v-model="state.searchWord"
+        ></el-input>
+      </div>
+    </div>
+  </nav>
+  <div class="header-space" v-if="state.activeMenuIndex == 0">
+    <div class="overlay">
+      <div class="header-text">
+        <h2>당신을 위한 공간, Ba:bble</h2>
+        <p style="color:#fce3ff">
+          bab·ble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
+        </p>
+      </div>
+      <img
+        :src="require('@/assets/images/Visionary technology-rafiki.png')"
+        class="illust"
+      />
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.navbar {
-  padding-top: 5px;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #d3c4ed;
+.header-space {
+  height: 300px;
+  padding-bottom: 50px;
 }
 
-.navbar .search-bar {
-  width: 400px;
-  display: inline;
-  margin: 20px;
+.header-space .overlay {
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+  color: #fff;
+  border-radius: 0 0 90% 50% /30%;
+  text-shadow: 1px 1px 1px #333;
+  background-image: linear-gradient(135deg, #9f05ff69 10%, #4a63cfc2 100%);
+  position: relative;
 }
+
+.header-text {
+  /* display: inline-block; */
+  float: left;
+  padding-left: 70px;
+}
+
+.illust {
+  width: 425px;
+  height: 425px;
+  float: right;
+  padding-bottom: 5px;
+  padding-right: 125px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  background-image: linear-gradient(40deg, #9f05ff69 40%, #4a63cfc2 100%);
+  padding: 10px 42px;
+}
+
+.navbar-logo h2 {
+  font-size: 36px;
+  color: white;
+}
+
+.navbar-logo h2:hover {
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.navbar-logo mark {
+  color: white;
+  background: none;
+}
+
+.navbar-logo h2:hover .purple {
+  color: #341a63;
+  background: none;
+}
+
+.navbar-search .search-bar {
+  width: 400px;
+}
+
+.navbar-menu ul {
+  display: flex;
+  list-style: none;
+  padding-left: 0px;
+}
+
+.navbar-menu li {
+  padding: 8px 12px;
+}
+
+.navbar-menu button:hover {
+  color: #341a63;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.navbar-menu button {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: white;
+}
+
+.navbar-menu .textBtn {
+  margin-top: 3px;
+}
+
+.navbar-toggleBtn {
+  display: none;
+  position: absolute;
+  border: none;
+  background: transparent;
+  right: 32px;
+  font-size: 24px;
+  color: #341a63;
+}
+
+.seen-media {
+  display: none;
+}
+
 .circle {
-  width: 30px;
-  height: 30px;
+  padding: 0px;
+  width: 40px;
+  height: 40px;
   border-radius: 70%;
   overflow: hidden;
 }
-.profile {
-  width: 100%;
-  height: 100%;
+
+.circle .profile {
+  width: 40px;
+  height: 40px;
   object-fit: cover;
+}
+
+.textline {
+  display: none;
+}
+
+@media screen and (max-width: 550px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .navbar-logo,
+  .navbar-search {
+    display: none;
+  }
+
+  .navbar-menu {
+    display: none;
+    width: 100%;
+  }
+
+  .navbar-toggleBtn,
+  .seen-media {
+    display: block;
+  }
+
+  .navbar-toggleBtn:hover {
+    cursor: pointer;
+  }
+
+  .seen-media {
+    text-align: center;
+  }
+
+  .seen-media .navbar-search {
+    display: block;
+    padding-bottom: 10px;
+  }
+
+  .seen-media .navbar-logo {
+    display: inline-block;
+  }
+
+  .seen-media .navbar-logo h2:hover .purple {
+    color: #341a63;
+    background: none;
+  }
+
+  .navbar-menu.active {
+    display: flex;
+    width: 100%;
+  }
+
+  .navbar-menu.active ul {
+    flex-direction: column;
+    width: 100%;
+    /* align-items: center; */
+  }
+
+  .navbar-menu.active li {
+    width: 90%;
+    /* text-align: center; */
+  }
+
+  .navbar-menu.active button:hover {
+    width: 100%;
+    background-color: rgb(245, 247, 215, 0.5);
+    border-radius: 5%;
+    text-align: start;
+    padding: 5px 1px;
+  }
+
+  .circle-img {
+    display: none;
+  }
+
+  .textline {
+    display: block;
+  }
 }
 </style>
 
 <script>
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { reactive, computed, onMounted } from "vue";
+import { reactive, computed, watch, onMounted } from "vue";
 
 export default {
   name: "main-header",
@@ -59,18 +281,34 @@ export default {
 
     const state = reactive({
       isLoggedin: computed(() => {
-        return store.getters["root/getToken"];
+        return store.getters["auth/getToken"];
       }),
-      searchWord: '',
+      profile: computed(() => {
+        return store.getters["auth/getProfile"];
+      }),
+      searchWord: "",
       activeMenuIndex: computed(() => {
-        return store.getters['root/getActiveMenuIndex']
+        return store.getters["menu/getActiveMenuIndex"];
+      }),
+      provider : computed(()=>{
+        return store.getters["auth/getProvider"]
+      }),
+      token: computed(() => {
+        return store.getters["auth/getToken"];
       })
-    })
+    });
+
+    store
+      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      .then(function(result) {
+        // console.log(result.data.picture)
+        store.commit("auth/setUserProfile", result.data.picture);
+      });
 
     const clickLogo = () => {
-      store.commit("root/setActiveCategory", null);
-      store.commit("root/setMenuActive", 0);
-      const MenuItems = store.getters["root/getMenus"];
+      store.commit("menu/setActiveCategory", null);
+      store.commit("menu/setMenuActive", 0);
+      const MenuItems = store.getters["menu/getMenus"];
       let keys = Object.keys(MenuItems);
       router.push({
         name: keys[0]
@@ -78,7 +316,7 @@ export default {
     };
 
     const clickJoin = function() {
-      console.log("clickJoin");
+      // console.log("clickJoin");
       emit("openJoinDialog");
     };
 
@@ -92,41 +330,77 @@ export default {
     };
 
     const clickCategory = function() {
-      store.commit("root/setMenuActive", 1);
-      store.commit("root/setActiveCategory", "all");
+      store.commit("menu/setMenuActive", 1);
+      store.commit("menu/setActiveCategory", "all");
       router.push({
         path: "/category/all"
       });
     };
 
     const clickMyPage = function() {
-      let nowIndex = store.getters["root/getActiveMenuIndex"];
+      let nowIndex = store.getters["menu/getActiveMenuIndex"];
       if (nowIndex != 2) {
-        store.commit("root/setMenuActive", 2);
+        store.commit("menu/setMenuActive", 2);
         router.push({
           path: "/mypage/keyword"
         });
       }
     };
 
+    //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
     const clickLogout = function() {
       console.log("clickLogout");
-      store
-        .dispatch("root/requestLogout")
-        .then(() => store.commit("root/setLogout"))
-        .then(() => router.push("/"));
-      console.log(state.isLoggedin);
+      console.log(state.provider)
+      if(state.provider === "kakao"){
+        store.dispatch("auth/requestKakaoLogout", state.token)
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=>router.push("/"));
+      }
+      // else if(state.provider==="google"){
+      //   console.log("구글로그아웃");
+      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
+
+      //   store.dispatch("auth/requestLogout")
+      //   .then(()=> store.commit("auth/setLogout"))
+      //   .then(()=>router.push("/"));
+      // }
+      else{
+        store
+        .dispatch("auth/requestLogout")
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=>router.push("/"));
+      }
+
     };
 
     const enterSearch = function() {
-      store.commit("root/setSearchWord", state.searchWord);
+      store.commit("menu/setMenuActive", 3)
+      store.commit("menu/setSearchWord", state.searchWord);
       router.push({
-        name: "search-result",
-        params: {
-          searchWord: state.searchWord
-        }
+        path: `/search/${state.searchWord}`
       });
       state.searchWord = "";
+    };
+
+    const clickToggle = function() {
+      let menu = document.querySelector(".navbar-menu");
+      menu.classList.toggle("active");
+    };
+
+    watch(
+      () => state.isLoggedin,
+      (after, prev) => {
+        // console.log(prev + '--->' + after)
+        loadProfile();
+      }
+    );
+
+    const loadProfile = function() {
+      store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function(result) {
+          store.commit("auth/setUserProfile", result.data.picture);
+        });
     };
 
     return {
@@ -138,7 +412,9 @@ export default {
       clickCategory,
       clickMyPage,
       clickLogout,
-      enterSearch
+      enterSearch,
+      clickToggle,
+      loadProfile
     };
   }
 };

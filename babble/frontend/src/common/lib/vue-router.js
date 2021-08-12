@@ -52,6 +52,8 @@ function makeRoutesFromMenu () {
         },
 
       ]}
+    } else if (key === 'search-result') {
+      return { path: fullMenu[key].path, name: key, component: SearchResult}
     } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }
@@ -63,12 +65,6 @@ function makeRoutesFromMenu () {
     path: '/conferences/:conferenceId',
     name: 'conference-detail',
     component: ConferencesDetail
-  })
-  // 검색
-  routes.push({
-    path: '/search/:searchWord',
-    name: 'search-result',
-    component: SearchResult
   })
   return routes
 }
