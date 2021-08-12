@@ -43,15 +43,6 @@ export default {
     });
     store.commit("root/joinRoom", route.params.conferenceId);
 
-<<<<<<< HEAD
-    store.dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        state.myId = result.data.id
-      })
-
-
-=======
->>>>>>> d40de6ef0d1d84101e14eb9dcf05600c26b6d746
     // 페이지 진입시 불리는 훅
     onMounted(() => {
       state.conferenceId = route.params.conferenceId;
