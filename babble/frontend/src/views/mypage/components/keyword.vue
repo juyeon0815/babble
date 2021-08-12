@@ -28,7 +28,7 @@
       {{ tag }}
     </el-tag>
     <div class="alarm">
-      <h5 class="text">해당 키워드로 알림을 받아보시겠습니까?</h5>
+      <h5 class="keyword-text">해당 키워드로 알림을 받아보시겠습니까?</h5>
       <el-switch
         v-model="state.alarmValue"
         active-text="On"
@@ -157,5 +157,8 @@ export default {
 
 .alarm {
   margin-top: 50px;
+}
+.alarm .keyword-text {
+  color: black;
 }
 </style>
