@@ -276,7 +276,7 @@ import SockJS from "sockjs-client";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io:8443";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
@@ -645,7 +645,7 @@ export default {
 
     // 권한 수정
 
-    let socket = new SockJS("https://i5a308.p.ssafy.io:8443/ws");
+    let socket = new SockJS("https://i5a308.p.ssafy.io/ws");
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
     state.stompClient.connect(

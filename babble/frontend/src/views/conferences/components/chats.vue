@@ -48,7 +48,7 @@ export default {
 
     // socket 연결
 
-    let socket = new SockJS("https://i5a308.p.ssafy.io:8443/ws");
+    let socket = new SockJS("https://i5a308.p.ssafy.io/ws");
 
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);

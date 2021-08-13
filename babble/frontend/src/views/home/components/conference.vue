@@ -2,25 +2,37 @@
   <!--받아오는 룸인포가 없다면 아예 카드가 안 보이게?-->
   <div v-if="roomInfo">
     <el-card class="conference-card">
-
       <div class="hide-show">
-        <div v-if="roomInfo.thumbnailUrl == 'room_thumbnailUrl' || roomInfo.thumbnailUrl == null || roomInfo.thumbnailUrl == 'default'" class="image-cover">
-          <img src="https://picsum.photos/200" class="image">
+        <div
+          v-if="
+            roomInfo.thumbnailUrl == 'room_thumbnailUrl' ||
+              roomInfo.thumbnailUrl == null ||
+              roomInfo.thumbnailUrl == 'default'
+          "
+          class="image-cover"
+        >
+          <img src="https://picsum.photos/200" class="image" />
         </div>
         <div v-else class="image-cover">
-          <img :src="roomInfo.thumbnailUrl" class="image">
+          <img :src="roomInfo.thumbnailUrl" class="image" />
         </div>
-        <p class="text"> Let's Ba:bble</p>
+        <p class="text">Let's Ba:bble</p>
       </div>
 
       <div class="card-bottom">
         <div class="stringcut">{{ roomInfo.title }}</div>
         <div>
-          <el-tag class="tag" @click.stop="clickCategory(roomInfo.category)">{{ roomInfo.category }}</el-tag>
+          <el-tag class="tag" @click.stop="clickCategory(roomInfo.category)">{{
+            roomInfo.category
+          }}</el-tag>
         </div>
         <div v-if="roomInfo.hashtag && roomInfo.hashtag[0] !== ''">
           <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
-            <el-tag type="warning" @click.stop="clickHashtag(roomInfo.hashtag[i - 1])">{{ roomInfo.hashtag[i - 1] }}</el-tag>
+            <el-tag
+              type="warning"
+              @click.stop="clickHashtag(roomInfo.hashtag[i - 1])"
+              >{{ roomInfo.hashtag[i - 1] }}</el-tag
+            >
           </div>
         </div>
         <div><i class="el-icon-user"></i> {{ state.connNum }} Watching</div>
@@ -32,16 +44,13 @@
 <script>
 import axios from "axios";
 import { computed, reactive, onMounted, onUnmounted } from "vue";
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io:8443";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
-
-
-
 
 export default {
   props: {
@@ -51,8 +60,8 @@ export default {
   },
 
   setup(props) {
-    const store = useStore()
-    const router = useRouter()
+    const store = useStore();
+    const router = useRouter();
 
     const state = reactive({
       connNum: 0
@@ -75,22 +84,22 @@ export default {
 
     getConnectionNum(props.roomInfo);
 
-    const clickCategory = function (tag) {
+    const clickCategory = function(tag) {
       // console.log("click category");
-      store.commit('menu/setActiveCategory', tag)
+      store.commit("menu/setActiveCategory", tag);
       router.push({
         path: `/category/${tag}`
-      })
+      });
     };
 
-    const clickHashtag = function (tag) {
+    const clickHashtag = function(tag) {
       // console.log(tag)
-      store.commit("menu/setMenuActive", 3)
-      store.commit("menu/setSearchWord", tag)
+      store.commit("menu/setMenuActive", 3);
+      store.commit("menu/setSearchWord", tag);
       router.push({
         path: `/search/${tag}`
-      })
-    }
+      });
+    };
 
     // if (props.roomInfo.id %= 1) {
     //   console.log(propss.roomInfo.id)
@@ -99,7 +108,6 @@ export default {
     // } else {
     //   card.classList.remove('change-color')
     // }
-
 
     return { state, clickCategory, getConnectionNum, clickHashtag };
   }
@@ -118,7 +126,7 @@ export default {
   transform: scale(1.05);
   border-width: 3px;
   border-style: solid;
-  border-color: #A0A0FF;
+  border-color: #a0a0ff;
 }
 
 .conference-card:hover.change-color {
@@ -127,7 +135,6 @@ export default {
   border-width: 3px;
   border-style: solid;
   border-color: #9f05ff69;
-
 }
 
 /* .hide-show {
@@ -164,11 +171,11 @@ export default {
 }
 
 .conference-card:hover .image-cover {
-  background-color: #A0A0FF;;
+  background-color: #a0a0ff;
 }
 
 .conference-card:hover img {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   opacity: 0.15;
 }
 
@@ -188,5 +195,4 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 </style>
