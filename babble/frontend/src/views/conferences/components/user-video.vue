@@ -5,13 +5,13 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div v-if="gridCount" class="vid">
+      <div v-if="gridCount">
         <!-- <img :src="profile.url" class="image-alone"> -->
-        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone">
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone vid" />
       </div>
-      <div v-else class="vid">
+      <div v-else>
         <!-- <img :src="profile.url" class="image"> -->
-        <img src="https://i.imgur.com/d6Yug9x.png" class="image">
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image vid" />
       </div>
     </div>
 
@@ -51,7 +51,7 @@ export default {
   props: {
     streamManager: Object,
     profile: Object,
-    gridCount: String,
+    gridCount: String
   },
 
   setup(props, { emit }) {
@@ -120,10 +120,12 @@ export default {
 
 .image {
   width: 90%;
+  border-radius: 10px;
 }
 
 .image-alone {
   width: 60%;
+  border-radius: 10px;
 }
 
 /* .fit-to-image {
