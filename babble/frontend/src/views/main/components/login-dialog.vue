@@ -21,13 +21,13 @@
           v-model="state.form.password"
           autocomplete="off"
           show-password
+          @keyup.enter="clickLogin"
         ></el-input>
       </el-form-item>
     </el-form>
-
+    <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
     <el-button type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
     <div><el-link href="#" target="_blank">비밀번호 찾기</el-link></div>
-
     <template #footer>
       <span class="dialog-footer">
         <el-divider></el-divider>
@@ -67,7 +67,7 @@
   .el-button.el-button--primary.is-disabled.is-round {
     background-color: #a8a0ff;
     border-color: #a0cfff00;
-    width: -webkit-fill-available;
+    width: 100%;
     }
   .el-link.el-link--default.is-underline{
     float: right;
@@ -86,6 +86,11 @@
   img{
     width: -webkit-fill-available;
     border-radius: 50%;
+  }
+  #msg{
+    color:red;
+    text-align: center;
+    margin-bottom: 10px;
   }
 
 </style>
@@ -118,6 +123,7 @@ export default {
     // Element UI Validators
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
     const state = reactive({
+      isCheck:false,
       form: {
         email: "",
         password: "",
@@ -167,7 +173,6 @@ export default {
               console.log("이메일과 토큰 store에 저장");
               store.commit("auth/setEmail", state.form.email);
               store.commit("auth/setToken", result.data.accessToken);
-              swal("로그인성공");
               emit("closeLoginDialog");
               // router.go()
               // window.location.reload()
@@ -176,7 +181,8 @@ export default {
               console.log(err);
               state.form.email = "";
               state.form.password = "";
-              alert(err);
+              state.isCheck = true;
+              // alert(err);
             });
         } else {
           alert("Validate error!");
@@ -187,6 +193,7 @@ export default {
     const handleClose = function() {
       state.form.email = "";
       state.form.password = "";
+      state.isCheck=false;
       emit("closeLoginDialog");
     };
 
@@ -203,7 +210,6 @@ export default {
         store.commit("auth/setToken", result.data.accessToken);
         store.commit("auth/setEmail", result.data.email);
         store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
-        alert("로그인 성공");
         emit("closeLoginDialog");
         router.push({
             path: "/"
@@ -227,7 +233,6 @@ export default {
         store.commit("auth/setToken", result.data.idToken);
         store.commit("auth/setEmail", result.data.email);
         store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
-        alert("로그인 성공");
         emit("closeLoginDialog");
         router.push({
             path: "/"

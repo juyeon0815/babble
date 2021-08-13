@@ -3,6 +3,7 @@
     title="방 생성하기"
     v-model="state.dialogVisible"
     @close="handleClose"
+    width="40%"
   >
     <el-form
       @submit.prevent
@@ -26,7 +27,9 @@
       >
         <el-input v-model="state.form.content" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="방 썸네일 업데이트">
+
+      <el-form-item label="방 썸네일 업데이트"
+      :label-width="state.formLabelWidth">
         <input
           type="file"
           ref="fileInput"
@@ -35,32 +38,29 @@
           @change="handleFileUpload()"
         />
       </el-form-item>
-      <el-form-item prop="category" label="카테고리">
-        <select
-        v-model="state.form.category"
-        placeholder="카테고리 하나를 골라주세요!"
-        >
-          <option label="sports" value="sports"></option>
-          <option label="cooking" value="cooking"></option>
-          <option label="handcraft" value="handcraft"></option>
-          <option label="music" value="music"></option>
-          <option label="finance" value="finance"></option>
-          <option label="game" value="game"></option>
-          <option label="movie" value="movie"></option>
-          <option label="drawing" value="drawing"></option>
-          <option label="book" value="book"></option>
-          <option label="pet" value="pet"></option>
-        </select>
+        <el-form-item prop="category" label="카테고리"
+        :label-width="state.formLabelWidth">
+        <el-select v-model="state.form.category" placeholder="카테고리를 선택해주세요">
+          <el-option label="sports" value="sports"></el-option>
+          <el-option label="cooking" value="cooking"></el-option>
+          <el-option label="handcraft" value="handcraft"></el-option>
+          <el-option label="music" value="music"></el-option>
+          <el-option label="finance" value="finance"></el-option>
+          <el-option label="game" value="game"></el-option>
+          <el-option label="movie" value="movie"></el-option>
+          <el-option label="drawing" value="drawing"></el-option>
+          <el-option label="book" value="book"></el-option>
+          <el-option label="pet" value="pet"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item prop="hashtag" label="해시태그">
+      <el-form-item prop="hashtag" label="해시태그" :label-width="state.formLabelWidth">
         <div class="inputGroup">
           <el-input
             placeholder="키워드를 입력해주세요(최대 5개)"
             ref="saveTagInput"
             v-model="state.form.inputValue"
             @blur="handleInputConfirm"
-            :disabled="state.form.count == 5"
-          >
+            :disabled="state.form.count == 5">
             <template #append>
               <el-button icon="el-icon-plus"></el-button>
             </template>
@@ -75,12 +75,6 @@
         >
           {{ tag }}
         </el-tag>
-      </el-form-item>
-      <el-form-item prop="speak" label="참여자 말하기 기본값 설정">
-        <el-radio-group v-model="state.form.speak">
-          <el-radio label="true">누구나 말하기 허용</el-radio>
-          <el-radio label="false">손 들기</el-radio>
-        </el-radio-group>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -171,7 +165,7 @@ export default {
       }),
       isVal: false,
       dialogVisible: computed(() => props.open),
-      formLabelWidth: "120px",
+      formLabelWidth: "25%",
       albumBucketName: "babble-test-zimin",
       bucketRegion: "ap-northeast-2",
       IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f"
@@ -293,7 +287,7 @@ export default {
           }
         );
       }
-      
+
     };
 
     const handleClose = function() {
@@ -302,7 +296,7 @@ export default {
       state.form.category = "";
       state.form.speak = "";
       state.form.roomHashtags = [];
-      // document.getElementsByName("thumbnailUrl")[0].files[0]
+      thumbnailUrl.value=null;
       emit("closeRoomCreateDialog");
     };
 
@@ -322,4 +316,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+  .el-button.el-button--primary.is-disabled{
+    background-color: #a8a0ff;
+    width: 100%;
+    border-color: #a0cfff00;
+  }
+</style>
