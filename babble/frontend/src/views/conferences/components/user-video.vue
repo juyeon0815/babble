@@ -6,10 +6,12 @@
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
       <div v-if="gridCount" class="vid">
-        <img :src="profile.url" class="image-alone">
+        <!-- <img :src="profile.url" class="image-alone"> -->
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone">
       </div>
       <div v-else class="vid">
-        <img :src="profile.url" class="image">
+        <!-- <img :src="profile.url" class="image"> -->
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image">
       </div>
     </div>
 
