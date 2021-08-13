@@ -25,7 +25,8 @@ export default {
 };
 </script>
 <style scoped>
-	.vid {
-		width: 90%
-	}
+.vid {
+  border-radius: 10px;
+  width: 90%;
+}
 </style>

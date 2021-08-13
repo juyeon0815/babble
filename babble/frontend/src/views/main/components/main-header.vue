@@ -26,7 +26,12 @@
         </li>
         <li class="circle-img">
           <button @click="clickMyPage" class="circle">
-            <img class="profile" :src="state.profile" />
+            <div v-if="state.profile == 'default'">
+              <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+            </div>
+            <div v-else>
+              <img class="profile" :src="state.profile" />
+            </div>
           </button>
         </li>
         <li>
@@ -57,7 +62,7 @@
       <div class="header-text">
         <h2>당신을 위한 공간, Ba:bble</h2>
         <p style="color:#fce3ff">
-          bab·ble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
+          ba:bble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
         </p>
       </div>
       <img
@@ -298,13 +303,6 @@ export default {
       })
     });
 
-    store
-      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        // console.log(result.data.picture)
-        store.commit("auth/setUserProfile", result.data.picture);
-      });
-
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
       store.commit("menu/setMenuActive", 0);
@@ -398,9 +396,15 @@ export default {
     const loadProfile = function() {
       store
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-        .then(function(result) {
+        .then(function (result) {
           store.commit("auth/setUserProfile", result.data.picture);
-        });
+        })
+        .catch(function (err) {
+          if (err) {
+            console.log(err, '헤더에서 프로필로드하며 에러캐치')
+            // clickLogout()
+          }
+        })
     };
 
     return {

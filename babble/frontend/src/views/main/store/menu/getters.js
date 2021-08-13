@@ -15,3 +15,7 @@ export function getActiveCategory (state) {
 export function getSearchWord (state) {
 	return state.searchWord
 }
+
+export function getMainStreamManager (state) {
+	return state.mainStreamManager
+}

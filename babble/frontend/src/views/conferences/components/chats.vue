@@ -9,11 +9,19 @@
   </div>
 
   <input
+    v-if="state.isLoggedin"
     type="textarea"
     class="chat"
     placeholder="채팅을 입력해주세요"
     v-model="state.chatText"
     @keyup.enter="enterChat"
+  />
+  <input
+    v-else
+    type="textarea"
+    class="chat"
+    placeholder="로그인이 필요합니다!"
+    readonly
   />
 </template>
 

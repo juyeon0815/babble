@@ -10,6 +10,7 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
+        :grid-count="state.videoGrid"
         :profile="state.profile"
         :id="state.publisher.stream.connection.connectionId"
         @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -162,7 +163,7 @@
   <!-- 6인 이상 추가 예정 -->
 
   <!-- 버튼 -->
-  <div class="nav-icons">
+  <div v-if="state.isLoggedin" class="nav-icons">
     <el-button-group>
       <el-button type="info" plain @click="onOffAudio">
         <i
@@ -238,6 +239,11 @@
       </el-button>
     </el-button-group>
   </div>
+  <div v-else class="nav-icons">
+    <el-button type="info" plain @click="leaveSession">
+      <i class="el-icon-error"></i>
+    </el-button>
+  </div>
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emoji-bubble">
@@ -305,8 +311,8 @@ export default {
 
       videoGrid: "alone",
       showMainVideo: false,
-      visible: false,
 
+      visible: false,
       emoji: "",
       prevEmoji: [],
       stompClient: null,
@@ -387,8 +393,9 @@ export default {
 
           // 강퇴 당했을 때
           state.session.on("sessionDisconnected", ({ stream }) => {
-            console.log("강티당함..");
             const MenuItems = store.getters["menu/getMenus"];
+            store.commit("menu/setActiveCategory", null);
+            store.commit("menu/setMenuActive", 0);
             let keys = Object.keys(MenuItems);
             router.push({
               name: keys[0]
@@ -398,18 +405,18 @@ export default {
           // 누군가의 음성이 감지되었을 때
           state.session.on("publisherStartSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
-              document.querySelector(
-                `#${event.connection.connectionId}`
-              ).style.border = "solid";
+              document
+                .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.add("gradient-box");
             }
           });
 
           // 누군가의 음성이 멈췄을 때
           state.session.on("publisherStopSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
-              document.querySelector(
-                `#${event.connection.connectionId}`
-              ).style.border = "none";
+              document
+                .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.remove("gradient-box");
             }
           });
 
@@ -456,13 +463,16 @@ export default {
             });
           };
 
+          // 새로 들어온 참가자
           const createToken = function(sessionId) {
+            let userRole = "SUBSCRIBER";
+            if (state.isLoggedin) userRole = "PUBLISHER";
             return new Promise((resolve, reject) => {
               axios
                 .post(
                   `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
                   {
-                    role: "MODERATOR"
+                    role: userRole
                   },
                   {
                     auth: {
@@ -490,7 +500,7 @@ export default {
               .connect(token, { clientData: state.myUserName })
               .then(() => {
                 // 새로 들어온 참가자
-                if (state.publisher === undefined) {
+                if (state.publisher === undefined && state.isLoggedin) {
                   let publisher = state.OV.initPublisher(undefined, {
                     audioSource: undefined, // The source of audio. If undefined default microphone
                     videoSource: undefined, // The source of video. If undefined default webcam
@@ -543,26 +553,46 @@ export default {
 
     const leaveSession = function() {
       if (state.isHost) {
+        // 방장이 떠날 때
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
         };
         store.dispatch("root/requestRoomDelete", payload);
+
+        console.log("@@@@@@@@@@@@@@");
+        console.log(state.mySessionId);
+        axios
+          .delete(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
+
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET
+              }
+            }
+          )
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => console.log(error));
+        // 오픈비두 방 종료
       } else {
+        // 시청자가 나갈 때
         const payload = {
           email: store.getters["auth/getEmail"],
           roomId: state.mySessionId
         };
         store.dispatch("root/requestRoomExit", payload);
+        store.commit("menu/setActiveCategory", null);
+        store.commit("menu/setMenuActive", 0);
+        const MenuItems = store.getters["menu/getMenus"];
+        let keys = Object.keys(MenuItems);
+        router.push({
+          name: keys[0]
+        });
       }
-
-      store.commit("menu/setActiveCategory", null);
-      store.commit("menu/setMenuActive", 0);
-      const MenuItems = store.getters["menu/getMenus"];
-      let keys = Object.keys(MenuItems);
-      router.push({
-        name: keys[0]
-      });
     };
 
     const updateMainVideoStreamManager = function(stream) {
@@ -614,26 +644,6 @@ export default {
     };
 
     // 권한 수정
-    const patchRole = function(stream) {
-      let cId = stream.stream.connection.connectionId;
-      axios
-        .patch(
-          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/${cId}`,
-          {
-            role: "SUBSCRIBER",
-            record: false
-          },
-          {
-            auth: {
-              username: "OPENVIDUAPP",
-              password: OPENVIDU_SERVER_SECRET
-            }
-          }
-        )
-        .then(response => console.log(response))
-        .then(data => console.log(data))
-        .catch(error => console.log(error));
-    };
 
     let socket = new SockJS("https://i5a308.p.ssafy.io:8443/ws");
     let authorization = state.isLoggedin;
@@ -706,19 +716,6 @@ export default {
       }
     };
 
-    // const videoFilter = function() {
-    //   state.publisher.stream
-    //     .applyFilter("GStreamerFilter", {
-    //       command: "textoverlay text='&#129409' valignment=top halignment=right font-desc='Cantarell 25'"
-    //     })
-    //     .then(() => {
-    //       console.log("Video rotated!");
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // };
-
     return {
       state,
       leaveSession,
@@ -726,20 +723,35 @@ export default {
       onOffVideo,
       onOffAudio,
       unpublish,
-      patchRole,
       clickLike,
       clickJoy,
       clickWow,
       clickHeart,
       clickSad,
       sendEmoji
-      // videoFilter
     };
   }
 };
 </script>
 
 <style>
+.gradient-box {
+  border: 3px solid transparent;
+  border-radius: 17px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(white, white),
+    -webkit-linear-gradient(left, #bb16e0 0%, #1aeba2 100%);
+  background: -o-linear-gradient(white, white),
+    -o-linear-gradient(left, #d388f4 0%, #d467da 100%);
+  background: linear-gradient(white, white),
+    linear-gradient(to right, #b72ba2 0%, #9d00ff 100%);
+  -webkit-background-clip: padding-box, border-box;
+  -moz-background-clip: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  -webkit-background-origin: border-box;
+  background-origin: border-box;
+}
+
 .nav-icons {
   margin-top: 10px;
   text-align: center;
@@ -815,19 +827,18 @@ export default {
   object-fit: cover;
 }
 
-.nickname {
+.emoji-bubble .nickname {
   background: #9f05ff69;
-  opacity: 60%;
   border-radius: 0 10px 10px 0;
   padding-left: 7px;
 }
 
-.text {
+.emoji-bubble .nickname .text {
   font-size: 89%;
   color: white;
 }
 
-.circle {
+.emoji-bubble .circle {
   padding: 0px;
   width: 40px;
   height: 40px;

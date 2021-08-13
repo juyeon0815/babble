@@ -5,9 +5,13 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div class="off-cam">
-        <!-- <img src="https://picsum.photos/200" class="image"> -->
-        <img :src="profile" class="image">
+      <div v-if="gridCount" class="vid">
+        <!-- <img :src="profile.url" class="image-alone"> -->
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone" />
+      </div>
+      <div v-else class="vid">
+        <!-- <img :src="profile.url" class="image"> -->
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image" />
       </div>
     </div>
 
@@ -18,7 +22,9 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button v-if="state.isHost" type="danger" plain @click="clickOut">강퇴</el-button>
+        <el-button v-if="state.isHost" type="danger" plain @click="clickOut"
+          >강퇴</el-button
+        >
       </div>
       <template #reference>
         <el-button
@@ -34,7 +40,7 @@
 
 <script>
 import { reactive, computed } from "vue";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import OvVideo from "./ov-video";
 
 export default {
@@ -44,13 +50,13 @@ export default {
   },
   props: {
     streamManager: Object,
-    profile: String
+    profile: Object,
+    gridCount: String
   },
 
   setup(props, { emit }) {
     console.log("가즈아");
     console.log(props.streamManager);
-    console.log(props.profile, '왔니이')
     // props.streamManager.on("publisherStopSpeaking", event => {
     //   console.log("User " + event.connection.connectionId + " stop speaking");
     // });
@@ -61,14 +67,14 @@ export default {
     //   });
     // }
 
-    const store = useStore()
+    const store = useStore();
     const state = reactive({
       popupVisible: false,
       clientData: computed(() => {
         return getConnectionData();
       }),
       isHost: computed(() => store.getters["root/getIsHost"]),
-      clientName: ''
+      clientName: ""
     });
 
     const getConnectionData = function() {
@@ -111,18 +117,17 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.off-cam {
-  width: 18vw;
-  height: 33vh;
-  border-radius: 50%;
-  background-color: black;
-  overflow: hidden;
-}
-
 
 .image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 90%;
+  border-radius: 10px;
 }
+
+.image-alone {
+  width: 60%;
+}
+
+/* .fit-to-image {
+  display: inline-block;
+} */
 </style>
