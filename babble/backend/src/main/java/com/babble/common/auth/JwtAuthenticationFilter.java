@@ -41,20 +41,20 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
 		// Read the Authorization header, where the JWT Token should be
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING); //jwt 헤더 토큰
         System.out.println("header : "+ header);
-        // header가 있는지 확인
-        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        try {
-            // If header is present, try grab user principal from database and perform authorization
-            Authentication authentication = getAuthentication(request);
-            // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception ex) {
-            ResponseBodyWriteUtil.sendError(request, response, ex);
-            return;
-        }
+            // header가 있는지 확인
+            if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            try {
+                // If header is present, try grab user principal from database and perform authorization
+                Authentication authentication = getAuthentication(request);
+                // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception ex) {
+                ResponseBodyWriteUtil.sendError(request, response, ex);
+                return;
+            }
 
         filterChain.doFilter(request, response);
 	}
