@@ -10,6 +10,7 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
+        :grid-count="state.videoGrid"
         :profile="state.profile"
         :id="state.publisher.stream.connection.connectionId"
         @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -303,8 +304,8 @@ export default {
 
       videoGrid: "alone",
       showMainVideo: false,
-      visible: false,
 
+      visible: false,
       emoji: "",
       prevEmoji: [],
       stompClient: null,
@@ -402,8 +403,9 @@ export default {
           state.session.on("publisherStartSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
               document.querySelector(
-                `#${event.connection.connectionId}`
-              ).style.border = "solid";
+                `#${event.connection.connectionId} .vid`
+              // ).style.border = "solid";
+              ).style.cssText = "border-style: solid; border-image-slice: 1; border-image-source: linear-gradient(to left, #743ad5, #d53a9d);"
             }
           });
 
@@ -412,7 +414,8 @@ export default {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
               document.querySelector(
                 `#${event.connection.connectionId}`
-              ).style.border = "none";
+              // ).style.border = "none";
+              ).style.cssText = "border-style: none; border-image-slice: 0; border-image-source: none";
             }
           });
 
@@ -819,19 +822,19 @@ export default {
   object-fit: cover;
 }
 
-.nickname {
+.emoji-bubble .nickname {
   background: #9f05ff69;
   opacity: 60%;
   border-radius: 0 10px 10px 0;
   padding-left: 7px;
 }
 
-.text {
+.emoji-bubble .nickname .text {
   font-size: 89%;
   color: white;
 }
 
-.circle {
+.emoji-bubble .circle {
   padding: 0px;
   width: 40px;
   height: 40px;
