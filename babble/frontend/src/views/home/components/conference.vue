@@ -81,6 +81,7 @@ export default {
       router.push({
         path: `/category/${tag}`
       })
+      .then((() =>window.scrollTo(0,0) ))
     };
 
     const clickHashtag = function (tag) {
@@ -90,6 +91,7 @@ export default {
       router.push({
         path: `/search/${tag}`
       })
+      .then((() =>window.scrollTo(0,0) ))
     }
 
     // if (props.roomInfo.id %= 1) {
