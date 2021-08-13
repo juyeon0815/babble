@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
 //                .antMatchers(HttpMethod.PATCH,"/api/v1/users/**").authenticated() // 회원 정보 수정
 //                .antMatchers(HttpMethod.DELETE,"/api/v1/users/**").authenticated() // 회원 탈퇴
-                .antMatchers("/api/v1/room/create").authenticated() // 방 생성
+//                .antMatchers("/api/v1/room/create").authenticated() // 방 생성
                 .antMatchers("/ws/pub/**").authenticated()
                 .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
                 .and().cors();

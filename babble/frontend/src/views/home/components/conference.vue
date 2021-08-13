@@ -37,7 +37,7 @@ import { useRouter } from 'vue-router'
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io:8443";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 

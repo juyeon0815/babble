@@ -125,7 +125,6 @@ export default {
         title: "",
         content: "",
         category: "",
-        speak: "",
         inputValue: "",
         roomHashtags: [],
         count: computed(() => {
@@ -156,13 +155,6 @@ export default {
             }
           }
         ],
-        speak: [
-          {
-            required: true,
-            message: "필수 입력 항목입니다.",
-            trigger: "change"
-          }
-        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
@@ -231,7 +223,6 @@ export default {
           thumbnailUrl: "default",
           category: state.form.category,
           hashtag: joinHashtag,
-          speak: state.form.speak
         };
         store.dispatch("root/requestRoomCreate", payload).then(res =>
           router.push({
@@ -270,7 +261,6 @@ export default {
               thumbnailUrl: data.Location,
               category: state.form.category,
               hashtag: joinHashtag,
-              speak: state.form.speak
             };
             store.dispatch("root/requestRoomCreate", payload).then(res =>
               router.push({
@@ -298,7 +288,6 @@ export default {
       state.form.title = "";
       state.form.content = "";
       state.form.category = "";
-      state.form.speak = "";
       state.form.roomHashtags = [];
       thumbnailUrl.value=null;
       emit("closeRoomCreateDialog");
