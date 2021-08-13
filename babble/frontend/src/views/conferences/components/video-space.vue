@@ -402,7 +402,7 @@ export default {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
               document.querySelector(
                 `#${event.connection.connectionId} .vid`
-              ).style.cssText = "border-style: solid; border-image-slice: 1; border-image-source: linear-gradient(to left, #743ad5, #d53a9d); border-radius: 10;"
+              ).style.cssText = "border-style: solid; border-image-slice: 1; border-image-source: linear-gradient(to left, #743ad5, #d53a9d); border-radius: '10px';"
             }
           });
 
