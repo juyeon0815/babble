@@ -5,8 +5,8 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div class="off-cam">
-          <img :src="profile.url" class="image">
+      <div class="off-cam vid">
+        <img :src="profile.url" class="image" />
       </div>
     </div>
 
@@ -17,7 +17,9 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button v-if="state.isHost" type="danger" plain @click="clickOut">강퇴</el-button>
+        <el-button v-if="state.isHost" type="danger" plain @click="clickOut"
+          >강퇴</el-button
+        >
       </div>
       <template #reference>
         <el-button
@@ -33,7 +35,7 @@
 
 <script>
 import { reactive, computed } from "vue";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import OvVideo from "./ov-video";
 
 export default {
@@ -59,14 +61,14 @@ export default {
     //   });
     // }
 
-    const store = useStore()
+    const store = useStore();
     const state = reactive({
       popupVisible: false,
       clientData: computed(() => {
         return getConnectionData();
       }),
       isHost: computed(() => store.getters["root/getIsHost"]),
-      clientName: ''
+      clientName: ""
     });
 
     const getConnectionData = function() {

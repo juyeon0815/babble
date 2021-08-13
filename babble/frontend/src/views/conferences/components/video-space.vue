@@ -159,6 +159,8 @@
     </el-row>
   </div>
 
+  <!-- 6인 이상 추가 예정 -->
+
   <!-- 버튼 -->
   <div class="nav-icons">
     <el-button-group>
@@ -178,6 +180,9 @@
         />
         <i v-else class="el-icon-video-camera" />
       </el-button>
+      <el-button type="info" plain @click="findStreamIdBySessionId">
+        <i class="el-icon-thumb"></i
+      ></el-button>
       <el-popover
         class="emoji-balloon"
         :width="280"
@@ -236,8 +241,10 @@
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
       <div class="emoji-bubble">
-        <div class="circle"><img :class="e.style" :src="e.img"></div>
-        <p class="nickname"><span class="text">{{ e.nickname }}</span></p>
+        <div class="circle"><img :class="e.style" :src="e.img" /></div>
+        <p class="nickname">
+          <span class="text">{{ e.nickname }}</span>
+        </p>
         <!-- <span class="nickname"><p class="text">{{ e.nickname }}</p></span> -->
       </div>
     </div>
@@ -303,10 +310,10 @@ export default {
       emoji: "",
       prevEmoji: [],
       stompClient: null,
-      // isLoggedin: computed(() => {
-      //   return store.getters["auth/getToken"];
-      // }),
-      profile: []
+      isLoggedin: computed(() => {
+        return store.getters["auth/getToken"];
+      }),
+      profile: ""
     });
 
     watch(
@@ -331,14 +338,9 @@ export default {
       }
     );
 
-    // if (!state.videoStatus && state.isLoggedin) {
-    //   state.profile = store.getters["auth/getProfile"]
-    // }
-
-    if (!state.videoStatus) {
-      state.profile =  {url: require('@/assets/images/icon.png')}
+    if (!state.videoStatus && state.isLoggedin) {
+      state.profile = store.getters["auth/getProfile"];
     }
-
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
@@ -385,8 +387,9 @@ export default {
 
           // 강퇴 당했을 때
           state.session.on("sessionDisconnected", ({ stream }) => {
-            console.log("강티당함..");
             const MenuItems = store.getters["menu/getMenus"];
+            store.commit("menu/setActiveCategory", null);
+            store.commit("menu/setMenuActive", 0);
             let keys = Object.keys(MenuItems);
             router.push({
               name: keys[0]
@@ -397,8 +400,11 @@ export default {
           state.session.on("publisherStartSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
               document.querySelector(
-                `#${event.connection.connectionId}`
-              ).style.border = "solid";
+                `#${event.connection.connectionId} .vid`
+              ).style.borderRadius = "10px";
+              document.querySelector(
+                `#${event.connection.connectionId} .vid`
+              ).style.boxShadow = "0 0 2px 4px #DD78F6";
             }
           });
 
@@ -406,8 +412,8 @@ export default {
           state.session.on("publisherStopSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
               document.querySelector(
-                `#${event.connection.connectionId}`
-              ).style.border = "none";
+                `#${event.connection.connectionId} .vid`
+              ).style.boxShadow = "none";
             }
           });
 
@@ -454,13 +460,16 @@ export default {
             });
           };
 
+          // 새로 들어온 참가자
           const createToken = function(sessionId) {
+            let userRole = "SUBSCRIBER";
+            if (state.isLoggedin) userRole = "PUBLISHER";
             return new Promise((resolve, reject) => {
               axios
                 .post(
                   `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
                   {
-                    role: "MODERATOR"
+                    role: userRole
                   },
                   {
                     auth: {
@@ -488,7 +497,7 @@ export default {
               .connect(token, { clientData: state.myUserName })
               .then(() => {
                 // 새로 들어온 참가자
-                if (state.publisher === undefined) {
+                if (state.publisher === undefined && state.isLoggedin) {
                   let publisher = state.OV.initPublisher(undefined, {
                     audioSource: undefined, // The source of audio. If undefined default microphone
                     videoSource: undefined, // The source of video. If undefined default webcam
@@ -541,32 +550,50 @@ export default {
 
     const leaveSession = function() {
       if (state.isHost) {
+        // 방장이 떠날 때
         const payload = {
           roomId: state.mySessionId,
           maxViewers: state.maxViewers
         };
         store.dispatch("root/requestRoomDelete", payload);
+
+        console.log("@@@@@@@@@@@@@@");
+        console.log(state.mySessionId);
+        axios
+          .delete(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
+
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET
+              }
+            }
+          )
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => console.log(error));
+        // 오픈비두 방 종료
       } else {
+        // 시청자가 나갈 때
         const payload = {
           email: store.getters["auth/getEmail"],
           roomId: state.mySessionId
         };
         store.dispatch("root/requestRoomExit", payload);
+        store.commit("menu/setActiveCategory", null);
+        store.commit("menu/setMenuActive", 0);
+        const MenuItems = store.getters["menu/getMenus"];
+        let keys = Object.keys(MenuItems);
+        router.push({
+          name: keys[0]
+        });
       }
-
-      store.commit("menu/setActiveCategory", null);
-      store.commit("menu/setMenuActive", 0);
-      const MenuItems = store.getters["menu/getMenus"];
-      let keys = Object.keys(MenuItems);
-      router.push({
-        name: keys[0]
-      });
     };
 
     const updateMainVideoStreamManager = function(stream) {
       store.commit("root/setMainStreamManager", stream);
-      console.log('***************')
-      console.log(stream)
       state.showMainVideo = true;
     };
 
@@ -575,7 +602,6 @@ export default {
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
         // state.profile = store.getters["auth/getProfile"]
-        state.profile = {url: require('@/assets/images/icon.png')}
         store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
@@ -612,28 +638,6 @@ export default {
           .then(response => console.log(response))
           .catch(error => console.log(error));
       }
-    };
-
-    // 권한 수정
-    const patchRole = function(stream) {
-      let cId = stream.stream.connection.connectionId;
-      axios
-        .patch(
-          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}/connection/${cId}`,
-          {
-            role: "SUBSCRIBER",
-            record: false
-          },
-          {
-            auth: {
-              username: "OPENVIDUAPP",
-              password: OPENVIDU_SERVER_SECRET
-            }
-          }
-        )
-        .then(response => console.log(response))
-        .then(data => console.log(data))
-        .catch(error => console.log(error));
     };
 
     let socket = new SockJS("http://localhost:8080/ws");
@@ -707,19 +711,6 @@ export default {
       }
     };
 
-    // const videoFilter = function() {
-    //   state.publisher.stream
-    //     .applyFilter("GStreamerFilter", {
-    //       command: "textoverlay text='&#129409' valignment=top halignment=right font-desc='Cantarell 25'"
-    //     })
-    //     .then(() => {
-    //       console.log("Video rotated!");
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // };
-
     return {
       state,
       leaveSession,
@@ -727,14 +718,12 @@ export default {
       onOffVideo,
       onOffAudio,
       unpublish,
-      patchRole,
       clickLike,
       clickJoy,
       clickWow,
       clickHeart,
       clickSad,
       sendEmoji
-      // videoFilter
     };
   }
 };
@@ -795,7 +784,7 @@ export default {
 .emojilog {
   position: absolute;
   bottom: 5vh;
-  width:300px;
+  width: 300px;
   overflow: hidden;
 }
 

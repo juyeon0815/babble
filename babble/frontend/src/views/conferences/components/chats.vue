@@ -9,11 +9,19 @@
   </div>
 
   <input
+    v-if="state.isLoggedin"
     type="textarea"
     class="chat"
     placeholder="채팅을 입력해주세요"
     v-model="state.chatText"
     @keyup.enter="enterChat"
+  />
+  <input
+    v-else
+    type="textarea"
+    class="chat"
+    placeholder="로그인이 필요합니다!"
+    readonly
   />
 </template>
 
@@ -35,7 +43,7 @@ export default {
       chatroomId: store.getters["root/getRoomID"],
       isLoggedin: computed(() => {
         return store.getters["auth/getToken"];
-      }),
+      })
     });
 
     // socket 연결
@@ -43,19 +51,25 @@ export default {
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
     console.log(">>>> authorization " + authorization);
-    if(!authorization) {
-      state.stompClient.connect({},frame => {
-        console.log(">>> socket connect success", frame);
-        state.stompClient.subscribe("/sub/message/" + state.chatroomId, res => {
-          let jsonBody = JSON.parse(res.body);
-          let m = {
-            nickname: jsonBody.nickname,
-            content: jsonBody.content,
-            style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
-          };
-            state.prevChat.push(m);
-            changeScroll();
-          });
+    if (!authorization) {
+      state.stompClient.connect(
+        {},
+        frame => {
+          console.log(">>> socket connect success", frame);
+          state.stompClient.subscribe(
+            "/sub/message/" + state.chatroomId,
+            res => {
+              let jsonBody = JSON.parse(res.body);
+              let m = {
+                nickname: jsonBody.nickname,
+                content: jsonBody.content,
+                style:
+                  jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+              };
+              state.prevChat.push(m);
+              changeScroll();
+            }
+          );
         },
         err => {
           console.log("fail", err);
@@ -63,27 +77,29 @@ export default {
       );
     } else {
       state.stompClient.connect(
-        {authorization},
+        { authorization },
         frame => {
           console.log(">>> socket connect success", frame);
-          state.stompClient.subscribe("/sub/message/" + state.chatroomId, res => {
-            let jsonBody = JSON.parse(res.body);
-            let m = {
-              nickname: jsonBody.nickname,
-              content: jsonBody.content,
-              style: jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
-            };
-            state.prevChat.push(m);
-            changeScroll();
-          });
+          state.stompClient.subscribe(
+            "/sub/message/" + state.chatroomId,
+            res => {
+              let jsonBody = JSON.parse(res.body);
+              let m = {
+                nickname: jsonBody.nickname,
+                content: jsonBody.content,
+                style:
+                  jsonBody.nickname == state.nickname ? "myMsg" : "otherMsg"
+              };
+              state.prevChat.push(m);
+              changeScroll();
+            }
+          );
         },
         err => {
           console.log("fail", err);
         }
       );
     }
-
-
 
     const enterChat = function() {
       if (state.chatText.trim() != "" && state.stompClient != null) {
