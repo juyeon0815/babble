@@ -92,8 +92,8 @@ public class EmailServiceImpl implements EmailService{
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("[Babble] 관심 주제 대화방이 생성되었습니다.");//제목
-        // 배포 시 도메인으로 변경, but 대기실이 아니라 바로 회의실로?
-        String linkUrl = "http://localhost:8080/conferences/" + roomId;
+        // 포트번호 변경 시 링크 수정
+        String linkUrl = "https://i5a308.p.ssafy.io:8443/conferences/" + roomId;
 
         String msgg="";
         msgg+= "<div style='margin:100px;'>";
