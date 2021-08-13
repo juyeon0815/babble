@@ -13,6 +13,10 @@
       <el-button type="text" @click="clickMore" v-if="state.roomList.length >= 10">더보기</el-button>
     </el-col>
   </el-row>
+  <ConferenceDialog
+    :open="state.conferenceDialogOpen"
+    :roomId="state.conferenceDialogNum"
+    @closeConferenceDialog="onCloseConferenceDialog"/>
 </template>
 
 <script>
@@ -20,11 +24,14 @@ import { reactive, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import Conference from '@/views/home/components/conference'
+import ConferenceDialog from '@/views/home/components/conference-dialog'
+
 
 export default {
   name: 'CategoryResult',
   components: {
-    Conference
+    Conference,
+    ConferenceDialog
   },
   setup () {
     const store = useStore()
@@ -36,6 +43,8 @@ export default {
       count: 0,
       pageNum: 1,
       searchWord: computed(() => store.getters['menu/getSearchWord']),
+      conferenceDialogOpen: false,
+      conferenceDialogNum: 0,
     })
 
     const loadSearchResult = function () {
@@ -49,10 +58,11 @@ export default {
         state.count = result.data.length
       })
       .catch(function (err) {
-        alert(err)
+        alert('특수문자 검색은 제한됩니다. 다른 키워드를 검색해보세요!')
       })
     }
     loadSearchResult()
+    store.commit("menu/setSearchWord", '')
 
     watch(
       () => state.searchWord,
@@ -84,15 +94,15 @@ export default {
     }
 
     const clickConference = function (id) {
-      router.push({
-        name: 'conference-detail',
-        params: {
-          conferenceId: id
-        }
-      })
+      state.conferenceDialogOpen = true
+      state.conferenceDialogNum = id
     }
 
-    return { state, loadSearchResult, clickMore, clickConference }
+    const onCloseConferenceDialog = function () {
+      state.conferenceDialogOpen = false
+    }
+
+    return { state, loadSearchResult, clickMore, clickConference, onCloseConferenceDialog }
   },
 }
 </script>

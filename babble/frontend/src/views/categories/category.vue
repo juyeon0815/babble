@@ -70,19 +70,21 @@ export default {
       categories_list: ['all', 'sports', 'cooking', 'handcraft', 'music', 'finance', 'game', 'movie', 'drawing', 'book', 'pet']
     })
 
-    onBeforeRouteUpdate ((to, from) => {
+    onBeforeRouteUpdate ((to, from, next) => {
       store.commit('menu/setActiveCategory', to.name)
       const newTab = document.getElementById(to.name)
       newTab.classList.add("active")
       const oldTab = document.getElementById(from.name)
       oldTab.classList.remove("active")
+      next()
     })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('menu/setMenuActiveMenuName', 'category')
-      const allTab = document.getElementById('all')
-      allTab.classList.add("active")
+      const newCategory = store.getters['menu/getActiveCategory']
+      const newTab = document.getElementById(newCategory)
+      newTab.classList.add("active")
     })
 
     return { state }
