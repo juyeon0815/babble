@@ -463,8 +463,6 @@ export default {
           // 새로 들어온 참가자
           const createToken = function(sessionId) {
             let userRole = "SUBSCRIBER";
-            console.log("############");
-            console.log(state.isLoggedin);
             if (state.isLoggedin) userRole = "PUBLISHER";
             return new Promise((resolve, reject) => {
               axios

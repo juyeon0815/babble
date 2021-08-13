@@ -29,3 +29,6 @@ export function getUserAudioStatus(state) {
 export function getIsHost(state) {
 	return state.isHost
 }
+export function getMainStreamManager(state) {
+	return state.mainStreamManager
+}

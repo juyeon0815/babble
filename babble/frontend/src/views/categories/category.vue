@@ -81,6 +81,8 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('menu/setMenuActiveMenuName', 'category')
+      const allTab = document.getElementById('all')
+      allTab.classList.add("active")
     })
 
     return { state }

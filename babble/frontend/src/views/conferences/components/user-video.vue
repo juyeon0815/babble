@@ -6,8 +6,7 @@
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
       <div class="off-cam vid">
-        <!-- <img src="https://picsum.photos/200" class="image"> -->
-        <img :src="profile" class="image" />
+        <img :src="profile.url" class="image" />
       </div>
     </div>
 
@@ -46,13 +45,12 @@ export default {
   },
   props: {
     streamManager: Object,
-    profile: String
+    profile: Object
   },
 
   setup(props, { emit }) {
     console.log("가즈아");
     console.log(props.streamManager);
-    console.log(props.profile, "왔니이");
     // props.streamManager.on("publisherStopSpeaking", event => {
     //   console.log("User " + event.connection.connectionId + " stop speaking");
     // });
@@ -114,16 +112,16 @@ export default {
   align-items: center;
 }
 .off-cam {
-  width: 18vw;
-  height: 33vh;
-  border-radius: 50%;
+  /* width: 33vw; */
+  /* height: 51vh; */
+  width: 90%;
+  /* height: 40%; */
   background-color: black;
-  overflow: hidden;
 }
 
 .image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
 }
 </style>

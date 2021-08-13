@@ -298,13 +298,6 @@ export default {
       })
     });
 
-    store
-      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        // console.log(result.data.picture)
-        store.commit("auth/setUserProfile", result.data.picture);
-      });
-
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
       store.commit("menu/setMenuActive", 0);
@@ -400,7 +393,8 @@ export default {
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
         .then(function(result) {
           store.commit("auth/setUserProfile", result.data.picture);
-        });
+        })
+        .catch
     };
 
     return {
