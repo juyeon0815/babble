@@ -124,7 +124,8 @@ export default {
       store.commit("menu/setActiveCategory", tag);
       router.push({
         path: `/category/${tag}`
-      });
+      })
+      .then((() =>window.scrollTo(0,0) ))
     };
 
     const clickHashtag = function(tag) {
@@ -133,8 +134,9 @@ export default {
       store.commit("menu/setSearchWord", tag);
       router.push({
         path: `/search/${tag}`
-      });
-    };
+      })
+      .then((() =>window.scrollTo(0,0) ))
+    }
 
     // if (props.roomInfo.id %= 1) {
     //   console.log(propss.roomInfo.id)
