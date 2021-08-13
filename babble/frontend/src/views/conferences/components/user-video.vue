@@ -5,9 +5,9 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div class="off-cam">
+      <div class="off-cam vid">
         <!-- <img src="https://picsum.photos/200" class="image"> -->
-        <img :src="profile" class="image">
+        <img :src="profile" class="image" />
       </div>
     </div>
 
@@ -18,7 +18,9 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button v-if="state.isHost" type="danger" plain @click="clickOut">강퇴</el-button>
+        <el-button v-if="state.isHost" type="danger" plain @click="clickOut"
+          >강퇴</el-button
+        >
       </div>
       <template #reference>
         <el-button
@@ -34,7 +36,7 @@
 
 <script>
 import { reactive, computed } from "vue";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import OvVideo from "./ov-video";
 
 export default {
@@ -50,7 +52,7 @@ export default {
   setup(props, { emit }) {
     console.log("가즈아");
     console.log(props.streamManager);
-    console.log(props.profile, '왔니이')
+    console.log(props.profile, "왔니이");
     // props.streamManager.on("publisherStopSpeaking", event => {
     //   console.log("User " + event.connection.connectionId + " stop speaking");
     // });
@@ -61,14 +63,14 @@ export default {
     //   });
     // }
 
-    const store = useStore()
+    const store = useStore();
     const state = reactive({
       popupVisible: false,
       clientData: computed(() => {
         return getConnectionData();
       }),
       isHost: computed(() => store.getters["root/getIsHost"]),
-      clientName: ''
+      clientName: ""
     });
 
     const getConnectionData = function() {
@@ -118,7 +120,6 @@ export default {
   background-color: black;
   overflow: hidden;
 }
-
 
 .image {
   width: 100%;
