@@ -230,7 +230,37 @@ export default {
       .then(function(result) {
         console.log(result.data.picture);
         store.commit("auth/setUserProfile", result.data.picture);
-      });
+      })
+      .catch(function (err) {
+        if (err) {
+          console.log(err, '마이페이지에서 유저정보 불러오며 받은 catch')
+          // clickLogout()
+        }
+      })
+
+    const clickLogout = function() {
+      console.log("clickLogout");
+      console.log(state.provider)
+      if(state.provider === "kakao"){
+        store.dispatch("auth/requestKakaoLogout", state.token)
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=> router.push("/"));
+      }
+      // else if(state.provider==="google"){
+      //   console.log("구글로그아웃");
+      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
+
+      //   store.dispatch("auth/requestLogout")
+      //   .then(()=> store.commit("auth/setLogout"))
+      //   .then(()=>router.push("/"));
+      // }
+      else{
+        store
+        .dispatch("auth/requestLogout")
+        .then(()=> store.commit("auth/setLogout"))
+        .then(()=>router.push("/"));
+      }
+    }
 
     const handleFileUpload = function() {
       let test1 = document.getElementsByName("newProfile")[0].files[0];
@@ -328,7 +358,8 @@ export default {
       updateProfile,
       deleteProfile,
       updatePassword,
-      deleteUser
+      deleteUser,
+      clickLogout
     };
   }
 };

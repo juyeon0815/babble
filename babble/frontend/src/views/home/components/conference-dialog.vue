@@ -10,7 +10,7 @@
       <el-col :offset="1">
         <h2>방송 시작 시간 : {{ state.createTime }}</h2>
       </el-col>
-      <el-col class="instruction">
+      <el-col v-if="state.isLoggedin" class="instruction">
         <p>아래와 같은 화면으로 방에 입장될 예정입니다.</p>
         <el-button-group class="btn-group">
           <el-button type="info" plain @click="onOffAudio">
@@ -32,11 +32,17 @@
         </el-button-group>
       </el-col>
 
-      <el-col :offset="3" :span="18">
+      <el-col v-if="state.isLoggedin" :offset="3" :span="18">
         <div id="video-container" class="col-md-6">
-          <UserVideo :stream-manager="state.publisher" :profile="state.profile" />
+          <UserVideo
+            :stream-manager="state.publisher"
+            :profile="state.profile"
+          />
           <!-- <UserVideo :stream-manager="state.publisher" /> -->
         </div>
+      </el-col>
+      <el-col v-else :offset="3" :span="18">
+        비회원은 뭘띄울까요 ? 썸네일?
       </el-col>
       <el-col :offset="18">
         <el-button type="primary" plain @click="clickEnterRoom">
@@ -44,7 +50,6 @@
         </el-button>
       </el-col>
     </el-row>
-
   </el-dialog>
 </template>
 
@@ -245,7 +250,7 @@ export default {
         roomId: props.roomId
       };
       store.dispatch("root/requestRoomEnter", payload);
-      store.commit('root/setIsHost', false)
+      store.commit("root/setIsHost", false);
       handleClose();
       router.push({
         name: "conference-detail",
@@ -274,7 +279,7 @@ export default {
         state.publisher.publishVideo(false);
         state.videoStatus = false;
         // state.profile = store.getters["auth/getProfile"]
-        state.profile = {url: require('@/assets/images/icon.png')}
+        state.profile = { url: require("@/assets/images/icon.png") };
         store.commit("root/setUserVideoStatus", false);
       } else {
         state.publisher.publishVideo(true);
