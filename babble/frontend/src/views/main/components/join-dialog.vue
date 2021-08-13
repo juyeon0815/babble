@@ -61,7 +61,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" round @click="clickJoin" :disabled="!state.isVal"
+        <el-button type="primary" @click="clickJoin" :disabled="!state.isVal"
           >회원가입</el-button
         >
       </span>
@@ -272,10 +272,10 @@ export default {
 </script>
 
 <style>
-.el-button.el-button--primary.is-disabled.is-round {
+.el-button.el-button--primary.is-disabled {
     background-color: #a8a0ff;
     border-color: #a0cfff00;
-    /* width: -webkit-fill-available; */
+    width: 100%;
     }
   .el-button.el-button--primary{
     background-color: #a8a0ff;
