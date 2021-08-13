@@ -5,8 +5,11 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div class="off-cam vid">
-        <img :src="profile.url" class="image" />
+      <div v-if="gridCount" class="vid">
+        <img :src="profile.url" class="image-alone">
+      </div>
+      <div v-else class="vid">
+        <img :src="profile.url" class="image">
       </div>
     </div>
 
@@ -45,7 +48,8 @@ export default {
   },
   props: {
     streamManager: Object,
-    profile: Object
+    profile: Object,
+    gridCount: String,
   },
 
   setup(props, { emit }) {
@@ -111,17 +115,16 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.off-cam {
-  /* width: 33vw; */
-  /* height: 51vh; */
-  width: 90%;
-  /* height: 40%; */
-  background-color: black;
-}
 
 .image {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
+  width: 90%;
 }
+
+.image-alone {
+  width: 60%;
+}
+
+/* .fit-to-image {
+  display: inline-block;
+} */
 </style>
