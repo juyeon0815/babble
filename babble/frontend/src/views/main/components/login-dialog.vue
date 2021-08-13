@@ -175,6 +175,7 @@ export default {
               console.log("이메일과 토큰 store에 저장");
               store.commit("auth/setEmail", state.form.email);
               store.commit("auth/setToken", result.data.accessToken);
+              store.commit("auth/setProvider","babble"); // 로그아웃할때 방식 다 달라서 구분용
               emit("closeLoginDialog");
               // router.go()
               // window.location.reload()

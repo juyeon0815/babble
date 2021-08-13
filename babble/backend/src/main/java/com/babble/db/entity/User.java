@@ -49,6 +49,7 @@ public class User extends BaseEntity{
         this.password = password;
         this.picture = "default";
         this.alarm=false;
+        this.provider="babble";
     }
 
 

@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
         String provider = request.getHeader("provider");
         System.out.println("provider :" + provider);
         // 요청 헤더에 Authorization 키값에 jwt 토큰이 포함된 경우에만, 토큰 검증 및 인증 처리 로직 실행.
-        if (token != null && provider.equals("") ) {
+        if (token != null && provider.equals("babble") ) {
             // parse the token and validate it (decode)
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
             JwtTokenUtil.handleError(token);
