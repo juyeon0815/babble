@@ -5,8 +5,13 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div class="off-cam">
-          <img :src="profile.url" class="image">
+      <div v-if="gridCount" class="vid">
+        <!-- <img :src="profile.url" class="image-alone"> -->
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone">
+      </div>
+      <div v-else class="vid">
+        <!-- <img :src="profile.url" class="image"> -->
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image">
       </div>
     </div>
 
@@ -17,7 +22,9 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button v-if="state.isHost" type="danger" plain @click="clickOut">강퇴</el-button>
+        <el-button v-if="state.isHost" type="danger" plain @click="clickOut"
+          >강퇴</el-button
+        >
       </div>
       <template #reference>
         <el-button
@@ -33,7 +40,7 @@
 
 <script>
 import { reactive, computed } from "vue";
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import OvVideo from "./ov-video";
 
 export default {
@@ -43,7 +50,8 @@ export default {
   },
   props: {
     streamManager: Object,
-    profile: Object
+    profile: Object,
+    gridCount: String,
   },
 
   setup(props, { emit }) {
@@ -59,14 +67,14 @@ export default {
     //   });
     // }
 
-    const store = useStore()
+    const store = useStore();
     const state = reactive({
       popupVisible: false,
       clientData: computed(() => {
         return getConnectionData();
       }),
       isHost: computed(() => store.getters["root/getIsHost"]),
-      clientName: ''
+      clientName: ""
     });
 
     const getConnectionData = function() {
@@ -109,17 +117,16 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.off-cam {
-  /* width: 33vw; */
-  /* height: 51vh; */
-  width: 90%;
-  /* height: 40%; */
-  background-color: black;
-}
 
 .image {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
+  width: 90%;
 }
+
+.image-alone {
+  width: 60%;
+}
+
+/* .fit-to-image {
+  display: inline-block;
+} */
 </style>

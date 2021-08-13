@@ -23,6 +23,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div v-if="state.subs.length > 0">
         <!-- 다른 참가자 -->
         <ul class="list-item">
           <li v-for="sub in state.subs" :key="sub.id">

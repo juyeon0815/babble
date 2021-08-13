@@ -97,7 +97,7 @@
 
 
 <script>
-import { reactive, computed, ref} from "vue";
+import { reactive, computed, ref, watch} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import swal from 'sweetalert';
@@ -147,6 +147,8 @@ export default {
         return store.getters["auth/getToken"];
       })
     });
+
+
     const isValid = function() {
       loginForm.value.validate(valid => {
         if (valid) {
@@ -199,27 +201,52 @@ export default {
 
 
   // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
-    let kakaoCode = new URL(window.location.href).searchParams.get("code");
-    console.log(kakaoCode);
-    if(kakaoCode!=null){
-      store.dispatch("auth/requestKakaoToken", kakaoCode)
-      .then(function(result){
-        console.log("result: ", result.data.accessToken)
-        console.log("email : ",result.data.email )
-        localStorage.setItem("jwt", result.data.accessToken);
-        store.commit("auth/setToken", result.data.accessToken);
-        store.commit("auth/setEmail", result.data.email);
-        store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
-        emit("closeLoginDialog");
-        router.push({
-            path: "/"
-        })
-      }).catch(function(error){
-        console.log(error)
-      })
-    }
+    // let kakaoCode = new URL(window.location.href).searchParams.get("code");
+    // console.log(kakaoCode);
+    // if(kakaoCode!=null){
+    //   store.dispatch("auth/requestKakaoToken", kakaoCode)
+    //   .then(function(result){
+    //     console.log("result: ", result.data.accessToken)
+    //     console.log("email : ",result.data.email )
+    //     localStorage.setItem("jwt", result.data.accessToken);
+    //     store.commit("auth/setToken", result.data.accessToken);
+    //     store.commit("auth/setEmail", result.data.email);
+    //     store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
+    //     alert("로그인 성공");
+    //     emit("closeLoginDialog");
+    //     router.push({
+    //         path: "/"
+    //     })
+    //   }).catch(function(error){
+    //     console.log(error)
+    //   })
+    // }
 
-  // 구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
+  // const goGoogle = function () {
+  //   location.href = "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google"
+  //   let googleCode = new URL(window.location.href).searchParams.get("code");
+  //   console.log(googleCode, '구글코드')
+  //   if(googleCode!=null){
+  //      store.dispatch("auth/requestGoogleToken", googleCode)
+  //     .then(function(result){
+  //       console.log("result: ", result.data.idToken)
+  //       console.log("email : ",result.data.email )
+  //       localStorage.setItem("jwt", result.data.idToken);
+  //       store.commit("auth/setToken", result.data.idToken);
+  //       store.commit("auth/setEmail", result.data.email);
+  //       store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
+  //       alert("로그인 성공");
+  //       // emit("closeLoginDialog");
+  //       router.push({
+  //         path: "/"
+  //       });
+  //     }).catch(function(error){
+  //       console.log(error)
+  //     })
+  //   }
+  // }
+
+  //구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
     let googleCode = new URL(window.location.href).searchParams.get("code");
     console.log(googleCode);
     if(googleCode!=null){
@@ -233,10 +260,11 @@ export default {
         store.commit("auth/setToken", result.data.idToken);
         store.commit("auth/setEmail", result.data.email);
         store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
-        emit("closeLoginDialog");
+        alert("로그인 성공");
+        // emit("closeLoginDialog");s
         router.push({
-            path: "/"
-          });
+          path: "/"
+        });
       }).catch(function(error){
         console.log(error)
       })
