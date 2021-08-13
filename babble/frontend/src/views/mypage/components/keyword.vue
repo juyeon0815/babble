@@ -66,7 +66,10 @@ export default {
       count: computed(() => {
         return store.getters["auth/getUserHashtagLength"];
       }),
-      inputValue: ""
+      inputValue: "",
+      provider: computed(() => {
+        return store.getters["auth/getProvider"];
+      }),
     });
 
     store
@@ -79,43 +82,45 @@ export default {
         }
       });
 
-    store
-      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        console.log(result.data.alarm);
-        store.commit("auth/setDefaultAlarm", result.data.alarm)
-      })
-      .catch(function (err) {
-        if (err) {
-          console.log(err, '키워드에서 axios날리며 받은 캐치')
-          // clickLogout()
-        }
-      })
 
-
-    const clickLogout = function() {
-      console.log("clickLogout");
-      console.log(state.provider)
-      if(state.provider === "kakao"){
-        store.dispatch("auth/requestKakaoLogout", state.token)
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
-      }
-      // else if(state.provider==="google"){
-      //   console.log("구글로그아웃");
-      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
-
-      //   store.dispatch("auth/requestLogout")
-      //   .then(()=> store.commit("auth/setLogout"))
-      //   .then(()=>router.push("/"));
-      // }
-      else{
-        store
-        .dispatch("auth/requestLogout")
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
-      }
+    if (state.provider == 'google' || state.provider == 'kakao') {
+      store
+        .dispatch("auth/requestSocialUserInfo", {email: state.email})
+        .then(function (result) {
+          console.log(result, '소셜 로그인 유저 정보 받아오기')
+          store.commit("auth/setDefaultAlarm", result.data.alarm);
+        })
+    } else {
+       store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function(result) {
+          console.log(result.data.alarm);
+          store.commit("auth/setDefaultAlarm", result.data.alarm)
+        })
+        .catch(function (err) {
+          if (err) {
+            console.log(err, '키워드에서 axios날리며 받은 캐치')
+            // clickLogout()
+          }
+        })
     }
+
+
+    // const clickLogout = function() {
+    //   console.log("clickLogout");
+    //   console.log(state.provider)
+    //   if(state.provider === "kakao"){
+    //     store.dispatch("auth/requestKakaoLogout", state.token)
+    //     .then(()=> store.commit("auth/setLogout"))
+    //     .then(()=>router.push("/"));
+    //   }
+    //   else{
+    //     store
+    //     .dispatch("auth/requestLogout")
+    //     .then(()=> store.commit("auth/setLogout"))
+    //     .then(()=>router.push("/"));
+    //   }
+    // }
 
     const handleClose = function(tag) {
       let hashtagIndex = state.userHashtags.indexOf(tag);

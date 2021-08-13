@@ -193,7 +193,10 @@ export default {
       isFail: false,
       albumBucketName: "babble-test-zimin",
       bucketRegion: "ap-northeast-2",
-      IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f"
+      IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f",
+      provider: computed(() => {
+        return store.getters["auth/getProvider"];
+      }),
     });
 
     const isValid = function() {
@@ -225,42 +228,43 @@ export default {
         });
     };
 
-    store
-      .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-      .then(function(result) {
-        console.log(result.data.picture);
-        store.commit("auth/setUserProfile", result.data.picture);
-      })
-      .catch(function (err) {
-        if (err) {
-          console.log(err, '마이페이지에서 유저정보 불러오며 받은 catch')
-          // clickLogout()
-        }
-      })
-
-    const clickLogout = function() {
-      console.log("clickLogout");
-      console.log(state.provider)
-      if(state.provider === "kakao"){
-        store.dispatch("auth/requestKakaoLogout", state.token)
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=> router.push("/"));
-      }
-      // else if(state.provider==="google"){
-      //   console.log("구글로그아웃");
-      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
-
-      //   store.dispatch("auth/requestLogout")
-      //   .then(()=> store.commit("auth/setLogout"))
-      //   .then(()=>router.push("/"));
-      // }
-      else{
-        store
-        .dispatch("auth/requestLogout")
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
-      }
+    if (state.provider == 'google' || state.provider == 'kakao') {
+      store
+        .dispatch("auth/requestSocialUserInfo", {email: state.email})
+        .then(function (result) {
+          console.log(result, '소셜 로그인 유저 정보 받아오기')
+          store.commit("auth/setUserProfile", result.data.picture);
+        })
+    } else {
+      store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function(result) {
+          console.log(result.data.picture);
+          store.commit("auth/setUserProfile", result.data.picture);
+        })
+        .catch(function (err) {
+          if (err) {
+            console.log(err, '마이페이지에서 유저정보 불러오며 받은 catch')
+            // clickLogout()
+          }
+        })
     }
+
+    // const clickLogout = function() {
+    //   console.log("clickLogout");
+    //   console.log(state.provider)
+    //   if(state.provider === "kakao"){
+    //     store.dispatch("auth/requestKakaoLogout", state.token)
+    //     .then(()=> store.commit("auth/setLogout"))
+    //     .then(()=> router.push("/"));
+    //   }
+    //   else{
+    //     store
+    //     .dispatch("auth/requestLogout")
+    //     .then(()=> store.commit("auth/setLogout"))
+    //     .then(()=>router.push("/"));
+    //   }
+    // }
 
     const handleFileUpload = function() {
       let test1 = document.getElementsByName("newProfile")[0].files[0];
