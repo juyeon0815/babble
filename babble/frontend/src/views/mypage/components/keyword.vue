@@ -76,7 +76,7 @@ export default {
       .dispatch("auth/requestUserHashtag", { email: state.email })
       .then(function(result) {
         console.log("해시태그를 가져올거야");
-        console.log(result.data[0]);
+        // console.log(result.data[0]);
         if (result.data[0] !== null) {
           store.commit("auth/setUserHashtag", result.data);
         }
@@ -100,27 +100,9 @@ export default {
         .catch(function (err) {
           if (err) {
             console.log(err, '키워드에서 axios날리며 받은 캐치')
-            // clickLogout()
           }
         })
     }
-
-
-    // const clickLogout = function() {
-    //   console.log("clickLogout");
-    //   console.log(state.provider)
-    //   if(state.provider === "kakao"){
-    //     store.dispatch("auth/requestKakaoLogout", state.token)
-    //     .then(()=> store.commit("auth/setLogout"))
-    //     .then(()=>router.push("/"));
-    //   }
-    //   else{
-    //     store
-    //     .dispatch("auth/requestLogout")
-    //     .then(()=> store.commit("auth/setLogout"))
-    //     .then(()=>router.push("/"));
-    //   }
-    // }
 
     const handleClose = function(tag) {
       let hashtagIndex = state.userHashtags.indexOf(tag);
@@ -163,7 +145,7 @@ export default {
         });
     };
 
-    return { state, saveTagInput, clickLogout, handleClose, handleInputConfirm, clickAlarm };
+    return { state, saveTagInput, handleClose, handleInputConfirm, clickAlarm };
   }
 };
 </script>

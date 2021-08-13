@@ -245,26 +245,9 @@ export default {
         .catch(function (err) {
           if (err) {
             console.log(err, '마이페이지에서 유저정보 불러오며 받은 catch')
-            // clickLogout()
           }
         })
     }
-
-    // const clickLogout = function() {
-    //   console.log("clickLogout");
-    //   console.log(state.provider)
-    //   if(state.provider === "kakao"){
-    //     store.dispatch("auth/requestKakaoLogout", state.token)
-    //     .then(()=> store.commit("auth/setLogout"))
-    //     .then(()=> router.push("/"));
-    //   }
-    //   else{
-    //     store
-    //     .dispatch("auth/requestLogout")
-    //     .then(()=> store.commit("auth/setLogout"))
-    //     .then(()=>router.push("/"));
-    //   }
-    // }
 
     const handleFileUpload = function() {
       let test1 = document.getElementsByName("newProfile")[0].files[0];
@@ -363,7 +346,7 @@ export default {
       deleteProfile,
       updatePassword,
       deleteUser,
-      clickLogout
+      // clickLogout
     };
   }
 };
