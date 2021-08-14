@@ -47,12 +47,7 @@
 
 ### Design Resources (미정)
 __외부 템플릿 또는 에셋__ (이미지 또는 링크 첨부)
-- 없음
-- 무료 이미지, 아이콘, 폰트 등은 제외
-- [Vue Argon Design System](https://www.creative-tim.com/product/vue-argon-design-system?affiliate_id=116187) (무료)
-  - __사용 기능__ : 디자인 전반 적용
-- [Vue Black Dashboard Pro](https://www.creative-tim.com/product/vue-black-dashboard-pro?affiliate_id=116187) (유료)
-  - __사용 기능__ : 캘린더 컴포넌트 사용
+- 없음 (무료 이미지, 폰트만 사용)
   <br>
 
 __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
@@ -69,6 +64,10 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 ### 서비스 구조
 <img src="/uploads/e048db22ebd22bed08d041804db56d2d/structure.PNG">
 
+### ERD
+
+<img src="/uploads/d32ce6da95741f1c3c41f57d055ceff9/erd_0814.png">
+
 ## 프로젝트 설계
 
 ### 프로토타입
@@ -78,6 +77,7 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
 ## 팀원 소개
 <img src="/uploads/135565e5451d9b7133f6eeec2ce7fb42/team-bubble-members.PNG">
+
 - 김주현 : 팀장 / backend / 채팅
 - 김주연 : back / API / 회원 관리 / 배포  
 - 이지민 : front / 
