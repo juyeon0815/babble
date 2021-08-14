@@ -62,7 +62,6 @@ export default {
       })
     }
     loadSearchResult()
-    store.commit("menu/setSearchWord", '')
 
     watch(
       () => state.searchWord,

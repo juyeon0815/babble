@@ -41,10 +41,14 @@
           <!-- <UserVideo :stream-manager="state.publisher" /> -->
         </div>
       </el-col>
-      <el-col v-else :offset="3" :span="18">
-        비회원은 뭘띄울까요 ? 썸네일?
+      <el-col v-else :offset="3" :span="18" style="text-align : center">
+        <img
+          src="https://images.vexels.com/media/users/3/134988/isolated/preview/33601d079a5f05c6ec5b34b277be201b-camera-off-button-circle-icon-by-vexels.png"
+          style="width : 50%"
+        />
+        <h3 style="color:#F56C6C">비회원은 관전자 모드로 입장합니다.</h3>
       </el-col>
-      <el-col :offset="18">
+      <el-col style="text-align:center">
         <el-button type="primary" plain @click="clickEnterRoom">
           방 입장하기
         </el-button>
@@ -63,7 +67,7 @@ import axios from "axios";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://" + "i5a308.p.ssafy.io:8443";
 const OPENVIDU_SERVER_SECRET = "BABBLE";
 
 export default {
@@ -126,112 +130,114 @@ export default {
               alert(err + "!!!!!!");
             });
 
-          state.OV = new OpenVidu();
-          state.session = state.OV.initSession();
+          if (state.isLoggedin) {
+            state.OV = new OpenVidu();
+            state.session = state.OV.initSession();
 
-          state.session.on("exception", ({ exception }) => {
-            console.warn(exception);
-          });
+            state.session.on("exception", ({ exception }) => {
+              console.warn(exception);
+            });
 
-          const createSession = function() {
-            return new Promise((resolve, reject) => {
-              axios
-                .post(
-                  `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
-                  JSON.stringify({}),
-                  {
-                    auth: {
-                      username: "OPENVIDUAPP",
-                      password: OPENVIDU_SERVER_SECRET
+            const createSession = function() {
+              return new Promise((resolve, reject) => {
+                axios
+                  .post(
+                    `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
+                    JSON.stringify({}),
+                    {
+                      auth: {
+                        username: "OPENVIDUAPP",
+                        password: OPENVIDU_SERVER_SECRET
+                      }
                     }
-                  }
-                )
-                .then(response => response.data)
-                .then(data => resolve(data.id))
-                .catch(error => {
-                  if (error.response.status === 409) {
-                    resolve(error);
-                  } else {
-                    console.warn(
-                      `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
-                    );
-                    if (
-                      window.confirm(
-                        `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
-                      )
-                    ) {
-                      location.assign(
-                        `${OPENVIDU_SERVER_URL}/accept-certificate`
+                  )
+                  .then(response => response.data)
+                  .then(data => resolve(data.id))
+                  .catch(error => {
+                    if (error.response.status === 409) {
+                      resolve(error);
+                    } else {
+                      console.warn(
+                        `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
                       );
+                      if (
+                        window.confirm(
+                          `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
+                        )
+                      ) {
+                        location.assign(
+                          `${OPENVIDU_SERVER_URL}/accept-certificate`
+                        );
+                      }
+                      reject("createSessionError!!!!!!" + error.response);
                     }
-                    reject("createSessionError!!!!!!" + error.response);
-                  }
-                });
-            });
-          };
-
-          const createToken = function(sessionId) {
-            return new Promise((resolve, reject) => {
-              axios
-                .post(
-                  `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-                  {},
-                  {
-                    auth: {
-                      username: "OPENVIDUAPP",
-                      password: OPENVIDU_SERVER_SECRET
-                    }
-                  }
-                )
-                .then(response => response.data)
-                .then(data => resolve(data.token))
-                .catch(error =>
-                  reject("createTokenError!!!!!!" + error.response)
-                );
-            });
-          };
-
-          const getToken = function(mySessionId) {
-            return createSession(mySessionId).then(sessionId =>
-              createToken(sessionId)
-            );
-          };
-
-          // 방 생성시 호출되지 않음.
-          getToken().then(token => {
-            state.session
-              .connect(token, { clientData: state.myUserName })
-              .then(() => {
-                console.log(token);
-                // --- Get your own camera stream with the desired properties ---
-
-                let publisher = state.OV.initPublisher(undefined, {
-                  audioSource: undefined, // The source of audio. If undefined default microphone
-                  videoSource: undefined, // The source of video. If undefined default webcam
-                  publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                  publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                  resolution: "640x480", // The resolution of your video
-                  frameRate: 30, // The frame rate of your video
-                  insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-                  mirror: false // Whether to mirror your local video or not
-                });
-
-                state.mainStreamManager = publisher;
-                state.publisher = publisher;
-
-                // --- Publish your stream ---
-                state.session.publish(state.publisher);
-
-                console.log(state.session);
-              })
-              .catch(error => {
-                console.log(
-                  "There was an error connecting to the session:",
-                  error.code,
-                  error.message
-                );
+                  });
               });
-          });
+            };
+
+            const createToken = function(sessionId) {
+              return new Promise((resolve, reject) => {
+                axios
+                  .post(
+                    `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+                    {},
+                    {
+                      auth: {
+                        username: "OPENVIDUAPP",
+                        password: OPENVIDU_SERVER_SECRET
+                      }
+                    }
+                  )
+                  .then(response => response.data)
+                  .then(data => resolve(data.token))
+                  .catch(error =>
+                    reject("createTokenError!!!!!!" + error.response)
+                  );
+              });
+            };
+
+            const getToken = function(mySessionId) {
+              return createSession(mySessionId).then(sessionId =>
+                createToken(sessionId)
+              );
+            };
+
+            // 방 생성시 호출되지 않음.
+            getToken().then(token => {
+              state.session
+                .connect(token, { clientData: state.myUserName })
+                .then(() => {
+                  console.log(token);
+                  // --- Get your own camera stream with the desired properties ---
+
+                  let publisher = state.OV.initPublisher(undefined, {
+                    audioSource: undefined, // The source of audio. If undefined default microphone
+                    videoSource: undefined, // The source of video. If undefined default webcam
+                    publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                    publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                    resolution: "640x480", // The resolution of your video
+                    frameRate: 30, // The frame rate of your video
+                    insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                    mirror: false // Whether to mirror your local video or not
+                  });
+
+                  state.mainStreamManager = publisher;
+                  state.publisher = publisher;
+
+                  // --- Publish your stream ---
+                  state.session.publish(state.publisher);
+
+                  console.log(state.session);
+                })
+                .catch(error => {
+                  console.log(
+                    "There was an error connecting to the session:",
+                    error.code,
+                    error.message
+                  );
+                });
+            });
+          }
         }
       }
     );

@@ -5,13 +5,13 @@
     </div>
     <div v-else class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
-      <div v-if="gridCount" class="vid">
+      <div v-if="gridCount">
         <!-- <img :src="profile.url" class="image-alone"> -->
-        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone">
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone vid" />
       </div>
-      <div v-else class="vid">
+      <div v-else>
         <!-- <img :src="profile.url" class="image"> -->
-        <img src="https://i.imgur.com/d6Yug9x.png" class="image">
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image vid" />
       </div>
     </div>
 
@@ -22,7 +22,7 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button v-if="state.isHost" type="danger" plain @click="clickOut"
+        <el-button v-if="state.isHost && !isMe" type="danger" plain @click="clickOut"
           >강퇴</el-button
         >
       </div>
@@ -52,6 +52,7 @@ export default {
     streamManager: Object,
     profile: Object,
     gridCount: String,
+    isMe: Boolean
   },
 
   setup(props, { emit }) {
@@ -120,10 +121,12 @@ export default {
 
 .image {
   width: 90%;
+  border-radius: 10px;
 }
 
 .image-alone {
   width: 60%;
+  border-radius: 10px;
 }
 
 /* .fit-to-image {

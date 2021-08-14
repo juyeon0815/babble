@@ -82,7 +82,7 @@
 .header-space .overlay {
   width: 100%;
   height: 100%;
-  padding: 50px;
+  padding-top : 50px;
   color: #fff;
   border-radius: 0 0 90% 50% /30%;
   text-shadow: 1px 1px 1px #333;
@@ -196,7 +196,7 @@
   display: none;
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 500px) {
   .navbar {
     flex-direction: column;
   }
