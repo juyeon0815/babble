@@ -10,6 +10,7 @@ import UserInfo from '@/views/mypage/components/user-info'
 import CategoryResult from '@/views/categories/components/category-result'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 import SearchResult from '@/views/search/search-result'
+import AboutUs from '@/views/main/components/about-us'
 
 const fullMenu = require('@/views/main/menu.json')
 const categories_list = ['all', 'sports', 'cooking', 'handcraft', 'music', 'finance', 'game', 'movie', 'drawing', 'book', 'pet']
@@ -54,6 +55,11 @@ function makeRoutesFromMenu () {
           path: 'user-info',
           component: UserInfo
         },
+        {
+          name: 'about-us',
+          path: 'about-us',
+          component: AboutUs
+        },
 
       ]}
     } else if (key === 'search-result') {
@@ -95,7 +101,7 @@ router.beforeEach(function (to, from, next) {
       router.go('-1')
     }
   }
-  
+
   // 카테고리 페이지
   if (categories_list.indexOf(to.name) >= 0) {
     store.commit('menu/setActiveCategory', to.name)
