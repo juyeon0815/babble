@@ -188,7 +188,7 @@
   <!-- 6인 이상 추가 예정 -->
 
   <!-- 버튼 -->
-  <div class="nav-icons">
+  <div v-if="state.isLoggedin" class="nav-icons">
     <el-button-group>
       <el-button type="info" plain @click="onOffAudio">
         <i
@@ -260,6 +260,11 @@
         <i class="el-icon-error"></i>
       </el-button>
     </el-button-group>
+  </div>
+  <div v-else class="nav-icons">
+    <el-button type="info" plain @click="leaveSession">
+      <i class="el-icon-error"></i>
+    </el-button>
   </div>
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
@@ -422,18 +427,18 @@ export default {
           // 누군가의 음성이 감지되었을 때
           state.session.on("publisherStartSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
-              document.querySelector(
-                `#${event.connection.connectionId} .vid`
-              ).style.cssText = "border-style: solid; border-image-slice: 1; border-image-source: linear-gradient(to left, #743ad5, #d53a9d); border-radius: '10px';"
+              document
+                .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.add("gradient-box");
             }
           });
 
           // 누군가의 음성이 멈췄을 때
           state.session.on("publisherStopSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
-              document.querySelector(
-                `#${event.connection.connectionId} .vid`
-              ).style.cssText = "border-style: none; border-image-slice: 0; border-image-source: none";
+              document
+                .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.remove("gradient-box");
             }
           });
 
@@ -747,6 +752,23 @@ export default {
 </script>
 
 <style>
+.gradient-box {
+  border: 3px solid transparent;
+  border-radius: 17px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(white, white),
+    -webkit-linear-gradient(left, #bb16e0 0%, #1aeba2 100%);
+  background: -o-linear-gradient(white, white),
+    -o-linear-gradient(left, #d388f4 0%, #d467da 100%);
+  background: linear-gradient(white, white),
+    linear-gradient(to right, #b72ba2 0%, #9d00ff 100%);
+  -webkit-background-clip: padding-box, border-box;
+  -moz-background-clip: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  -webkit-background-origin: border-box;
+  background-origin: border-box;
+}
+
 .nav-icons {
   margin-top: 10px;
   text-align: center;
