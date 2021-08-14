@@ -1,6 +1,6 @@
 <template>
-  <el-tabs stretch="true" type="card" @tab-click="handleClick">
-    <el-tab-pane label="참여자 정보">
+  <el-tabs stretch="true" type="card" @tab-click="handleClick" class="tabs">
+    <el-tab-pane label="참여자 정보" class="participants">
       <div v-if="state.publisher" class="people-list">
         <h3>{{ roomTitle }}</h3>
         <!-- 나 -->
@@ -24,7 +24,11 @@
           </div>
         </div>
       </div>
-      <div v-if="state.subs.length > 0">
+      <div v-else class="nologin-user">
+        <p>비회원으로 방에 참여중입니다.</p>
+      </div>
+     
+      <div v-if="state.subs.length > 0" class="people-list">
         <!-- 다른 참가자 -->
         <ul class="list-item">
           <li v-for="sub in state.subs" :key="sub.id">
@@ -125,4 +129,10 @@ export default {
   .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
     border-bottom-color: #666fe6c2;
   }
+
+  .nologin-user > p {
+    margin: 5px 0 5px 20px;
+    color: lightgray;
+  }
+
 </style>
