@@ -217,8 +217,6 @@ export default {
       store
         .dispatch("auth/requestEmailConfirm", state.form.email)
         .then(function(result) {
-          console.log(result);
-          console.log(result.data.message);
           state.authNum = result.data.message;
         })
         .catch(function(err) {
@@ -230,7 +228,6 @@ export default {
       // 유효성 검사 후 -> 로그인 API 호출 or 경고창 표시
       joinForm.value.validate(valid => {
         if (valid) {
-          console.log("submit");
           store
             .dispatch("auth/requestJoin", {
               email: state.form.email,

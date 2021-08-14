@@ -52,12 +52,10 @@ export default {
 
     let authorization = state.isLoggedin;
     state.stompClient = Stomp.over(socket);
-    console.log(">>>> authorization " + authorization);
     if (!authorization) {
       state.stompClient.connect(
         {},
         frame => {
-          console.log(">>> socket connect success", frame);
           state.stompClient.subscribe(
             "/sub/message/" + state.chatroomId,
             res => {
@@ -73,15 +71,12 @@ export default {
             }
           );
         },
-        err => {
-          console.log("fail", err);
-        }
+        err => {}
       );
     } else {
       state.stompClient.connect(
         { authorization },
         frame => {
-          console.log(">>> socket connect success", frame);
           state.stompClient.subscribe(
             "/sub/message/" + state.chatroomId,
             res => {
@@ -98,7 +93,7 @@ export default {
           );
         },
         err => {
-          console.log("fail", err);
+          "fail", err;
         }
       );
     }

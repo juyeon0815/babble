@@ -207,7 +207,6 @@ export default {
               state.session
                 .connect(token, { clientData: state.myUserName })
                 .then(() => {
-                  console.log(token);
                   // --- Get your own camera stream with the desired properties ---
 
                   let publisher = state.OV.initPublisher(undefined, {
@@ -226,15 +225,6 @@ export default {
 
                   // --- Publish your stream ---
                   state.session.publish(state.publisher);
-
-                  console.log(state.session);
-                })
-                .catch(error => {
-                  console.log(
-                    "There was an error connecting to the session:",
-                    error.code,
-                    error.message
-                  );
                 });
             });
           }
@@ -277,14 +267,9 @@ export default {
     };
 
     const onOffVideo = function() {
-      // if (state.isLoggedin) {
-      //   const img = store.getters["auth/getProfile"]
-      //   console.log(img, '프로필 가져왔다')
-      // }
       if (state.videoStatus) {
         state.publisher.publishVideo(false);
         state.videoStatus = false;
-        // state.profile = store.getters["auth/getProfile"]
         state.profile = { url: require("@/assets/images/icon.png") };
         store.commit("root/setUserVideoStatus", false);
       } else {

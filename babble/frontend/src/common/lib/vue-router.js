@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '@/common/lib/store'
 import Home from '@/views/home/home'
 import Category from '@/views/categories/category'
 import MyPage from '@/views/mypage/my-page'
@@ -24,10 +25,13 @@ for (let index = 0; index < categories_list.length; index++) {
 function makeRoutesFromMenu () {
   let routes = Object.keys(fullMenu).map((key) => {
     if (key === 'home') {
+      store.commit('menu/setMenuActive', 0)
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'category') {
+      store.commit('menu/setMenuActive', 1)
       return { path: fullMenu[key].path, name: key, component: Category, children: categoryChildren}
     } else if (key === 'mypage') {
+      store.commit('menu/setMenuActive', 2)
       return { path: fullMenu[key].path, name: key, component: MyPage,
       children: [
         {
@@ -53,6 +57,7 @@ function makeRoutesFromMenu () {
 
       ]}
     } else if (key === 'search-result') {
+      store.commit('menu/setMenuActive', 3)
       return { path: fullMenu[key].path, name: key, component: SearchResult}
     } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
@@ -76,9 +81,31 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach(function (to, from, next) {
+  // 마이페이지
+  if (to.name == 'keyword' || to.name == 'history1' || to.name == 'history2' || to.name == 'user-info') {
+    // 로그인 확인
+    let isAuthenticated = false
+    if (store.getters['auth/getToken'] != null) {
+      isAuthenticated = true
+    }
+    // 로그인 안됐으면 alert
+    if (!isAuthenticated) {
+      alert('로그인이 필요한 페이지입니다.')
+      router.go('-1')
+    }
+  }
+  
+  // 카테고리 페이지
+  if (categories_list.indexOf(to.name) >= 0) {
+    store.commit('menu/setActiveCategory', to.name)
+  }
+
+  next()
+})
+
 
 router.afterEach((to) => {
-  console.log(to)
 })
 
 export default router

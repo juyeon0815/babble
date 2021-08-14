@@ -2,21 +2,23 @@
   <!--받아오는 룸인포가 없다면 아예 카드가 안 보이게?-->
   <div v-if="roomInfo">
     <el-card class="conference-card">
-      <div class="hide-show">
-        <div
-          v-if="
-            roomInfo.thumbnailUrl == 'room_thumbnailUrl' ||
-              roomInfo.thumbnailUrl == null ||
-              roomInfo.thumbnailUrl == 'default'
-          "
-          class="image-cover"
-        >
-          <img src="https://picsum.photos/200" class="image" />
+      <div class="card-top">
+        <div class="hide-show">
+          <div
+            v-if="
+              roomInfo.thumbnailUrl == 'room_thumbnailUrl' ||
+                roomInfo.thumbnailUrl == null ||
+                roomInfo.thumbnailUrl == 'default'
+            "
+            class="image-cover"
+          >
+            <img src="https://i.imgur.com/UPA4MTB.png" class="image" />
+          </div>
+          <div v-else class="image-cover">
+            <img :src="roomInfo.thumbnailUrl" class="image" />
+          </div>
+          <p class="text">Let's Ba:bble</p>
         </div>
-        <div v-else class="image-cover">
-          <img :src="roomInfo.thumbnailUrl" class="image" />
-        </div>
-        <p class="text">Let's Ba:bble</p>
       </div>
 
       <div class="card-bottom">
@@ -26,16 +28,49 @@
             roomInfo.category
           }}</el-tag>
         </div>
-        <div v-if="roomInfo.hashtag && roomInfo.hashtag[0] !== ''">
-          <div class="tag" v-for="i in roomInfo.hashtag.length" :key="i">
+
+        <div v-if="roomInfo.hashtag">
+          <!-- 해쉬태그 0개 -->
+          <div v-if="roomInfo.hashtag[0] == ''">
+            <el-tag style="visibility: hidden"></el-tag>
+          </div>
+          <!-- 해쉬태그 1개 -->
+          <div v-else-if="roomInfo.hashtag.length == 1">
             <el-tag
               type="warning"
-              @click.stop="clickHashtag(roomInfo.hashtag[i - 1])"
-              >{{ roomInfo.hashtag[i - 1] }}</el-tag
+              @click.stop="clickHashtag(roomInfo.hashtag[0])"
+              >{{ roomInfo.hashtag[0] }}</el-tag
             >
           </div>
+          <!-- 해쉬태그 2개 이상 -->
+          <div v-else>
+            <el-tag
+              type="warning"
+              @click.stop="clickHashtag(roomInfo.hashtag[0])"
+              >{{ roomInfo.hashtag[0] }}</el-tag
+            >
+            <el-popover placement="bottom" trigger="click">
+              <template #reference>
+                <button
+                  class="el-icon-more"
+                  style="background-color: #11ffee00; border:none"
+                ></button>
+              </template>
+              <div v-for="i in roomInfo.hashtag.length - 1" :key="i">
+                <el-tag
+                  type="warning"
+                  style="margin:5px;"
+                  @click.stop="clickHashtag(roomInfo.hashtag[i])"
+                  >{{ roomInfo.hashtag[i] }}</el-tag
+                >
+              </div>
+            </el-popover>
+          </div>
         </div>
-        <div><i class="el-icon-user"></i> {{ state.connNum }} Watching</div>
+
+        <div class="viewers">
+          <i class="el-icon-user"></i> {{ state.connNum }} Watching
+        </div>
       </div>
     </el-card>
   </div>
@@ -76,38 +111,30 @@ export default {
           }
         })
         .then(response => {
-          console.log(roomInfo.id);
           state.connNum = response.data.connections.numberOfElements;
-        })
-        .catch(error => console.log(error));
+        });
     };
 
     getConnectionNum(props.roomInfo);
 
     const clickCategory = function(tag) {
-      // console.log("click category");
       store.commit("menu/setActiveCategory", tag);
-      router.push({
-        path: `/category/${tag}`
-      });
+      router
+        .push({
+          path: `/category/${tag}`
+        })
+        .then(() => window.scrollTo(0, 0));
     };
 
     const clickHashtag = function(tag) {
-      // console.log(tag)
       store.commit("menu/setMenuActive", 3);
       store.commit("menu/setSearchWord", tag);
-      router.push({
-        path: `/search/${tag}`
-      });
+      router
+        .push({
+          path: `/search/${tag}`
+        })
+        .then(() => window.scrollTo(0, 0));
     };
-
-    // if (props.roomInfo.id %= 1) {
-    //   console.log(propss.roomInfo.id)
-    //   let card = document.querySelector(".conference-card")
-    //   card.classList.add('change-color')
-    // } else {
-    //   card.classList.remove('change-color')
-    // }
 
     return { state, clickCategory, getConnectionNum, clickHashtag };
   }
@@ -115,8 +142,15 @@ export default {
 </script>
 
 <style>
+.card-top {
+  height: 60%;
+}
+
 .conference-card {
   margin: 10px;
+  max-width: 240px;
+  max-height: 330px;
+  padding-bottom: 20px;
   transition: all 0.2s linear;
   position: relative;
 }
@@ -172,6 +206,7 @@ export default {
 
 .conference-card:hover .image-cover {
   background-color: #a0a0ff;
+  border-radius: 10px;
 }
 
 .conference-card:hover img {
@@ -180,6 +215,7 @@ export default {
 }
 
 .card-bottom {
+  height: 40%;
   margin-top: 13px;
 }
 
@@ -194,5 +230,14 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.hashtag {
+  display: inline;
+}
+
+.viewers {
+  position: absolute;
+  bottom: 10px;
 }
 </style>
