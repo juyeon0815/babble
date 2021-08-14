@@ -22,7 +22,7 @@
     >
       <div class="menu">
         <el-button @click="clickToMain">크게 보기</el-button>
-        <el-button v-if="state.isHost" type="danger" plain @click="clickOut"
+        <el-button v-if="state.isHost && !isMe" type="danger" plain @click="clickOut"
           >강퇴</el-button
         >
       </div>
@@ -51,7 +51,8 @@ export default {
   props: {
     streamManager: Object,
     profile: Object,
-    gridCount: String
+    gridCount: String,
+    isMe: Boolean
   },
 
   setup(props, { emit }) {
