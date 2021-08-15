@@ -30,14 +30,10 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-<<<<<<< HEAD
             <img
-              class="profile"
+              class="nologin-profile"
               :src="require('@/assets/images/default_profile.png')"
             />
-=======
-            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
->>>>>>> fae69cfb00260bd5d7b22ba26e6a2550485a66e9
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -66,14 +62,10 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-<<<<<<< HEAD
             <img
-              class="profile"
+              class="nologin-profile"
               :src="require('@/assets/images/default_profile.png')"
             />
-=======
-            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
->>>>>>> fae69cfb00260bd5d7b22ba26e6a2550485a66e9
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -125,14 +117,10 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-<<<<<<< HEAD
             <img
-              class="profile"
+              class="nologin-profile"
               :src="require('@/assets/images/default_profile.png')"
             />
-=======
-            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
->>>>>>> fae69cfb00260bd5d7b22ba26e6a2550485a66e9
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
