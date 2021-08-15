@@ -10,6 +10,7 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
+        :isMe="true"
         :grid-count="state.videoGrid"
         :profile="state.profile"
         :id="state.publisher.stream.connection.connectionId"
@@ -23,14 +24,20 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :isMe="true"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
+          <div v-if="!state.isLoggedin" class="nologin-video">
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <p>비회원으로 방에 참여중입니다.</p>
+          </div>
         </el-col>
         <el-col :span="12" v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
@@ -45,15 +52,21 @@
         <el-col :offset="3" :span="8">
           <UserVideo
             v-if="state.publisher"
+            :isMe="true"
             :stream-manager="state.publisher"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
+          <div v-if="!state.isLoggedin" class="nologin-video">
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <p>비회원으로 방에 참여중입니다.</p>
+          </div>
         </el-col>
         <el-col :offset="1" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
@@ -65,6 +78,7 @@
         <el-col :offset="3" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[1]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[1].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[1])"
@@ -75,6 +89,7 @@
           <UserVideo
             v-if="state.subscribers.length == 3"
             :stream-manager="state.subscribers[2]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[2].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[2])"
@@ -90,10 +105,15 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :isMe="true"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
+          <div v-if="!state.isLoggedin" class="nologin-video">
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <p>비회원으로 방에 참여중입니다.</p>
+          </div>
         </el-col>
         <el-col
           :span="8"
@@ -102,6 +122,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :isMe="false"
             :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
@@ -117,6 +138,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :isMe="false"
             :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
@@ -133,6 +155,7 @@
       <el-col :span="15">
         <UserVideo
           :streamManager="state.mainStreamManager"
+          :isMe="true"
           :profile="state.profile"
           :id="state.mainStreamManager.stream.connection.connectionId"
           @click="state.showMainVideo = false"
@@ -142,6 +165,7 @@
         <el-row>
           <UserVideo
             :stream-manager="state.publisher"
+            :isMe="true"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -150,6 +174,7 @@
         <el-row v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
@@ -163,7 +188,7 @@
   <!-- 6인 이상 추가 예정 -->
 
   <!-- 버튼 -->
-  <div class="nav-icons">
+  <div v-if="state.isLoggedin" class="nav-icons">
     <el-button-group>
       <el-button type="info" plain @click="onOffAudio">
         <i
@@ -181,9 +206,6 @@
         />
         <i v-else class="el-icon-video-camera" />
       </el-button>
-      <el-button type="info" plain @click="findStreamIdBySessionId">
-        <i class="el-icon-thumb"></i
-      ></el-button>
       <el-popover
         class="emoji-balloon"
         :width="280"
@@ -238,6 +260,11 @@
         <i class="el-icon-error"></i>
       </el-button>
     </el-button-group>
+  </div>
+  <div v-else class="nav-icons">
+    <el-button type="info" plain @click="leaveSession">
+      <i class="el-icon-error"></i>
+    </el-button>
   </div>
   <div class="emojilog" id="emojis">
     <div v-for="(e, idx) in state.prevEmoji" :key="idx">
@@ -400,18 +427,18 @@ export default {
           // 누군가의 음성이 감지되었을 때
           state.session.on("publisherStartSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
-              document.querySelector(
-                `#${event.connection.connectionId} .vid`
-              ).style.cssText = "border-style: solid; border-image-slice: 1; border-image-source: linear-gradient(to left, #743ad5, #d53a9d); border-radius: '10px';"
+              document
+                .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.add("gradient-box");
             }
           });
 
           // 누군가의 음성이 멈췄을 때
           state.session.on("publisherStopSpeaking", event => {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
-              document.querySelector(
-                `#${event.connection.connectionId} .vid`
-              ).style.cssText = "border-style: none; border-image-slice: 0; border-image-source: none";
+              document
+                .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.remove("gradient-box");
             }
           });
 
@@ -554,9 +581,6 @@ export default {
           maxViewers: state.maxViewers
         };
         store.dispatch("root/requestRoomDelete", payload);
-
-        console.log("@@@@@@@@@@@@@@");
-        console.log(state.mySessionId);
         axios
           .delete(
             `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
@@ -728,6 +752,23 @@ export default {
 </script>
 
 <style>
+.gradient-box {
+  border: 3px solid transparent;
+  border-radius: 17px;
+  overflow: hidden;
+  background: -webkit-linear-gradient(white, white),
+    -webkit-linear-gradient(left, #bb16e0 0%, #1aeba2 100%);
+  background: -o-linear-gradient(white, white),
+    -o-linear-gradient(left, #d388f4 0%, #d467da 100%);
+  background: linear-gradient(white, white),
+    linear-gradient(to right, #b72ba2 0%, #9d00ff 100%);
+  -webkit-background-clip: padding-box, border-box;
+  -moz-background-clip: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  -webkit-background-origin: border-box;
+  background-origin: border-box;
+}
+
 .nav-icons {
   margin-top: 10px;
   text-align: center;
@@ -821,5 +862,16 @@ export default {
   height: 40px;
   border-radius: 70%;
   overflow: hidden;
+}
+
+.nologin-video {
+  padding-top: 50px;
+  text-align: center;
+}
+
+.nologin-profile {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 </style>

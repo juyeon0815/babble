@@ -80,6 +80,15 @@
           {{ tag }}
         </el-tag>
       </el-form-item>
+<<<<<<< HEAD
+=======
+      <!-- <el-form-item prop="speak" label="참여자 말하기 기본값 설정">
+        <el-radio-group v-model="state.form.speak">
+          <el-radio label="true">누구나 말하기 허용</el-radio>
+          <el-radio label="false">손 들기</el-radio>
+        </el-radio-group>
+      </el-form-item> -->
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -125,6 +134,10 @@ export default {
         title: "",
         content: "",
         category: "",
+<<<<<<< HEAD
+=======
+        // speak: "",
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
         inputValue: "",
         roomHashtags: [],
         count: computed(() => {
@@ -223,6 +236,10 @@ export default {
           thumbnailUrl: "default",
           category: state.form.category,
           hashtag: joinHashtag,
+<<<<<<< HEAD
+=======
+          // speak: state.form.speak
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
         };
         store.dispatch("root/requestRoomCreate", payload).then(res =>
           router.push({
@@ -261,6 +278,10 @@ export default {
               thumbnailUrl: data.Location,
               category: state.form.category,
               hashtag: joinHashtag,
+<<<<<<< HEAD
+=======
+              // speak: state.form.speak
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
             };
             store.dispatch("root/requestRoomCreate", payload).then(res =>
               router.push({
@@ -288,6 +309,10 @@ export default {
       state.form.title = "";
       state.form.content = "";
       state.form.category = "";
+<<<<<<< HEAD
+=======
+      // state.form.speak = "";
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
       state.form.roomHashtags = [];
       thumbnailUrl.value=null;
       emit("closeRoomCreateDialog");

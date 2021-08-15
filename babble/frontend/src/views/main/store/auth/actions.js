@@ -60,6 +60,11 @@ export function requestUserInfo ({ state }, payload) {
   })
 }
 
+export function requestSocialUserInfo({state}, payload){
+  console.log('requestSocialUserInfo', state, payload)
+  return $axios.get(`users/socialInfo/${payload.email}`)
+}
+
 export function requestPasswordCheck ({ state }, payload) {
   console.log('requestPasswordCheck', state, payload)
   return $axios.post('/users/passwordCheck', payload)

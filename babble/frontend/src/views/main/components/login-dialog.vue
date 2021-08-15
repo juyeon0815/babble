@@ -25,6 +25,7 @@
         ></el-input>
       </el-form-item>
     </el-form>
+<<<<<<< HEAD
     <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
     <el-button type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
     <div><el-link href="#" target="_blank">비밀번호 찾기</el-link></div>
@@ -36,11 +37,20 @@
     <el-row :gutter="20">
     <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
     <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
+=======
+   <a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
     <img
       :src="require('@/assets/images/kakaolink_btn_medium.png')"
     />
+<<<<<<< HEAD
   </a></div></el-col>
     <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
+=======
+  </a>
+    <br>
+   <a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
     <img
       :src="require('@/assets/images/free-icon-google-plus.png')"
     />
@@ -175,10 +185,13 @@ export default {
               console.log("이메일과 토큰 store에 저장");
               store.commit("auth/setEmail", state.form.email);
               store.commit("auth/setToken", result.data.accessToken);
+<<<<<<< HEAD
               store.commit("auth/setProvider","babble"); // 로그아웃할때 방식 다 달라서 구분용
+=======
+              store.commit("auth/setProvider", "babble");
+              alert("로그인 성공");
+>>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
               emit("closeLoginDialog");
-              // router.go()
-              // window.location.reload()
             })
             .catch(function(err) {
               console.log(err);
@@ -200,69 +213,43 @@ export default {
       emit("closeLoginDialog");
     };
 
+  // 카카오 로그인 후 실행
+  //(구글 로그인 시 해당 코드로 들어는 가나 auth/requestKakaoToken에서 걸려서 빠져나와 밑에 구글 코드 실행됨)
+    let kakaoCode = new URL(window.location.href).searchParams.get("code");
+    if(kakaoCode != null){
+      console.log('카카오로그인 시도')
+      store.dispatch("auth/requestKakaoToken", kakaoCode)
+      .then(function(result){
+        console.log("카카오 result: ", result.data.accessToken)
+        console.log("카카오 email : ",result.data.email )
+        localStorage.setItem("jwt", result.data.accessToken);
+        store.commit("auth/setToken", result.data.accessToken);
+        store.commit("auth/setEmail", result.data.email);
+        store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
+        router.push({
+            path: "/"
+        })
+      }).catch(function(error){
+        console.log(error)
+      })
+    }
 
-  // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
-    // let kakaoCode = new URL(window.location.href).searchParams.get("code");
-    // console.log(kakaoCode);
-    // if(kakaoCode!=null){
-    //   store.dispatch("auth/requestKakaoToken", kakaoCode)
-    //   .then(function(result){
-    //     console.log("result: ", result.data.accessToken)
-    //     console.log("email : ",result.data.email )
-    //     localStorage.setItem("jwt", result.data.accessToken);
-    //     store.commit("auth/setToken", result.data.accessToken);
-    //     store.commit("auth/setEmail", result.data.email);
-    //     store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
-    //     alert("로그인 성공");
-    //     emit("closeLoginDialog");
-    //     router.push({
-    //         path: "/"
-    //     })
-    //   }).catch(function(error){
-    //     console.log(error)
-    //   })
-    // }
-
-  // const goGoogle = function () {
-  //   location.href = "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google"
-  //   let googleCode = new URL(window.location.href).searchParams.get("code");
-  //   console.log(googleCode, '구글코드')
-  //   if(googleCode!=null){
-  //      store.dispatch("auth/requestGoogleToken", googleCode)
-  //     .then(function(result){
-  //       console.log("result: ", result.data.idToken)
-  //       console.log("email : ",result.data.email )
-  //       localStorage.setItem("jwt", result.data.idToken);
-  //       store.commit("auth/setToken", result.data.idToken);
-  //       store.commit("auth/setEmail", result.data.email);
-  //       store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
-  //       alert("로그인 성공");
-  //       // emit("closeLoginDialog");
-  //       router.push({
-  //         path: "/"
-  //       });
-  //     }).catch(function(error){
-  //       console.log(error)
-  //     })
-  //   }
-  // }
-
-  //구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
+  //구글 로그인 후 실행
+  //카카오 로그인 시, 해당 코드에도 접근해 문제 발생 >> 구글에서 받아온 토큰이 있어야만 다음 코드 실행되게끔 처리
     let googleCode = new URL(window.location.href).searchParams.get("code");
-    console.log(googleCode);
-    if(googleCode!=null){
-      console.log("여기안간거야?");
-       store.dispatch("auth/requestGoogleToken", googleCode)
+    if(googleCode != null){
+      console.log("구글로그인 시도");
+      store.dispatch("auth/requestGoogleToken", googleCode)
       .then(function(result){
         console.log(result)
-        console.log("result: ", result.data.idToken)
-        console.log("email : ",result.data.email )
-        localStorage.setItem("jwt", result.data.idToken);
-        store.commit("auth/setToken", result.data.idToken);
-        store.commit("auth/setEmail", result.data.email);
-        store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
-        alert("로그인 성공");
-        // emit("closeLoginDialog");s
+        if (result.data.idToken) {
+          console.log("구글 result: ", result.data.idToken)
+          console.log("구글 email : ",result.data.email )
+          localStorage.setItem("jwt", result.data.idToken);
+          store.commit("auth/setToken", result.data.idToken);
+          store.commit("auth/setEmail", result.data.email);
+          store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
+        }
         router.push({
           path: "/"
         });
