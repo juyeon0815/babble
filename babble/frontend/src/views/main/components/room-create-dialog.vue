@@ -76,12 +76,12 @@
           {{ tag }}
         </el-tag>
       </el-form-item>
-      <el-form-item prop="speak" label="참여자 말하기 기본값 설정">
+      <!-- <el-form-item prop="speak" label="참여자 말하기 기본값 설정">
         <el-radio-group v-model="state.form.speak">
           <el-radio label="true">누구나 말하기 허용</el-radio>
           <el-radio label="false">손 들기</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -127,7 +127,7 @@ export default {
         title: "",
         content: "",
         category: "",
-        speak: "",
+        // speak: "",
         inputValue: "",
         roomHashtags: [],
         count: computed(() => {
@@ -158,13 +158,6 @@ export default {
             }
           }
         ],
-        speak: [
-          {
-            required: true,
-            message: "필수 입력 항목입니다.",
-            trigger: "change"
-          }
-        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
@@ -233,7 +226,7 @@ export default {
           thumbnailUrl: "default",
           category: state.form.category,
           hashtag: joinHashtag,
-          speak: state.form.speak
+          // speak: state.form.speak
         };
         store.dispatch("root/requestRoomCreate", payload).then(res =>
           router.push({
@@ -272,7 +265,7 @@ export default {
               thumbnailUrl: data.Location,
               category: state.form.category,
               hashtag: joinHashtag,
-              speak: state.form.speak
+              // speak: state.form.speak
             };
             store.dispatch("root/requestRoomCreate", payload).then(res =>
               router.push({
@@ -293,14 +286,14 @@ export default {
           }
         );
       }
-      
+
     };
 
     const handleClose = function() {
       state.form.title = "";
       state.form.content = "";
       state.form.category = "";
-      state.form.speak = "";
+      // state.form.speak = "";
       state.form.roomHashtags = [];
       // document.getElementsByName("thumbnailUrl")[0].files[0]
       emit("closeRoomCreateDialog");
