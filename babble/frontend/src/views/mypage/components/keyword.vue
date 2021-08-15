@@ -69,7 +69,7 @@ export default {
       inputValue: "",
       provider: computed(() => {
         return store.getters["auth/getProvider"];
-      }),
+      })
     });
 
     store
@@ -82,26 +82,25 @@ export default {
         }
       });
 
-
-    if (state.provider == 'google' || state.provider == 'kakao') {
+    if (state.provider == "google" || state.provider == "kakao") {
       store
-        .dispatch("auth/requestSocialUserInfo", {email: state.email})
-        .then(function (result) {
-          console.log(result, '소셜 로그인 유저 정보 받아오기')
+        .dispatch("auth/requestSocialUserInfo", { email: state.email })
+        .then(function(result) {
+          console.log(result, "소셜 로그인 유저 정보 받아오기");
           store.commit("auth/setDefaultAlarm", result.data.alarm);
-        })
+        });
     } else {
-       store
+      store
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
         .then(function(result) {
           console.log(result.data.alarm);
-          store.commit("auth/setDefaultAlarm", result.data.alarm)
+          store.commit("auth/setDefaultAlarm", result.data.alarm);
         })
-        .catch(function (err) {
+        .catch(function(err) {
           if (err) {
-            console.log(err, '키워드에서 axios날리며 받은 캐치')
+            console.log(err, "키워드에서 axios날리며 받은 캐치");
           }
-        })
+        });
     }
 
     const handleClose = function(tag) {
@@ -165,9 +164,10 @@ export default {
   width: 370px;
   padding-bottom: 20px;
 }
-/* .tag {
-    padding-bottom: 20px;
-  } */
+.tag {
+  margin-right: 5px;
+  /* padding-bottom: 20px; */
+}
 .text {
   display: inline;
   padding-right: 20px;

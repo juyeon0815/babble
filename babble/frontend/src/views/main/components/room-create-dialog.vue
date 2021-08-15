@@ -35,10 +35,11 @@
           @change="handleFileUpload()"
         />
       </el-form-item>
+
       <el-form-item prop="category" label="카테고리">
         <select
-        v-model="state.form.category"
-        placeholder="카테고리 하나를 골라주세요!"
+          v-model="state.form.category"
+          placeholder="카테고리 하나를 골라주세요!"
         >
           <option label="sports" value="sports"></option>
           <option label="cooking" value="cooking"></option>
@@ -58,11 +59,14 @@
             placeholder="키워드를 입력해주세요(최대 5개)"
             ref="saveTagInput"
             v-model="state.form.inputValue"
-            @blur="handleInputConfirm"
+            @keyup.enter="handleInputConfirm"
             :disabled="state.form.count == 5"
           >
             <template #append>
-              <el-button icon="el-icon-plus"></el-button>
+              <el-button
+                icon="el-icon-plus"
+                @click="handleInputConfirm"
+              ></el-button>
             </template>
           </el-input>
         </div>
@@ -157,7 +161,7 @@ export default {
               }
             }
           }
-        ],
+        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
@@ -225,7 +229,7 @@ export default {
           content: state.form.content,
           thumbnailUrl: "default",
           category: state.form.category,
-          hashtag: joinHashtag,
+          hashtag: joinHashtag
           // speak: state.form.speak
         };
         store.dispatch("root/requestRoomCreate", payload).then(res =>
@@ -236,7 +240,7 @@ export default {
             }
           })
         );
-        store.commit('root/setIsHost', true)
+        store.commit("root/setIsHost", true);
         handleClose();
       } else {
         let upload = new AWS.S3.ManagedUpload({
@@ -264,7 +268,7 @@ export default {
               content: state.form.content,
               thumbnailUrl: data.Location,
               category: state.form.category,
-              hashtag: joinHashtag,
+              hashtag: joinHashtag
               // speak: state.form.speak
             };
             store.dispatch("root/requestRoomCreate", payload).then(res =>
@@ -275,7 +279,7 @@ export default {
                 }
               })
             );
-            store.commit('root/setIsHost', true)
+            store.commit("root/setIsHost", true);
             handleClose();
           },
           function(err) {
@@ -286,7 +290,6 @@ export default {
           }
         );
       }
-
     };
 
     const handleClose = function() {
