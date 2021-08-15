@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -23,17 +24,17 @@ public class RoomHistory extends BaseEntity {
     @JoinColumn(name = "roomId")
     Room room;
 
-    Date startTime;
-    Date endTime;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
 
-    public void createRoomHistory(Room room, User user, Date date){
+    public void createRoomHistory(Room room, User user, LocalDateTime date){
         this.room = room;
         this.user = user;
         this.startTime = date;
     }
 
     public void roomExit(){
-        Date date = new Date();
+        LocalDateTime date = LocalDateTime.now();
         this.endTime = date;
     }
 }
