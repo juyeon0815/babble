@@ -81,21 +81,43 @@ const router = createRouter({
   routes
 })
 
+function logout () {
+  store
+    .dispatch("auth/requestLogout")
+    .then(()=> store.commit("auth/setLogout"))
+    .then(()=>router.push("/"))
+}
+
 router.beforeEach(function (to, from, next) {
   // 마이페이지
   if (to.name == 'keyword' || to.name == 'history1' || to.name == 'history2' || to.name == 'user-info') {
     // 로그인 확인
-    let isAuthenticated = false
-    if (store.getters['auth/getToken'] != null) {
-      isAuthenticated = true
-    }
-    // 로그인 안됐으면 alert
-    if (!isAuthenticated) {
+    let provider = store.getters['auth/getProvider']
+    console.log(provider, 'provider 확인!!')
+
+    if (provider == '') {
       alert('로그인이 필요한 페이지입니다.')
-      router.go('-1')
+      router.push('/')
     }
+    if (provider == 'babble') {
+      console.log('일반 유저 토큰 유효여부 axios 검증')
+      store
+        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+        .then(function () {
+          console.log('문제없음');
+        })
+        .catch(function (err) {
+          if (err) {
+            console.log(err, '토큰이 풀려버림 로그아웃 처리')
+            alert('토큰이 풀렸습니다. 다시 로그인해주세요.')
+            logout()
+          }
+        })
+       } else if (provider == 'kakao' || provider == 'google') {
+         console.log('소셜로그인 유저입니다')
+       }
   }
-  
+
   // 카테고리 페이지
   if (categories_list.indexOf(to.name) >= 0) {
     store.commit('menu/setActiveCategory', to.name)

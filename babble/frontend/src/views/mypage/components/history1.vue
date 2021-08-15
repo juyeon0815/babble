@@ -32,7 +32,7 @@
       <el-table-column prop="viewDateFix" label="날짜" sortable>
       </el-table-column>
       <el-table-column prop="viewStartFix" label="시청 시작"> </el-table-column>
-      <el-table-column prop="viewEndFix" label="시청 끝"> </el-table-column>
+      <el-table-column prop="viewEndFix" label="시청 종료"> </el-table-column>
       <el-table-column prop="maxView" label="최대시청자수"> </el-table-column>
     </el-table>
   </div>

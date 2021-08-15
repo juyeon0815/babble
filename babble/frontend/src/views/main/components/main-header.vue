@@ -300,6 +300,9 @@ export default {
       }),
       token: computed(() => {
         return store.getters["auth/getToken"];
+      }),
+      email: computed(() => {
+        return store.getters["auth/getEmail"]
       })
     });
 
@@ -349,20 +352,12 @@ export default {
     const clickLogout = function() {
       console.log("clickLogout");
       console.log(state.provider)
-      if(state.provider === "kakao"){
+      if (state.provider === "kakao") {
         store.dispatch("auth/requestKakaoLogout", state.token)
         .then(()=> store.commit("auth/setLogout"))
         .then(()=>router.push("/"));
       }
-      // else if(state.provider==="google"){
-      //   console.log("구글로그아웃");
-      //   document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
-
-      //   store.dispatch("auth/requestLogout")
-      //   .then(()=> store.commit("auth/setLogout"))
-      //   .then(()=>router.push("/"));
-      // }
-      else{
+      else {
         store
         .dispatch("auth/requestLogout")
         .then(()=> store.commit("auth/setLogout"))
@@ -394,17 +389,27 @@ export default {
     );
 
     const loadProfile = function() {
-      store
-        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+      if (state.provider == 'google' || state.provider == 'kakao') {
+         store
+        .dispatch("auth/requestSocialUserInfo", {email: state.email})
         .then(function (result) {
+          console.log(result, '소셜 로그인 유저 정보 받아오기')
           store.commit("auth/setUserProfile", result.data.picture);
         })
-        .catch(function (err) {
-          if (err) {
-            console.log(err, '헤더에서 프로필로드하며 에러캐치')
-            // clickLogout()
-          }
-        })
+      } else {
+        store
+          .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+          .then(function (result) {
+            store.commit("auth/setUserProfile", result.data.picture);
+          })
+          .catch(function (err) {
+            if (err) {
+              console.log(err, '헤더에서 프로필로드하며 에러캐치')
+              // clickLogout()
+            }
+          })
+      }
+
     };
 
     return {
