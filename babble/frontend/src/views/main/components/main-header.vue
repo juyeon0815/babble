@@ -3,9 +3,6 @@
     <div class="navbar-logo">
       <h2 @click="clickLogo">Ba<mark class="purple">:b</mark>ble</h2>
     </div>
-    <div @click="alertTest1">alert tset1</div>
-    <div @click="alertTest2">alert tset2</div>
-    <div @click="alertTest3">alert tset3</div>
     <div class="navbar-search">
       <el-input
         prefix-icon="el-icon-search"
@@ -279,7 +276,6 @@
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { reactive, computed, watch, onMounted } from "vue";
-import swal from 'sweetalert';
 
 export default {
   name: "main-header",
@@ -317,30 +313,6 @@ export default {
     //     store.commit("auth/setUserProfile", result.data.picture);
     //   });
 
-    const alertTest1 = function(){
-      swal("alert창꾸미는중");
-    }
-    const alertTest2 = function(){
-      swal(" 인증번호 전송!", "히힛!", "success");
-    }
-    const alertTest3 = function(){
-      swal({
-      title: "정말로 삭제하시겠습니까?",
-      text: "정말루?ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((willDelete) => {
-      if (willDelete) {
-        swal("다음에 또만나 ㅜㅜㅜㅜ", {
-          icon: "success",
-        });
-      } else {
-        swal("취소!");
-      }
-});
-    }
 
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
@@ -393,18 +365,7 @@ export default {
         .then(()=> store.commit("auth/setLogout"))
         .then(()=>router.push("/"));
       }
-<<<<<<< HEAD
-      else if(state.provider==="google"){
-        console.log("구글로그아웃");
-        // document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8080";
-        store.dispatch("auth/requestLogout")
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
-      }
-      else{
-=======
       else {
->>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
         store
         .dispatch("auth/requestLogout")
         .then(()=> store.commit("auth/setLogout"))
@@ -471,9 +432,6 @@ export default {
       enterSearch,
       clickToggle,
       loadProfile,
-      alertTest1,
-      alertTest2,
-      alertTest3
     };
   }
 };

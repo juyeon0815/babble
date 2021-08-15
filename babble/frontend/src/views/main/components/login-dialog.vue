@@ -25,7 +25,6 @@
         ></el-input>
       </el-form-item>
     </el-form>
-<<<<<<< HEAD
     <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
     <el-button type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
     <div><el-link href="#" target="_blank">비밀번호 찾기</el-link></div>
@@ -37,20 +36,11 @@
     <el-row :gutter="20">
     <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
     <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
-=======
-   <a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
->>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
     <img
       :src="require('@/assets/images/kakaolink_btn_medium.png')"
     />
-<<<<<<< HEAD
   </a></div></el-col>
     <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
-=======
-  </a>
-    <br>
-   <a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
->>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
     <img
       :src="require('@/assets/images/free-icon-google-plus.png')"
     />
@@ -110,7 +100,6 @@
 import { reactive, computed, ref, watch} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import swal from 'sweetalert';
 
 
 export default {
@@ -185,12 +174,8 @@ export default {
               console.log("이메일과 토큰 store에 저장");
               store.commit("auth/setEmail", state.form.email);
               store.commit("auth/setToken", result.data.accessToken);
-<<<<<<< HEAD
-              store.commit("auth/setProvider","babble"); // 로그아웃할때 방식 다 달라서 구분용
-=======
               store.commit("auth/setProvider", "babble");
               alert("로그인 성공");
->>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
               emit("closeLoginDialog");
             })
             .catch(function(err) {

@@ -70,17 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // 요청에 대한 사용권한 체크 (url별 권한 관리를 설정하는 옵션의 시작점)
 //                antMathcers : 권한 관리 대상을 지정하는 옵션으로 url/http 메소드별로 관리가 가능
                 .antMatchers("/api/v1/users/me").authenticated()   // api/v1/uesrs/me 요청은 인증되어야함
-<<<<<<< HEAD
 //                .antMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
 //                .antMatchers(HttpMethod.PATCH,"/api/v1/users/**").authenticated() // 회원 정보 수정
 //                .antMatchers(HttpMethod.DELETE,"/api/v1/users/**").authenticated() // 회원 탈퇴
 //                .antMatchers("/api/v1/room/create").authenticated() // 방 생성
-=======
-                //.antMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
-//                .antMatchers(HttpMethod.PATCH,"/api/v1/users/**").authenticated() // 회원 정보 수정
-//                .antMatchers(HttpMethod.DELETE,"/api/v1/users/**").authenticated() // 회원 탈퇴
-                //.antMatchers("/api/v1/room/create").authenticated() // 방 생성
->>>>>>> 343db210dd4e2a93d1cc035fa0df5e7f2c0678f3
                 .antMatchers("/ws/pub/**").authenticated()
                 .anyRequest().permitAll() // 그 외 나머지 요청은 누구나 접근 가능
                 .and().cors();
