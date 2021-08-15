@@ -24,7 +24,7 @@ public class GoogleService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com"); //수정 할것
-            sb.append("&redirect_uri=http://localhost:8083/auth/google/callback"); //수정 할것
+            sb.append("&redirect_uri=https://i5a308.p.ssafy.io:8443/login/oauth2/code/google"); //수정 할것
             sb.append("&client_secret=kjfp2GRnn0NAmjEwdrG6oo6m"); //수정 할것
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());

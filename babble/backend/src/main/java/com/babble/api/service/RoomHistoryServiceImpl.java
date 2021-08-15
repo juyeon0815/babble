@@ -10,6 +10,7 @@ import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class RoomHistoryServiceImpl implements RoomHistoryService {
 
     @Override
     public RoomHistory createRoomHistory(User user, Room room) {
-        Date date = new Date();
+        LocalDateTime date = LocalDateTime.now();
         RoomHistory history = roomHistoryRepositorySupport.findRoomHistoryByUserEmail(user, room);
         System.out.println(history);
         if(history!=null){

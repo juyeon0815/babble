@@ -33,7 +33,7 @@ public class KakaoService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=b571e5a822cacd3d5f0fdec309364338"); //수정 할것
-            sb.append("&redirect_uri=http://localhost:8083/oauth/callback/kakao"); //수정 할것
+            sb.append("&redirect_uri=https://i5a308.p.ssafy.io:8443/oauth/callback/kakao"); //수정 할것
             sb.append("&client_secret=EbRMgQpvBg7CuKhOtJYsri2Xvln0lRbn"); //수정 할것
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
