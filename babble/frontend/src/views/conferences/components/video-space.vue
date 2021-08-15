@@ -30,7 +30,7 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-            <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -59,7 +59,7 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-            <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -111,7 +111,7 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-            <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -867,5 +867,11 @@ export default {
 .nologin-video {
   padding-top: 50px;
   text-align: center;
+}
+
+.nologin-profile {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 </style>
