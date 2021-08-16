@@ -28,8 +28,10 @@
         <el-input v-model="state.form.content" autocomplete="off"></el-input>
       </el-form-item>
 
-      <el-form-item label="방 썸네일 업데이트"
-      :label-width="state.formLabelWidth">
+      <el-form-item
+        label="방 썸네일 업데이트"
+        :label-width="state.formLabelWidth"
+      >
         <input
           type="file"
           ref="fileInput"
@@ -38,12 +40,12 @@
           @change="handleFileUpload()"
         />
       </el-form-item>
-        <el-form-item prop="category" label="카테고리"
-        :label-width="state.formLabelWidth">
-        <select
-        v-model="state.form.category"
-        class="select-box"
-        >
+      <el-form-item
+        prop="category"
+        label="카테고리"
+        :label-width="state.formLabelWidth"
+      >
+        <select v-model="state.form.category" class="select-box">
           <option value="" disabled selected hidden>카테고리</option>
           <option label="sports" value="sports"></option>
           <option label="cooking" value="cooking"></option>
@@ -56,9 +58,12 @@
           <option label="book" value="book"></option>
           <option label="pet" value="pet"></option>
         </select>
-
       </el-form-item>
-      <el-form-item prop="hashtag" label="해시태그" :label-width="state.formLabelWidth">
+      <el-form-item
+        prop="hashtag"
+        label="해시태그"
+        :label-width="state.formLabelWidth"
+      >
         <div class="inputGroup">
           <el-input
             placeholder="키워드를 입력해주세요(최대 5개)"
@@ -66,9 +71,13 @@
             v-model="state.form.inputValue"
             @keydown.enter="handleInputConfirm"
             :disabled="state.form.count == 5"
-            maxlength="15">
+            maxlength="15"
+          >
             <template #append>
-              <el-button icon="el-icon-plus" @click="handleInputConfirm"></el-button>
+              <el-button
+                icon="el-icon-plus"
+                @click="handleInputConfirm"
+              ></el-button>
             </template>
           </el-input>
         </div>
@@ -158,7 +167,7 @@ export default {
               }
             }
           }
-        ],
+        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
@@ -226,7 +235,7 @@ export default {
           content: state.form.content,
           thumbnailUrl: "default",
           category: state.form.category,
-          hashtag: joinHashtag,
+          hashtag: joinHashtag
         };
         store.dispatch("root/requestRoomCreate", payload).then(res =>
           router.push({
@@ -236,7 +245,7 @@ export default {
             }
           })
         );
-        store.commit('root/setIsHost', true)
+        store.commit("root/setIsHost", true);
         handleClose();
       } else {
         let upload = new AWS.S3.ManagedUpload({
@@ -264,7 +273,7 @@ export default {
               content: state.form.content,
               thumbnailUrl: data.Location,
               category: state.form.category,
-              hashtag: joinHashtag,
+              hashtag: joinHashtag
             };
             store.dispatch("root/requestRoomCreate", payload).then(res =>
               router.push({
@@ -274,7 +283,7 @@ export default {
                 }
               })
             );
-            store.commit('root/setIsHost', true)
+            store.commit("root/setIsHost", true);
             handleClose();
           },
           function(err) {
@@ -285,7 +294,6 @@ export default {
           }
         );
       }
-
     };
 
     const handleClose = function() {
@@ -293,7 +301,7 @@ export default {
       state.form.content = "";
       state.form.category = "";
       state.form.roomHashtags = [];
-      thumbnailUrl.value=null;
+      thumbnailUrl.value = null;
       emit("closeRoomCreateDialog");
     };
 
@@ -314,24 +322,24 @@ export default {
 </script>
 
 <style>
-  .select-box {
-    width: 100px;
-    padding: 5px;
-    border: 1px solid #999;
-    border-radius: 3px;
-  }
-  .create-btn {
-    background-color: #a8a0ff;
-    width: 100%;
-  }
+.select-box {
+  width: 100px;
+  padding: 5px;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+.create-btn {
+  background-color: #a8a0ff;
+  width: 100%;
+}
 
+.el-dialog {
+  width: 30% !important;
+}
+
+@media screen and (max-width: 480px) {
   .el-dialog {
-    width: 30% !important;
+    width: 80% !important;
   }
-
-  @media screen and (max-width: 480px) {
-    .el-dialog {
-      width: 80% !important;
-    }
-  }
+}
 </style>

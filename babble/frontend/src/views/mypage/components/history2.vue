@@ -1,50 +1,57 @@
 <template>
-  <div class="history-tab">
+  <div class="tab">
     <h3>{{ state.email }}님의 방 생성이력</h3>
     <!-- <div>{{state.historyData}}</div> -->
     <!--[{ "title": "test1", "viewDate": "2021-07-26T12:40:12.409+00:00",}]-->
     <!-- <el-button @click="clearFilter">reset all filters</el-button> -->
-    <el-table
-      :data="state.historyData"
-      row-key="category"
-      class="table"
-      ref="filterTable"
-      :default-sort="{ prop: 'createDate', order: 'descending' }"
-      empty-text="No Data"
-    >
-      <el-table-column prop="title" label="방 제목"> </el-table-column>
-      <el-table-column
-        prop="category"
-        label="카테고리"
-        :filters="[
-          { text: 'sports', value: 'sports' },
-          { text: 'cooking', value: 'cooking' },
-          { text: 'handcraft', value: 'handcraft' },
-          { text: 'music', value: 'music' },
-          { text: 'finance', value: 'finance' },
-          { text: 'game', value: 'game' },
-          { text: 'movie', value: 'movie' },
-          { text: 'drawing', value: 'drawing' },
-          { text: 'book', value: 'book' },
-          { text: 'pet', value: 'pet' }
-        ]"
-        :filter-method="filterCategory"
-        filter-placement="right-start"
+    <div class="chart">
+      <el-table
+        :data="state.historyData"
+        row-key="category"
+        class="table"
+        ref="filterTable"
+        :default-sort="{ prop: 'createDate', order: 'descending' }"
+        empty-text="No Data"
       >
-      </el-table-column>
-      <el-table-column prop="createDate" label="생성 날짜" sortable>
-      </el-table-column>
-      <el-table-column prop="createTime" label="생성 시간"> </el-table-column>
-      <el-table-column prop="maxView" label="최대시청자수"> </el-table-column>
-    </el-table>
+        <el-table-column prop="title" label="방 제목"> </el-table-column>
+        <el-table-column
+          prop="category"
+          label="카테고리"
+          :filters="[
+            { text: 'sports', value: 'sports' },
+            { text: 'cooking', value: 'cooking' },
+            { text: 'handcraft', value: 'handcraft' },
+            { text: 'music', value: 'music' },
+            { text: 'finance', value: 'finance' },
+            { text: 'game', value: 'game' },
+            { text: 'movie', value: 'movie' },
+            { text: 'drawing', value: 'drawing' },
+            { text: 'book', value: 'book' },
+            { text: 'pet', value: 'pet' }
+          ]"
+          :filter-method="filterCategory"
+          filter-placement="right-start"
+        >
+        </el-table-column>
+        <el-table-column prop="createDate" label="생성 날짜" sortable>
+        </el-table-column>
+        <el-table-column prop="createTime" label="생성 시간"> </el-table-column>
+        <el-table-column prop="maxView" label="최대시청자수"> </el-table-column>
+      </el-table>
+      <Chart :chartData="state.historyData"></Chart>
+    </div>
   </div>
 </template>
 
 <script>
-import { reactive, computed, onMounted, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useStore } from "vuex";
+import Chart from "./chart.vue";
 
 export default {
+  components: {
+    Chart
+  },
   name: "History2",
   setup(props, { emit }) {
     const store = useStore();
@@ -96,11 +103,28 @@ export default {
 };
 </script>
 
-<style>
-.history-tab {
+<style scoped>
+.tab {
   margin-left: 60px;
 }
+.chart {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .table {
-  width: 90%;
+  width: 60%;
+}
+@media screen and (max-width: 480px) {
+  .tab {
+  }
+  .chart {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .table {
+    width: 100%;
+  }
 }
 </style>
