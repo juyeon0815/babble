@@ -10,6 +10,7 @@ import UserInfo from '@/views/mypage/components/user-info'
 import CategoryResult from '@/views/categories/components/category-result'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 import SearchResult from '@/views/search/search-result'
+import AboutUs from '@/views/home/about-us'
 import ErrorPage from '@/views/error/error-page'
 
 const fullMenu = require('@/views/main/menu.json')
@@ -55,13 +56,15 @@ function makeRoutesFromMenu() {
           path: 'user-info',
           component: UserInfo
         },
-
       ]}
     } else if (key === 'search-result') {
       store.commit('menu/setMenuActive', 3)
       return { path: fullMenu[key].path, name: key, component: SearchResult}
-    }
-    else { // menu.json 에 들어있는 로그아웃 메뉴
+    } else if (key === 'about-us') {
+      store.commit('menu/setMenuActive', 4)
+      return { path: fullMenu[key].path, name: key, component: AboutUs  }
+
+    } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }
   })
