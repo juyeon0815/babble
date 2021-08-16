@@ -4,7 +4,7 @@
     v-model="state.dialogVisible"
     @close="handleClose"
     width="30%"
-  >
+    >
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -61,7 +61,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickJoin" :disabled="!state.isVal"
+        <el-button type="primary" round @click="clickJoin" :disabled="!state.isVal"
           >회원가입</el-button
         >
       </span>
@@ -92,6 +92,7 @@ export default {
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
 
     const state = reactive({
+      temp: '30%',
       form: {
         email: "",
         emailConfirm: "",
@@ -203,18 +204,27 @@ export default {
         .dispatch("auth/requestCheckEmail", state.form.email)
         .then(function(result) {
           if (result.status == 200) {
-            alert("사용가능한 이메일입니다.");
+            swal({
+              text: "사용가능한 이메일입니다!",
+              icon: "success",
+            });
             state.isOnlyEmail = true;
           }
         })
         .catch(function(err) {
-          alert("이미존재하는 이메일입니다.");
+          swal({
+            text: "이미존재하는 이메일입니다.",
+            icon: "warning",
+          });
           state.isOnlyEmail = false;
         });
     };
 
     const checkConfirm = function() {
-      alert("인증번호가 해당 메일로 전송되었습니다.");
+      swal({
+        text: "인증번호가 해당 메일로 전송되었습니다.",
+        icon: "info",
+      });
       store
         .dispatch("auth/requestEmailConfirm", state.form.email)
         .then(function(result) {
@@ -235,14 +245,20 @@ export default {
               password: state.form.password
             })
             .then(function(result) {
-              alert("회원가입이 완료되었습니다.");
+              swal({
+                text: "회원가입이 완료되었습니다.\n Ba:bble에 오신 것을 환영합니다!",
+                icon: "success",
+              });
               emit("closeJoinDialog");
             })
             .catch(function(err) {
               alert(err);
             });
         } else {
-          alert("회원가입에 실패하였습니다.");
+          swal({
+            text: "회원가입에 실패하였습니다.",
+            icon: "warning",
+          });
         }
       });
     };

@@ -42,8 +42,9 @@
         :label-width="state.formLabelWidth">
         <select
         v-model="state.form.category"
-        placeholder="카테고리 하나를 골라주세요!"
+        class="select-box"
         >
+          <option value="" disabled selected hidden>카테고리</option>
           <option label="sports" value="sports"></option>
           <option label="cooking" value="cooking"></option>
           <option label="handcraft" value="handcraft"></option>
@@ -63,10 +64,11 @@
             placeholder="키워드를 입력해주세요(최대 5개)"
             ref="saveTagInput"
             v-model="state.form.inputValue"
-            @blur="handleInputConfirm"
-            :disabled="state.form.count == 5">
+            @keydown.enter="handleInputConfirm"
+            :disabled="state.form.count == 5"
+            maxlength="15">
             <template #append>
-              <el-button icon="el-icon-plus"></el-button>
+              <el-button icon="el-icon-plus" @click="handleInputConfirm"></el-button>
             </template>
           </el-input>
         </div>
@@ -85,6 +87,8 @@
       <span class="dialog-footer">
         <el-button
           type="primary"
+          round
+          class="create-btn"
           @click="clickRoomCreate"
           :disabled="!state.isVal"
           >방 생성하기</el-button
@@ -309,10 +313,25 @@ export default {
 };
 </script>
 
-<style scoped>
-  .el-button.el-button--primary.is-disabled{
+<style>
+  .select-box {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #999;
+    border-radius: 3px;
+  }
+  .create-btn {
     background-color: #a8a0ff;
     width: 100%;
-    border-color: #a0cfff00;
+  }
+
+  .el-dialog {
+    width: 30% !important;
+  }
+
+  @media screen and (max-width: 480px) {
+    .el-dialog {
+      width: 80% !important;
+    }
   }
 </style>

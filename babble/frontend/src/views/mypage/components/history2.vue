@@ -1,5 +1,5 @@
 <template>
-  <div class="tab">
+  <div class="history-tab">
     <h3>{{ state.email }}님의 방 생성이력</h3>
     <!-- <div>{{state.historyData}}</div> -->
     <!--[{ "title": "test1", "viewDate": "2021-07-26T12:40:12.409+00:00",}]-->
@@ -97,7 +97,7 @@ export default {
 </script>
 
 <style>
-.tab {
+.history-tab {
   margin-left: 60px;
 }
 .table {

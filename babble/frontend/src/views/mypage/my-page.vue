@@ -54,7 +54,7 @@ export default {
     min-height: 80vh;
   }
 
-  .tab {
+  .mypage-container .tab {
     margin-top: 40px;
   }
 
@@ -63,11 +63,19 @@ export default {
   }
 
   .el-tabs__item.is-active{
-    color: #8860D8;
+    color: #341a63;
   }
 
   .el-tabs__item:hover {
-    color: #8860D8;
+    color: #341a63;
+  }
+
+  @media screen and (max-width: 480px) {
+    .mypage-container .tab {
+      margin-left: 5%;
+      width: 90%;
+    }
+
   }
 
 </style>

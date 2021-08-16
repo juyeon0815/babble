@@ -1,5 +1,5 @@
 <template>
-  <div class="tab">
+  <div class="keyword-box">
     <div class="title">
       <h3>{{ state.email }}님의 키워드</h3>
     </div>
@@ -8,25 +8,28 @@
         placeholder="관심있는 키워드를 입력해주세요(최대 5개)"
         ref="saveTagInput"
         v-model="state.inputValue"
-        @blur="handleInputConfirm"
+        @keyup.enter="handleInputConfirm"
         :disabled="state.count == 5"
         class="input"
+        maxlength="15"
       >
         <template #append>
-          <el-button icon="el-icon-plus"></el-button>
+          <el-button icon="el-icon-plus" @click="handleInputConfirm"></el-button>
         </template>
       </el-input>
     </div>
-    <el-tag
-      :key="tag"
-      v-for="tag in state.userHashtags"
-      closable
-      :disable-transitions="false"
-      @close="handleClose(tag)"
-      class="tag"
-    >
-      {{ tag }}
-    </el-tag>
+    <div class="tag-group">
+      <el-tag
+        :key="tag"
+        v-for="tag in state.userHashtags"
+        closable
+        :disable-transitions="false"
+        @close="handleClose(tag)"
+        class="tag"
+      >
+        {{ tag }}
+      </el-tag>
+    </div>
     <div class="alarm">
       <h5 class="keyword-text">해당 키워드로 알림을 받아보시겠습니까?</h5>
       <el-switch
@@ -34,8 +37,21 @@
         active-text="On"
         inactive-text="Off"
         @change="clickAlarm"
+        class="alarm-switch"
       ></el-switch>
     </div>
+  </div>
+  <div class="keyword-circle">
+    <el-popover
+      placement="top-start"
+      title="Let's Ba:bble"
+      trigger="hover"
+      content="당신을 위한 오늘의 추천 키워드는 싸피입니다!"
+       >
+      <template #reference>
+        <img class="keyword-profile" :src="require('@/assets/images/default_profile.png')" />
+      </template>
+    </el-popover>
   </div>
 </template>
 
@@ -121,7 +137,10 @@ export default {
 
     const handleInputConfirm = function() {
       if (state.inputValue == "") {
-        alert("빈 키워드는 입력되지 않아요!");
+        swal({
+          text: "빈 키워드는 입력되지 않아요!",
+          icon: "warning",
+        });
       } else {
         store.commit("auth/setUserHashtagPush", state.inputValue);
         store
@@ -151,32 +170,140 @@ export default {
 </script>
 
 <style>
-.tab {
-  margin-left: 60px;
-}
-.title {
-  display: block;
-  padding-bottom: 10px;
-}
-.inputGroup {
-  display: block;
-}
-.input {
-  width: 370px;
-  padding-bottom: 20px;
-}
-/* .tag {
-    padding-bottom: 20px;
-  } */
-.text {
-  display: inline;
-  padding-right: 20px;
+.keyword-box {
+  width: 40vw;
+  margin-top: 8%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.alarm {
-  margin-top: 50px;
+.keyword-box .title {
+  display: block;
+  padding-bottom: 3%;
 }
-.alarm .keyword-text {
+
+.keyword-box .inputGroup {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.keyword-box .inputGroup .input {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 4%;
+}
+
+.keyword-box .tag-group {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+.keyword-box .tag-group .tag {
+  height: 5vh;
+  margin-right: 1%;
+  background-image: linear-gradient(130deg, #9f05ff69 20%, #4a63cfc2 100%);
+  color: white;
+  line-height: 35px;
+}
+
+.el-tag .el-tag__close {
+  color: white;
+}
+
+.keyword-box .alarm {
+  width: 80%;
+  margin-top: 6%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.keyword-box .alarm .keyword-text {
+  display: inline;
+  padding-right: 3%;
   color: black;
+}
+
+.keyword-box .alarm .alarm-switch {
+  display: inline;
+  margin-bottom: 1%;
+  color: purple;
+}
+
+.el-switch.is-checked .el-switch__core {
+  background-color: rgba(113, 28, 250, 0.671);
+  border-color: rgba(113, 28, 250, 0.671);
+}
+
+.el-switch__label.is-active {
+  color: rgba(161, 28, 250, 0.692);
+}
+
+@keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.keyword-circle {
+  margin-left: 3%;
+  border-radius: 50%;
+}
+
+.keyword-profile {
+  /* position: absolute; */
+  position: fixed;
+  bottom: 3%;
+  width: 15%;
+  height: 25%;
+
+  object-fit: cover;
+  animation: rotate 3s infinite
+}
+
+@media screen and (max-width: 480px) {
+  .keyword-box {
+    width: 80vw;
+  }
+
+  .keyword-box .inputGroup .input {
+    width: 90%;
+    font-size: 11px;
+  }
+
+  .keyword-box .tag-group {
+    margin-top: 5%;
+  }
+
+  .keyword-box .alarm {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .keyword-profile {
+    position: fixed;
+    bottom: 3%;
+    width: 30%;
+    height: 20%;
+    border-radius: 30%;
+    object-fit: cover;
+    animation: rotate 3s infinite
+  }
+
 }
 </style>

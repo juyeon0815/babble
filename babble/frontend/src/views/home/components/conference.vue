@@ -30,20 +30,31 @@
         </div>
 
         <div v-if="roomInfo.hashtag">
-          <!-- 해쉬태그 0개 -->
+          <!-- 해쉬태그 없는 경우 -->
           <div v-if="roomInfo.hashtag[0] == ''">
             <el-tag style="visibility: hidden"></el-tag>
           </div>
+          <!-- 해쉬태그 있는 경우 -->
+          <div v-else class="h-scroll">
+            <el-tag
+              type="warning"
+              class="h-tag"
+              v-for="i in roomInfo.hashtag.length" :key="i"
+              @click.stop="clickHashtag(roomInfo.hashtag[0])">{{ roomInfo.hashtag[0] }}
+            </el-tag>
+          </div>
+
+          
           <!-- 해쉬태그 1개 -->
-          <div v-else-if="roomInfo.hashtag.length == 1">
+          <!-- <div v-else-if="roomInfo.hashtag.length == 1">
             <el-tag
               type="warning"
               @click.stop="clickHashtag(roomInfo.hashtag[0])"
               >{{ roomInfo.hashtag[0] }}</el-tag
             >
-          </div>
+          </div> -->
           <!-- 해쉬태그 2개 이상 -->
-          <div v-else>
+          <!-- <div v-else>
             <el-tag
               type="warning"
               @click.stop="clickHashtag(roomInfo.hashtag[0])"
@@ -65,7 +76,7 @@
                 >
               </div>
             </el-popover>
-          </div>
+          </div> -->
         </div>
 
         <div class="viewers">
@@ -142,6 +153,28 @@ export default {
 </script>
 
 <style>
+.h-scroll {
+  overflow: auto;
+  white-space: nowrap;
+}
+.h-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.h-scroll::-webkit-scrollbar-thumb {
+  background-color: lightgrey;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 6px solid transparent;
+  visibility: visible;
+}
+.chatlog::-webkit-scrollbar-thumb:hover {
+  visibility: visible;
+}
+
+.h-scroll .h-tag {
+  display: inline-block;
+}
+
 .card-top {
   height: 60%;
 }
