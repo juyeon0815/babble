@@ -309,6 +309,14 @@ export default {
       })
     });
 
+    // store
+    //   .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
+    //   .then(function(result) {
+    //     // console.log(result.data.picture)
+    //     store.commit("auth/setUserProfile", result.data.picture);
+    //   });
+
+
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
       store.commit("menu/setMenuActive", 0);
@@ -342,13 +350,13 @@ export default {
     };
 
     const clickMyPage = function() {
-      let nowIndex = store.getters["menu/getActiveMenuIndex"];
-      if (nowIndex != 2) {
-        store.commit("menu/setMenuActive", 2);
-        router.push({
-          path: "/mypage/keyword"
-        });
-      }
+      let nowIndex = store.getters["root/getActiveMenuIndex"];
+        if (nowIndex != 2) {
+          store.commit("root/setMenuActive", 2);
+          router.push({
+            path: "/mypage/keyword"
+          });
+        }
     };
 
     //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
@@ -424,7 +432,7 @@ export default {
       clickLogout,
       enterSearch,
       clickToggle,
-      loadProfile
+      loadProfile,
     };
   }
 };

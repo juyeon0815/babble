@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="로그인" v-model="state.dialogVisible" @close="handleClose">
+ <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="23%">
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -8,14 +8,12 @@
       @change="isValid"
     >
       <el-form-item
-        prop="email"
         label="이메일"
         :label-width="state.formLabelWidth"
       >
-        <el-input v-model="state.form.email" autocomplete="off"></el-input>
+        <el-input v-model="state.form.email" autocomplete="off"  ></el-input>
       </el-form-item>
       <el-form-item
-        prop="password"
         label="비밀번호"
         :label-width="state.formLabelWidth"
       >
@@ -23,36 +21,86 @@
           v-model="state.form.password"
           autocomplete="off"
           show-password
+          @keyup.enter="clickLogin"
         ></el-input>
       </el-form-item>
     </el-form>
-   <a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
-    <img
-      :src="require('@/assets/images/btn_google_signin_dark_pressed_web.png')"
-      width="222"
-    />
-  </a>
-    <br>
-   <a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
-    <img
-      src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
-      width="222"
-    />
-  </a>
+    <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
+    <el-button type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
+    <div><el-link href="#" target="_blank">비밀번호 찾기</el-link></div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin" :disabled="!state.isVal"
-          >로그인</el-button
-        >
+        <el-divider></el-divider>
+        <div class="socialLogin">SNS 계정으로 로그인하기</div>
+
+    <el-row :gutter="20">
+    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+    <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
+    <img
+      :src="require('@/assets/images/kakaolink_btn_medium.png')"
+    />
+  </a></div></el-col>
+    <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
+    <img
+      :src="require('@/assets/images/free-icon-google-plus.png')"
+    />
+  </a></div></el-col>
+    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+  </el-row>
+
+
       </span>
     </template>
   </el-dialog>
 </template>
 
+<style>
+  .el-dialog__header {
+    /* background-color: #9370db3b; */
+    text-align: center;
+    }
+  .el-dialog__body {
+    /* background-color: #9370db3b; */
+    padding: 30px;
+    padding-top: 10px;
+    }
+  .el-button.el-button--primary.is-disabled.is-round {
+    background-color: #a8a0ff;
+    border-color: #a0cfff00;
+    width: 100%;
+    }
+  .el-link.el-link--default.is-underline{
+    float: right;
+    margin-top: 10px;
+  }
+  .el-dialog__footer {
+    /* background-color: #9370db3b; */
+    text-align: center;
+    }
+  div.socialLogin{
+    text-align: center;
+    font-size: 14px;
+    color: gray;
+    padding-bottom: 10px;
+  }
+  img{
+    width: -webkit-fill-available;
+    border-radius: 50%;
+  }
+  #msg{
+    color:red;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+</style>
+
+
 <script>
 import { reactive, computed, ref, watch} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+
 
 export default {
   name: "login-dialog",
@@ -74,6 +122,7 @@ export default {
     // Element UI Validators
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
     const state = reactive({
+      isCheck:false,
       form: {
         email: "",
         password: "",
@@ -89,7 +138,7 @@ export default {
       },
       isVal: false,
       dialogVisible: computed(() => props.open),
-      formLabelWidth: "120px",
+      formLabelWidth: "25%",
       setEmail: computed(() => {
         return store.getters["auth/getEmail"];
       }),
@@ -133,7 +182,8 @@ export default {
               console.log(err);
               state.form.email = "";
               state.form.password = "";
-              alert(err);
+              state.isCheck = true;
+              // alert(err);
             });
         } else {
           alert("Validate error!");
@@ -144,6 +194,7 @@ export default {
     const handleClose = function() {
       state.form.email = "";
       state.form.password = "";
+      state.isCheck=false;
       emit("closeLoginDialog");
     };
 
@@ -198,4 +249,3 @@ export default {
 };
 </script>
 
-<style></style>

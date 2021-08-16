@@ -61,7 +61,7 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) throws Exception {
-        //방 생성 시 email, title, content, thumbnail_url, category, hashtag, speak 정보 넘어옴
+        //방 생성 시 email, title, content, thumbnail_url, category, hashtag, 정보 넘어옴
 
         //category 테이블에서 category_name과 일치한 id 가져와 저장
         Category category = categoryService.getCategoryByCategoryName(roomCreateReq.getCategory());

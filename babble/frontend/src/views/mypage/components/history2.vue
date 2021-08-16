@@ -38,13 +38,18 @@
       <el-table-column prop="maxView" label="최대시청자수"> </el-table-column>
     </el-table>
   </div>
+  <Chart :chartData="state.historyData"></Chart>
 </template>
 
 <script>
 import { reactive, computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
+import Chart from "./chart.vue";
 
 export default {
+  components: {
+    Chart
+  },
   name: "History2",
   setup(props, { emit }) {
     const store = useStore();

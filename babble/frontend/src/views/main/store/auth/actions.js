@@ -54,8 +54,9 @@ export function requestUserInfo ({ state }, payload) {
   return $axios.get(url, {
     headers: {
         Authorization: `Bearer ${payload}`,
-        provider: state.provider
-    }
+        provider : state.provider
+    },
+
   })
 }
 

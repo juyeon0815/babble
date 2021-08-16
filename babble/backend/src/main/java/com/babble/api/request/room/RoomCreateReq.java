@@ -31,7 +31,6 @@ public class RoomCreateReq {
     String category;
     @ApiModelProperty(name="hashtag", example="room_hashtag")
     String hashtag;
-    @ApiModelProperty(name="room speakOption", example="room_speakOption")
-    boolean speak;
+
 
 }
