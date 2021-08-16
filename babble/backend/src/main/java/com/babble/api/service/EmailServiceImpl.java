@@ -12,7 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
     @Autowired
     JavaMailSender emailSender;
@@ -86,14 +86,14 @@ public class EmailServiceImpl implements EmailService{
     }
 
     // 방이 생성되면 해당 해시테그를 가진 유젇르에게 이메일을 보낸다.
-    private MimeMessage createHashTagMessage(String to, String hashtag, Long roomId) throws Exception{
+    private MimeMessage createHashTagMessage(String to, String hashtag) throws Exception{
         System.out.println("보내는 대상 : "+ to);
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("[Babble] 관심 주제 대화방이 생성되었습니다.");//제목
         // 포트번호 변경 시 링크 수정
-        String linkUrl = "https://i5a308.p.ssafy.io/conferences/" + roomId;
+        String linkUrl = "https://i5a308.p.ssafy.io/search/" + hashtag.split(",")[0];
 
         String msgg="";
         msgg+= "<div style='margin:100px;'>";
@@ -110,8 +110,8 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public void sendHashtagMessage(String to, String hashtag, Long roomId) throws Exception {
-        MimeMessage message = createHashTagMessage(to, hashtag, roomId);
+    public void sendHashtagMessage(String to, String hashtag) throws Exception {
+        MimeMessage message = createHashTagMessage(to, hashtag);
         try{ //예외처리
             emailSender.send(message);
         } catch(MailException es){

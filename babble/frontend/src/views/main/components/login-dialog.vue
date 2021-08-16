@@ -1,5 +1,5 @@
 <template>
- <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="23%">
+ <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="30%">
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -26,29 +26,20 @@
       </el-form-item>
     </el-form>
     <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
-    <el-button type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
-    <div><el-link href="#" target="_blank">비밀번호 찾기</el-link></div>
+    <el-button class="login-btn" type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
+    <a href="#" class="find-pwd">비밀번호 찾기</a>
     <template #footer>
       <span class="dialog-footer">
         <el-divider></el-divider>
-        <div class="socialLogin">SNS 계정으로 로그인하기</div>
-
-    <el-row :gutter="20">
-    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
-    <img
-      :src="require('@/assets/images/kakaolink_btn_medium.png')"
-    />
-  </a></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple"><a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
-    <img
-      :src="require('@/assets/images/free-icon-google-plus.png')"
-    />
-  </a></div></el-col>
-    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-  </el-row>
-
-
+        <div class="social-login">SNS 계정으로 로그인하기</div>
+        <div class="social-icon">
+          <a href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
+            <img class="kakao-img" :src="require('@/assets/images/kakao-icon.png')"/>
+          </a>
+          <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
+            <img :src="require('@/assets/images/google-icon.png')"/>
+          </a>
+        </div>
       </span>
     </template>
   </el-dialog>
@@ -64,28 +55,39 @@
     padding: 30px;
     padding-top: 10px;
     }
-  .el-button.el-button--primary.is-disabled.is-round {
+  .login-btn {
     background-color: #a8a0ff;
     border-color: #a0cfff00;
     width: 100%;
-    }
-  .el-link.el-link--default.is-underline{
+  }
+  .find-pwd {
     float: right;
     margin-top: 10px;
+    text-decoration: none;
+    color: grey;
   }
   .el-dialog__footer {
     /* background-color: #9370db3b; */
     text-align: center;
     }
-  div.socialLogin{
+  .social-login {
     text-align: center;
     font-size: 14px;
     color: gray;
     padding-bottom: 10px;
   }
-  img{
-    width: -webkit-fill-available;
-    border-radius: 50%;
+  .social-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .social-icon img {
+    margin: 0 10px 0;
+    width: 50px;
+    height: 50px;
+  }
+  .social-icon .kakao-img {
+    /* border-radius: 50%; */
   }
   #msg{
     color:red;
@@ -175,7 +177,6 @@ export default {
               store.commit("auth/setEmail", state.form.email);
               store.commit("auth/setToken", result.data.accessToken);
               store.commit("auth/setProvider", "babble");
-              alert("로그인 성공");
               emit("closeLoginDialog");
             })
             .catch(function(err) {

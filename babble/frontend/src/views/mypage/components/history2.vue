@@ -103,7 +103,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .tab {
   margin-left: 60px;
 }
@@ -113,5 +113,18 @@ export default {
 }
 
 .table {
+  width: 60%;
+}
+@media screen and (max-width: 480px) {
+  .tab {
+  }
+  .chart {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .table {
+    width: 100%;
+  }
 }
 </style>

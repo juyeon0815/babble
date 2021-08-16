@@ -1,21 +1,18 @@
 package com.babble.api.controller;
 
-import com.babble.api.request.user.UserHashtagReq;
-import com.babble.api.request.user.UserRegisterReq;
-import com.babble.api.request.user.UserUpdatePasswordReq;
-import com.babble.api.request.user.UserUpdatePictureReq;
+import com.babble.api.request.user.*;
 import com.babble.api.response.user.UserHistoryRes;
 import com.babble.api.response.user.UserLoginPostRes;
 import com.babble.api.response.user.UserRes;
 import com.babble.api.service.*;
 import com.babble.common.auth.BabbleUserDetails;
-import com.babble.common.util.JwtTokenUtil;
 import com.babble.db.entity.*;
 import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -176,15 +173,29 @@ public class UserController {
 	}
 
 	// 이메일로 임시 비밀번호 발급
-	@GetMapping("/findPassword/{email}")
-	public ResponseEntity findPassword(@PathVariable("email") String email) throws Exception {
+	@PatchMapping("/findPassword")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity findPassword(@RequestBody @ApiParam(value = "이메일", required = true) UserFindPasswordReq userFindPasswordReq) throws Exception {
+		System.out.println(">>> email " + userFindPasswordReq.getEmail());
 		// 존재하는 아이디인지 확인 후 임시 비밀번호 변경
-		String tempPassword = emailService.sendTempPassword(email);
+		User user = userService.checkEmail(userFindPasswordReq.getEmail());
+		if (user == null) { // 존재하는 ID가 아님
+			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "가입되어있지 않은 e-mail 입니다."));
+		}
+
+		String tempPassword = emailService.sendTempPassword(userFindPasswordReq.getEmail());
+
 		// 임시 비밀번호로 변경
-		UserUpdatePasswordReq userUpdateTempPasswordReq = new UserUpdatePasswordReq();
-		userUpdateTempPasswordReq.setEmail(email);
-		userUpdateTempPasswordReq.setPassword(tempPassword);
-		userService.updatePassword(userUpdateTempPasswordReq);
+		UserUpdatePasswordReq userUpdateTempPasswordReq = UserUpdatePasswordReq.builder()
+				.email(userFindPasswordReq.getEmail())
+				.password(tempPassword)
+				.build();
+		userService.updatePassword(userUpdateTempPasswordReq );
 		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
 

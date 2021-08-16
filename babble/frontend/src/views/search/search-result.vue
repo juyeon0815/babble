@@ -1,6 +1,6 @@
 <template>
   <el-row class="result-container">
-    <el-col :offset="1"><h2>"{{ state.searchWord }}"의 검색 결과</h2></el-col>
+    <el-col :offset="1" class="result-title"><h2>"{{ state.searchWord }}"의 검색 결과</h2></el-col>
     <el-col>
       <el-row class="conference-row">
         <div v-if="state.roomList.length == 0">검색 결과에 해당하는 방이 없습니다. 다른 키워드를 검색해보세요!</div>
@@ -58,7 +58,10 @@ export default {
         state.count = result.data.length
       })
       .catch(function (err) {
-        alert('특수문자 검색은 제한됩니다. 다른 키워드를 검색해보세요!')
+        swal({
+          text: "특수문자 검색은 제한됩니다. 다른 키워드를 검색해보세요!",
+          icon: "warning",
+        })
       })
     }
     loadSearchResult()
@@ -80,7 +83,10 @@ export default {
       store.dispatch('menu/requestRoomSearch', payload)
       .then(function (result) {
         if (result.data.length == 0) {
-          alert('추가 데이터가 없습니다.')
+          swal({
+            text: "추가 데이터가 없습니다.",
+            icon: "warning",
+          })
         } else {
           state.pageNum += 1
           state.roomList.push(...result.data)
@@ -116,5 +122,12 @@ export default {
   .conference-row {
     justify-content: center;
     align-items: center;
+  }
+
+  @media screen and (max-width: 480px) {
+    .result-container .result-title>h2 {
+      margin-left: 13%;
+
+    }
   }
 </style>

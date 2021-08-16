@@ -1,27 +1,29 @@
 <template>
   <!-- <div class="header-space"></div> -->
 
-  <div class="head-label"><mark class="purple">Best</mark> LIVE</div>
-  <el-row class="conference-row">
-    <Conference
-      v-for="i in state.bestRoomCount"
-      :key="i"
-      v-cloak
-      :roomInfo="state.bestRoomList[i - 1]"
-      @click="clickConference(state.bestRoomList[i - 1].id)"
-    />
-  </el-row>
+  <div class="home-container">
+    <div class="head-label"><mark class="purple">Best</mark> LIVE</div>
+    <el-row class="conference-row">
+      <Conference
+        v-for="i in state.bestRoomCount"
+        :key="i"
+        v-cloak
+        :roomInfo="state.bestRoomList[i - 1]"
+        @click="clickConference(state.bestRoomList[i - 1].id)"
+      />
+    </el-row>
 
-  <div class="head-label"><mark class="purple">Latest</mark> LIVE</div>
-  <el-row class="conference-row">
-    <Conference
-      v-for="i in state.recentRoomCount"
-      :key="i"
-      v-cloak
-      :roomInfo="state.recentRoomList[i - 1]"
-      @click="clickConference(state.recentRoomList[i - 1].id)"
-    />
-  </el-row>
+    <div class="head-label"><mark class="purple">Latest</mark> LIVE</div>
+    <el-row class="conference-row">
+      <Conference
+        v-for="i in state.recentRoomCount"
+        :key="i"
+        v-cloak
+        :roomInfo="state.recentRoomList[i - 1]"
+        @click="clickConference(state.recentRoomList[i - 1].id)"
+      />
+    </el-row>
+  </div>
 
   <ConferenceDialog
     :open="state.conferenceDialogOpen"
@@ -31,6 +33,9 @@
 </template>
 
 <style>
+.home-container {
+  min-height: 80%;
+}
 .head-label {
   font-size: 20px;
   font-weight: bold;
@@ -49,6 +54,12 @@
   margin-top: 15px;
   margin-left: 5%;
   width: 90%;
+}
+
+@media screen and (max-width: 480px) {
+  .head-label {
+    margin-top: 50px;
+  }
 }
 </style>
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab">
+  <div class="history-tab">
     <h3>{{ state.email }}님의 시청이력</h3>
     <!-- <div>{{state.historyData}}</div> -->
     <el-table
@@ -56,8 +56,8 @@ export default {
     store
       .dispatch("auth/requestViewHistory1", { email: state.email })
       .then(function(result) {
-        console.log('********************')
-        console.log(result.data)
+        console.log("********************");
+        console.log(result.data);
         let data = result.data;
         // console.log(data, '처음 받아온 데이터')
         // console.log(result.data[0].viewDate)
@@ -92,11 +92,22 @@ export default {
 };
 </script>
 
-<style>
-.tab {
+<style scoped>
+.history-tab {
   margin-left: 60px;
 }
 .table {
   width: 90%;
+}
+
+@media screen and (max-width: 480px) {
+  .history-tab {
+    margin-left: 8%;
+    margin-top: 8%;
+  }
+
+  .history-tab > h3 {
+    margin-bottom: 8%;
+  }
 }
 </style>

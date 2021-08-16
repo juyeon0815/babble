@@ -1,5 +1,5 @@
 <template>
-  <div style="width:50vh">
+  <div class="chart">
     <vue3-chart-js
       :id="doughnutChart.id"
       ref="chartRef"
@@ -106,3 +106,13 @@ export default {
   }
 };
 </script>
+<style scoped>
+.chart {
+  width: 30%;
+}
+@media screen and (max-width: 480px) {
+  .chart {
+    width: 100%;
+  }
+}
+</style>

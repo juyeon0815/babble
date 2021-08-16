@@ -576,26 +576,36 @@ export default {
     const leaveSession = function() {
       if (state.isHost) {
         // 방장이 떠날 때
-        const payload = {
-          roomId: state.mySessionId,
-          maxViewers: state.maxViewers
-        };
-        store.dispatch("root/requestRoomDelete", payload);
-        axios
-          .delete(
-            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
+        swal({
+          text: "호스트 퇴장 시 방이 자동으로 종료됩니다.\n 퇴장하시겠습니까?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willExit) => {
+          if (willExit) {
+            const payload = {
+              roomId: state.mySessionId,
+              maxViewers: state.maxViewers
+            };
+            store.dispatch("root/requestRoomDelete", payload);
+            axios
+              .delete(
+                `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
 
-            {
-              auth: {
-                username: "OPENVIDUAPP",
-                password: OPENVIDU_SERVER_SECRET
-              }
-            }
-          )
-          .then(response => {
-            console.log(response);
-          })
-          .catch(error => console.log(error));
+                {
+                  auth: {
+                    username: "OPENVIDUAPP",
+                    password: OPENVIDU_SERVER_SECRET
+                  }
+                }
+              )
+              .then(response => {
+                console.log(response);
+              })
+              .catch(error => console.log(error));
+          }
+        })
         // 오픈비두 방 종료
       } else {
         // 시청자가 나갈 때
