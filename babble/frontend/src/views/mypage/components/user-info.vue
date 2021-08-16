@@ -552,13 +552,20 @@ export default {
   color: rgb(66, 64, 64)
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
   .profile-change-form>label {
-    left: 16rem;
+    left: 18rem;
+  }
+
+  .profile-change-form .file-search {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
   }
 
   .profile-change-form .file-name {
-    margin-left: 18%;
+    margin-left: 0%;
   }
 
   .el-col-offset-1 {
@@ -583,7 +590,7 @@ export default {
   }
 
   .inputPwd {
-    width: 58%;
+    width: 60%;
   }
 
   .alert {
@@ -595,7 +602,7 @@ export default {
   }
 
   .submitBtn {
-    margin-left: 11%;
+    margin-left: 33%;
   }
 
   .delete-user-box {
