@@ -121,7 +121,7 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
      - 로그인 하지 않은 사용자는 방송 청취와 이모티콘 리액션, 채팅 보기만가능합니다.
 
-     <img src="/uploads/fe17855ed0a38918278112b3e49a04a9/chat.png" width="50%">
+     <img src="/uploads/fe17855ed0a38918278112b3e49a04a9/chat.png" width="30%">
 
      <img src="/uploads/797f5753d7f83191ff1e7bc36bf48d9d/emoji.png" width="30%">
 
@@ -129,10 +129,10 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
    - 최대 5개까지 알림 설정을 원하는 해시테그 키워드를 설정할 수 있습니다. 알람 설정이 on이라면 해당 키워드의 이야기 방이 개설되면 이메일 알람을 보내드립니다.
 
-     <img src="/uploads/09c6ab4f84891f85aac6f320ca0ca1c7/keyword.png" width="50%">
+     <img src="/uploads/09c6ab4f84891f85aac6f320ca0ca1c7/keyword.png" width="30%">
 
    - 이야기 방 시청 이력과 방 생성 이력을 확인할 수 있습니다.
 
-     <img src="/uploads/e6210e160f71f1d256b5120700f11f10/mypage.png" width="50%">
+     <img src="/uploads/e6210e160f71f1d256b5120700f11f10/mypage.png" width="60%">
 
 
