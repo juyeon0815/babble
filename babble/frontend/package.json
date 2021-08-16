@@ -19,6 +19,7 @@
     "sass-loader": "^10.2.0",
     "sockjs-client": "^1.5.1",
     "stylus-loader": "^3.0.2",
+    "sweetalert": "^2.1.2",
     "vue": "^3.0.0",
     "vue-axios": "^3.2.4",
     "vue-i18n": "^9.1.6",

@@ -202,18 +202,27 @@ export default {
         .dispatch("auth/requestCheckEmail", state.form.email)
         .then(function(result) {
           if (result.status == 200) {
-            alert("사용가능한 이메일입니다.");
+            swal({
+              text: "사용가능한 이메일입니다!",
+              icon: "success",
+            });
             state.isOnlyEmail = true;
           }
         })
         .catch(function(err) {
-          alert("이미존재하는 이메일입니다.");
+          swal({
+            text: "이미존재하는 이메일입니다.",
+            icon: "warning",
+          });
           state.isOnlyEmail = false;
         });
     };
 
     const checkConfirm = function() {
-      alert("인증번호가 해당 메일로 전송되었습니다.");
+      swal({
+        text: "인증번호가 해당 메일로 전송되었습니다.",
+        icon: "info",
+      });
       store
         .dispatch("auth/requestEmailConfirm", state.form.email)
         .then(function(result) {
@@ -237,14 +246,20 @@ export default {
               password: state.form.password
             })
             .then(function(result) {
-              alert("회원가입이 완료되었습니다.");
+              swal({
+                text: "회원가입이 완료되었습니다.\n Ba:bble에 오신 것을 환영합니다!",
+                icon: "success",
+              });
               emit("closeJoinDialog");
             })
             .catch(function(err) {
               alert(err);
             });
         } else {
-          alert("회원가입에 실패하였습니다.");
+          swal({
+            text: "회원가입에 실패하였습니다.",
+            icon: "warning",
+          });
         }
       });
     };

@@ -291,8 +291,10 @@ export default {
 
       promise.then(
         function(data) {
-          alert("Successfully uploaded photo.");
-          console.log(data, "자 업로드 된 데이터야");
+          swal({
+            text: "프로필 이미지를 업로드했습니다.",
+            icon: "success",
+          });
           store.commit("auth/setUserProfile", data.Location);
           store
             .dispatch("auth/requestUpdateProfile", {
@@ -330,7 +332,10 @@ export default {
         })
         .then(function(result) {
           console.log(result);
-          alert("변경되었습니다.");
+          swal({
+            text: "비밀번호가 변경되었습니다.",
+            icon: "success",
+          });
           state.form.password = "";
           state.form.newPassword = "";
           state.form.newPasswordConfirm = "";
@@ -338,14 +343,29 @@ export default {
     };
 
     const deleteUser = function() {
-      store
-        .dispatch("auth/requestDeleteUser", { email: state.email })
-        .then(function(result) {
-          console.log("삭제되었니", result);
-          alert("다시 또 만나요 우리...See U Soon");
-          store.commit("auth/setLogout");
-          router.push("/");
-        });
+      swal({
+        text: "정말 Ba:bble에서 탈퇴하시겠습니까?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          store
+            .dispatch("auth/requestDeleteUser", { email: state.email })
+            .then(function(result) {
+              swal({
+                text: "탈퇴가 완료되었습니다.\n 다시 또 만나요 우리...",
+                icon: "info",
+              })
+              store.commit("auth/setLogout");
+              router.push("/");
+            });
+        }
+      });
+
+
+      
     };
 
     return {
