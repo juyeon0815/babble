@@ -58,7 +58,10 @@ export default {
         state.count = result.data.length
       })
       .catch(function (err) {
-        alert('특수문자 검색은 제한됩니다. 다른 키워드를 검색해보세요!')
+        swal({
+          text: "특수문자 검색은 제한됩니다. 다른 키워드를 검색해보세요!",
+          icon: "warning",
+        })
       })
     }
     loadSearchResult()
@@ -80,7 +83,10 @@ export default {
       store.dispatch('menu/requestRoomSearch', payload)
       .then(function (result) {
         if (result.data.length == 0) {
-          alert('추가 데이터가 없습니다.')
+          swal({
+            text: "추가 데이터가 없습니다.",
+            icon: "warning",
+          })
         } else {
           state.pageNum += 1
           state.roomList.push(...result.data)

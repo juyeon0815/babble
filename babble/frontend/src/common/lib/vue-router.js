@@ -10,6 +10,7 @@ import UserInfo from '@/views/mypage/components/user-info'
 import CategoryResult from '@/views/categories/components/category-result'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 import SearchResult from '@/views/search/search-result'
+import ErrorPage from '@/views/error/error-page'
 
 const fullMenu = require('@/views/main/menu.json')
 const categories_list = ['all', 'sports', 'cooking', 'handcraft', 'music', 'finance', 'game', 'movie', 'drawing', 'book', 'pet']
@@ -22,7 +23,7 @@ for (let index = 0; index < categories_list.length; index++) {
   })
 }
 
-function makeRoutesFromMenu () {
+function makeRoutesFromMenu() {
   let routes = Object.keys(fullMenu).map((key) => {
     if (key === 'home') {
       store.commit('menu/setMenuActive', 0)
@@ -59,18 +60,36 @@ function makeRoutesFromMenu () {
     } else if (key === 'search-result') {
       store.commit('menu/setMenuActive', 3)
       return { path: fullMenu[key].path, name: key, component: SearchResult}
-    } else { // menu.json 에 들어있는 로그아웃 메뉴
+    }
+    else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }
   })
+
   // 로그아웃 파싱한 부분 제거
   routes = routes.filter(item => item)
+
+
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
     path: '/conferences/:conferenceId',
     name: 'conference-detail',
     component: ConferencesDetail
   })
+
+  routes.push({
+    path: '/error',
+    name: 'error',
+    component: ErrorPage
+  })
+
+  // 라우터에 존재하지 않을 경우 에러페이지로 이동
+  routes.push({
+    path: '/:pathMatch(.*)*',
+    redirect: "/error"
+},)
+
+
   return routes
 }
 
@@ -109,7 +128,10 @@ router.beforeEach(function (to, from, next) {
         .catch(function (err) {
           if (err) {
             console.log(err, '토큰이 풀려버림 로그아웃 처리')
-            alert('토큰이 풀렸습니다. 다시 로그인해주세요.')
+            swal({
+              text: "세션이 만료되었습니다.\n 다시 로그인해주세요.",
+              icon: "warning",
+            });
             logout()
           }
         })
@@ -122,7 +144,6 @@ router.beforeEach(function (to, from, next) {
   if (categories_list.indexOf(to.name) >= 0) {
     store.commit('menu/setActiveCategory', to.name)
   }
-
   next()
 })
 
