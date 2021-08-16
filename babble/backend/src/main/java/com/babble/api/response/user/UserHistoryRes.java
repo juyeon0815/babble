@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,11 +23,11 @@ public class UserHistoryRes {
     @ApiModelProperty(name="room_category")
     String category;
     @ApiModelProperty(name="room_viewDate")
-    Date viewDate;
+    LocalDateTime viewDate;
     @ApiModelProperty(name="room_viewTime")
-    Date viewStart;
+    LocalDateTime viewStart;
     @ApiModelProperty(name="room_viewTime")
-    Date viewEnd;
+    LocalDateTime viewEnd;
     @ApiModelProperty(name="room_maxView")
     Long maxView;
 }

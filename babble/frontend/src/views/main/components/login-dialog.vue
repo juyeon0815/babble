@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="로그인" v-model="state.dialogVisible" @close="handleClose">
+ <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="30%">
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -8,14 +8,12 @@
       @change="isValid"
     >
       <el-form-item
-        prop="email"
         label="이메일"
         :label-width="state.formLabelWidth"
       >
-        <el-input v-model="state.form.email" autocomplete="off"></el-input>
+        <el-input v-model="state.form.email" autocomplete="off"  ></el-input>
       </el-form-item>
       <el-form-item
-        prop="password"
         label="비밀번호"
         :label-width="state.formLabelWidth"
       >
@@ -23,38 +21,88 @@
           v-model="state.form.password"
           autocomplete="off"
           show-password
+          @keyup.enter="clickLogin"
         ></el-input>
       </el-form-item>
     </el-form>
-   <a id="custom-login-btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
-   <!-- <button @click="goGoogle"> -->
-    <img
-      :src="require('@/assets/images/btn_google_signin_dark_pressed_web.png')"
-      width="222"
-    />
-   <!-- </button> -->
-  </a>
-    <br>
-   <a id="custom-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
-    <img
-      src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
-      width="222"
-    />
-  </a>
+    <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
+    <el-button class="login-btn" type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
+    <a href="#" class="find-pwd">비밀번호 찾기</a>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin" :disabled="!state.isVal"
-          >로그인</el-button
-        >
+        <el-divider></el-divider>
+        <div class="social-login">SNS 계정으로 로그인하기</div>
+        <div class="social-icon">
+          <a href="https://kauth.kakao.com/oauth/authorize?client_id=b571e5a822cacd3d5f0fdec309364338&redirect_uri=http://localhost:8083/oauth/callback/kakao&response_type=code">
+            <img class="kakao-img" :src="require('@/assets/images/kakao-icon.png')"/>
+          </a>
+          <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google">
+            <img :src="require('@/assets/images/google-icon.png')"/>
+          </a>
+        </div>
       </span>
     </template>
   </el-dialog>
 </template>
 
+<style>
+  .el-dialog__header {
+    /* background-color: #9370db3b; */
+    text-align: center;
+    }
+  .el-dialog__body {
+    /* background-color: #9370db3b; */
+    padding: 30px;
+    padding-top: 10px;
+    }
+  .login-btn {
+    background-color: #a8a0ff;
+    border-color: #a0cfff00;
+    width: 100%;
+  }
+  .find-pwd {
+    float: right;
+    margin-top: 10px;
+    text-decoration: none;
+    color: grey;
+  }
+  .el-dialog__footer {
+    /* background-color: #9370db3b; */
+    text-align: center;
+    }
+  .social-login {
+    text-align: center;
+    font-size: 14px;
+    color: gray;
+    padding-bottom: 10px;
+  }
+  .social-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .social-icon img {
+    margin: 0 10px 0;
+    width: 50px;
+    height: 50px;
+  }
+  .social-icon .kakao-img {
+    /* border-radius: 50%; */
+  }
+  #msg{
+    color:red;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+</style>
+
+
 <script>
 import { reactive, computed, ref, watch} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+
 
 export default {
   name: "login-dialog",
@@ -76,6 +124,7 @@ export default {
     // Element UI Validators
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
     const state = reactive({
+      isCheck:false,
       form: {
         email: "",
         password: "",
@@ -91,7 +140,7 @@ export default {
       },
       isVal: false,
       dialogVisible: computed(() => props.open),
-      formLabelWidth: "120px",
+      formLabelWidth: "25%",
       setEmail: computed(() => {
         return store.getters["auth/getEmail"];
       }),
@@ -127,16 +176,15 @@ export default {
               console.log("이메일과 토큰 store에 저장");
               store.commit("auth/setEmail", state.form.email);
               store.commit("auth/setToken", result.data.accessToken);
-              alert("로그인 성공");
+              store.commit("auth/setProvider", "babble");
               emit("closeLoginDialog");
-              // router.go()
-              // window.location.reload()
             })
             .catch(function(err) {
               console.log(err);
               state.form.email = "";
               state.form.password = "";
-              alert(err);
+              state.isCheck = true;
+              // alert(err);
             });
         } else {
           alert("Validate error!");
@@ -147,72 +195,47 @@ export default {
     const handleClose = function() {
       state.form.email = "";
       state.form.password = "";
+      state.isCheck=false;
       emit("closeLoginDialog");
     };
 
+  // 카카오 로그인 후 실행
+  //(구글 로그인 시 해당 코드로 들어는 가나 auth/requestKakaoToken에서 걸려서 빠져나와 밑에 구글 코드 실행됨)
+    let kakaoCode = new URL(window.location.href).searchParams.get("code");
+    if(kakaoCode != null){
+      console.log('카카오로그인 시도')
+      store.dispatch("auth/requestKakaoToken", kakaoCode)
+      .then(function(result){
+        console.log("카카오 result: ", result.data.accessToken)
+        console.log("카카오 email : ",result.data.email )
+        localStorage.setItem("jwt", result.data.accessToken);
+        store.commit("auth/setToken", result.data.accessToken);
+        store.commit("auth/setEmail", result.data.email);
+        store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
+        router.push({
+            path: "/"
+        })
+      }).catch(function(error){
+        console.log(error)
+      })
+    }
 
-  // 카카오 로그인 후 딱 한번만 실행되어야한다. 위치가 여기 맞나유..?
-    // let kakaoCode = new URL(window.location.href).searchParams.get("code");
-    // console.log(kakaoCode);
-    // if(kakaoCode!=null){
-    //   store.dispatch("auth/requestKakaoToken", kakaoCode)
-    //   .then(function(result){
-    //     console.log("result: ", result.data.accessToken)
-    //     console.log("email : ",result.data.email )
-    //     localStorage.setItem("jwt", result.data.accessToken);
-    //     store.commit("auth/setToken", result.data.accessToken);
-    //     store.commit("auth/setEmail", result.data.email);
-    //     store.commit("auth/setProvider","kakao"); // 로그아웃할때 방식 다 달라서 구분용
-    //     alert("로그인 성공");
-    //     emit("closeLoginDialog");
-    //     router.push({
-    //         path: "/"
-    //     })
-    //   }).catch(function(error){
-    //     console.log(error)
-    //   })
-    // }
-
-  // const goGoogle = function () {
-  //   location.href = "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com&redirect_uri=http://localhost:8083/login/oauth2/code/google"
-  //   let googleCode = new URL(window.location.href).searchParams.get("code");
-  //   console.log(googleCode, '구글코드')
-  //   if(googleCode!=null){
-  //      store.dispatch("auth/requestGoogleToken", googleCode)
-  //     .then(function(result){
-  //       console.log("result: ", result.data.idToken)
-  //       console.log("email : ",result.data.email )
-  //       localStorage.setItem("jwt", result.data.idToken);
-  //       store.commit("auth/setToken", result.data.idToken);
-  //       store.commit("auth/setEmail", result.data.email);
-  //       store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
-  //       alert("로그인 성공");
-  //       // emit("closeLoginDialog");
-  //       router.push({
-  //         path: "/"
-  //       });
-  //     }).catch(function(error){
-  //       console.log(error)
-  //     })
-  //   }
-  // }
-
-  //구글 로그인 후 딱 한번만 실행.. 위치 대체 어디..
+  //구글 로그인 후 실행
+  //카카오 로그인 시, 해당 코드에도 접근해 문제 발생 >> 구글에서 받아온 토큰이 있어야만 다음 코드 실행되게끔 처리
     let googleCode = new URL(window.location.href).searchParams.get("code");
-    console.log(googleCode);
-    if(googleCode!=null){
-      console.log("여기안간거야?");
-       store.dispatch("auth/requestGoogleToken", googleCode)
+    if(googleCode != null){
+      console.log("구글로그인 시도");
+      store.dispatch("auth/requestGoogleToken", googleCode)
       .then(function(result){
         console.log(result)
-        console.log("result: ", result.data.idToken)
-        console.log("email : ",result.data.email )
-        localStorage.setItem("jwt", result.data.idToken);
-        store.commit("auth/setToken", result.data.idToken);
-        store.commit("auth/setEmail", result.data.email);
-        store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
-        alert("로그인 성공");
-        // emit("closeLoginDialog");s
+        if (result.data.idToken) {
+          console.log("구글 result: ", result.data.idToken)
+          console.log("구글 email : ",result.data.email )
+          localStorage.setItem("jwt", result.data.idToken);
+          store.commit("auth/setToken", result.data.idToken);
+          store.commit("auth/setEmail", result.data.email);
+          store.commit("auth/setProvider","google"); // 로그아웃할때 방식 다 달라서 구분용
+        }
         router.push({
           path: "/"
         });
@@ -227,4 +250,3 @@ export default {
 };
 </script>
 
-<style></style>

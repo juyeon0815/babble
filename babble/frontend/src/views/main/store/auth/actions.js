@@ -54,9 +54,15 @@ export function requestUserInfo ({ state }, payload) {
   return $axios.get(url, {
     headers: {
         Authorization: `Bearer ${payload}`,
-        provider: state.provider
-    }
+        provider : state.provider
+    },
+
   })
+}
+
+export function requestSocialUserInfo({state}, payload){
+  console.log('requestSocialUserInfo', state, payload)
+  return $axios.get(`users/socialInfo/${payload.email}`)
 }
 
 export function requestPasswordCheck ({ state }, payload) {

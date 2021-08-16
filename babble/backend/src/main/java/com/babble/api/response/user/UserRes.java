@@ -22,6 +22,8 @@ public class UserRes{
 	String picture;
 	@ApiModelProperty(name="User Alarm")
 	boolean alarm;
+	@ApiModelProperty(name="User provider")
+	String provider;
 
 	@Builder
 	public UserRes(User user){
@@ -29,5 +31,6 @@ public class UserRes{
 		this.email = user.getEmail();
 		this.picture = user.getPicture();
 		this.alarm = user.isAlarm();
+		this.provider = user.getProvider();
 	}
 }

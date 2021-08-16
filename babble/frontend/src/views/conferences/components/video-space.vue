@@ -10,6 +10,7 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
+        :isMe="true"
         :grid-count="state.videoGrid"
         :profile="state.profile"
         :id="state.publisher.stream.connection.connectionId"
@@ -23,14 +24,20 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :isMe="true"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
+          <div v-if="!state.isLoggedin" class="nologin-video">
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <p>비회원으로 방에 참여중입니다.</p>
+          </div>
         </el-col>
         <el-col :span="12" v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
@@ -45,15 +52,21 @@
         <el-col :offset="3" :span="8">
           <UserVideo
             v-if="state.publisher"
+            :isMe="true"
             :stream-manager="state.publisher"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
+          <div v-if="!state.isLoggedin" class="nologin-video">
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <p>비회원으로 방에 참여중입니다.</p>
+          </div>
         </el-col>
         <el-col :offset="1" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
@@ -65,6 +78,7 @@
         <el-col :offset="3" :span="8">
           <UserVideo
             :stream-manager="state.subscribers[1]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[1].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[1])"
@@ -75,6 +89,7 @@
           <UserVideo
             v-if="state.subscribers.length == 3"
             :stream-manager="state.subscribers[2]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[2].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[2])"
@@ -90,10 +105,15 @@
           <UserVideo
             v-if="state.publisher"
             :stream-manager="state.publisher"
+            :isMe="true"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
+          <div v-if="!state.isLoggedin" class="nologin-video">
+            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <p>비회원으로 방에 참여중입니다.</p>
+          </div>
         </el-col>
         <el-col
           :span="8"
@@ -102,6 +122,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :isMe="false"
             :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
@@ -117,6 +138,7 @@
         >
           <UserVideo
             :stream-manager="sub"
+            :isMe="false"
             :profile="state.profile"
             :id="sub.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(sub)"
@@ -133,6 +155,7 @@
       <el-col :span="15">
         <UserVideo
           :streamManager="state.mainStreamManager"
+          :isMe="true"
           :profile="state.profile"
           :id="state.mainStreamManager.stream.connection.connectionId"
           @click="state.showMainVideo = false"
@@ -142,6 +165,7 @@
         <el-row>
           <UserVideo
             :stream-manager="state.publisher"
+            :isMe="true"
             :profile="state.profile"
             :id="state.publisher.stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.publisher)"
@@ -150,6 +174,7 @@
         <el-row v-if="state.subscribers.length != 0">
           <UserVideo
             :stream-manager="state.subscribers[0]"
+            :isMe="false"
             :profile="state.profile"
             :id="state.subscribers[0].stream.connection.connectionId"
             @toMain="updateMainVideoStreamManager(state.subscribers[0])"
@@ -181,9 +206,6 @@
         />
         <i v-else class="el-icon-video-camera" />
       </el-button>
-      <el-button type="info" plain @click="findStreamIdBySessionId">
-        <i class="el-icon-thumb"></i
-      ></el-button>
       <el-popover
         class="emoji-balloon"
         :width="280"
@@ -554,29 +576,36 @@ export default {
     const leaveSession = function() {
       if (state.isHost) {
         // 방장이 떠날 때
-        const payload = {
-          roomId: state.mySessionId,
-          maxViewers: state.maxViewers
-        };
-        store.dispatch("root/requestRoomDelete", payload);
+        swal({
+          text: "호스트 퇴장 시 방이 자동으로 종료됩니다.\n 퇴장하시겠습니까?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willExit) => {
+          if (willExit) {
+            const payload = {
+              roomId: state.mySessionId,
+              maxViewers: state.maxViewers
+            };
+            store.dispatch("root/requestRoomDelete", payload);
+            axios
+              .delete(
+                `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
 
-        console.log("@@@@@@@@@@@@@@");
-        console.log(state.mySessionId);
-        axios
-          .delete(
-            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${state.mySessionId}`,
-
-            {
-              auth: {
-                username: "OPENVIDUAPP",
-                password: OPENVIDU_SERVER_SECRET
-              }
-            }
-          )
-          .then(response => {
-            console.log(response);
-          })
-          .catch(error => console.log(error));
+                {
+                  auth: {
+                    username: "OPENVIDUAPP",
+                    password: OPENVIDU_SERVER_SECRET
+                  }
+                }
+              )
+              .then(response => {
+                console.log(response);
+              })
+              .catch(error => console.log(error));
+          }
+        })
         // 오픈비두 방 종료
       } else {
         // 시청자가 나갈 때
@@ -843,5 +872,16 @@ export default {
   height: 40px;
   border-radius: 70%;
   overflow: hidden;
+}
+
+.nologin-video {
+  padding-top: 50px;
+  text-align: center;
+}
+
+.nologin-profile {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
 }
 </style>
