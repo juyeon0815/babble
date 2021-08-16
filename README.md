@@ -59,14 +59,14 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
 ### 핵심 라이브러리 
 - Front : Vuex, Vue Router
-- Back : 
+- Back : JPA, Hiberate, QueryDSL, Lombok
 
 ### 서비스 구조
-<img src="/uploads/e048db22ebd22bed08d041804db56d2d/structure.PNG">
+<img src="/uploads/e048db22ebd22bed08d041804db56d2d/structure.PNG" width="80%">
 
 ### ERD
 
-<img src="/uploads/d32ce6da95741f1c3c41f57d055ceff9/erd_0814.png">
+<img src="/uploads/d32ce6da95741f1c3c41f57d055ceff9/erd_0814.png" width="80%">
 
 ## 프로젝트 설계
 
@@ -76,7 +76,7 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 ### ERD
 
 ## 팀원 소개
-<img src="/uploads/135565e5451d9b7133f6eeec2ce7fb42/team-bubble-members.PNG">
+<img src="/uploads/135565e5451d9b7133f6eeec2ce7fb42/team-bubble-members.PNG"  width="80%">
 
 - 김주현 : 팀장 / backend / 채팅
 - 김주연 : back / API / 회원 관리 / 배포  
