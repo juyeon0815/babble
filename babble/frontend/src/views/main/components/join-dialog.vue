@@ -1,9 +1,10 @@
 <template>
   <el-dialog
-    title="회원가입"
+    title="JOIN"
     v-model="state.dialogVisible"
     @close="handleClose"
-  >
+    width="30%"
+    >
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -12,8 +13,8 @@
       @change="isValid"
     >
       <el-form-item
-        prop="email"
         label="이메일"
+        prop="email"
         :label-width="state.formLabelWidth"
       >
         <el-input v-model="state.form.email" autocomplete="off"></el-input>
@@ -26,8 +27,8 @@
         >
       </el-form-item>
       <el-form-item
-        prop="emailConfirm"
         label="이메일인증번호"
+        prop="emailConfirm"
         :label-width="state.formLabelWidth"
       >
         <el-input
@@ -36,8 +37,8 @@
         ></el-input>
       </el-form-item>
       <el-form-item
-        prop="password"
         label="비밀번호"
+        prop="password"
         :label-width="state.formLabelWidth"
       >
         <el-input
@@ -47,8 +48,8 @@
         ></el-input>
       </el-form-item>
       <el-form-item
-        prop="passwordConfirm"
         label="비밀번호 확인"
+        prop="passwordConfirm"
         :label-width="state.formLabelWidth"
       >
         <el-input
@@ -60,7 +61,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickJoin" :disabled="!state.isVal"
+        <el-button type="primary" round @click="clickJoin" :disabled="!state.isVal"
           >회원가입</el-button
         >
       </span>
@@ -91,6 +92,7 @@ export default {
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
 
     const state = reactive({
+      temp: '30%',
       form: {
         email: "",
         emailConfirm: "",
@@ -184,7 +186,7 @@ export default {
       authNum: "",
       isOnlyEmail: false,
       dialogVisible: computed(() => props.open),
-      formLabelWidth: "120px"
+      formLabelWidth: "35%"
     });
 
     const isValid = function() {
@@ -285,4 +287,23 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.el-button.el-button--primary.is-disabled {
+    background-color: #a8a0ff;
+    border-color: #a0cfff00;
+    width: 100%;
+    }
+  .el-button.el-button--primary{
+    background-color: #a8a0ff;
+    border-color: #a0cfff00;
+  }
+  .el-button.el-button--primary:hover{
+    background-color: #9467e2;
+    border-color: #a0cfff00;
+  }
+   .el-dialog__body {
+
+    padding: 30px;
+    padding-top: 10px;
+    }
+</style>

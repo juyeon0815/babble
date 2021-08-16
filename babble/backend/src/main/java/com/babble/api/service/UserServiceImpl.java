@@ -16,6 +16,7 @@ import com.babble.db.entity.User;
 import com.babble.db.repository.UserRepository;
 import com.babble.db.repository.UserRepositorySupport;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 		for(int i=0;i<historyInfo.size();i++){
 			String title = historyInfo.get(i).get(qRoom.title);
 			String category = historyInfo.get(i).get(qCategory.name);
-			Date create = historyInfo.get(i).get(qRoom.createTime);
+			LocalDateTime create = historyInfo.get(i).get(qRoom.createTime);
 			Long maxView = historyInfo.get(i).get(qRoom.maxView);
 
 			UserHistoryRes userHistoryRes = new UserHistoryRes();
@@ -90,8 +91,8 @@ public class UserServiceImpl implements UserService {
 			userHistoryRes.setMaxView(maxView);
 
 			if(command.equals("view")){
-				Date start = historyInfo.get(i).get(qRoomHistory.startTime);
-				Date end = historyInfo.get(i).get(qRoomHistory.endTime);
+				LocalDateTime start = historyInfo.get(i).get(qRoomHistory.startTime);
+				LocalDateTime end = historyInfo.get(i).get(qRoomHistory.endTime);
 				userHistoryRes.setViewStart(start);
 				userHistoryRes.setViewEnd(end);
 			}
