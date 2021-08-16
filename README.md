@@ -82,35 +82,35 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
 1. **[회원 가입 / 로그인]** E-mail / SNS로 쉽게 가입하세요.
 
-   <img src="/uploads/96f53f9bb253b569710429536e233c97/join.png" width="80%">
+   <img src="/uploads/96f53f9bb253b569710429536e233c97/join.png" width="50%">
 
-   <img src="/uploads/2605a6f145d374af8413169df32f72a4/join2.png" width="80%">
+   <img src="/uploads/2605a6f145d374af8413169df32f72a4/join2.png" width="50%">
 
    - 비회원도 방 시청 등 서비스 이용이 가능합니다.
 
-   <img src="/uploads/b31c0232ac799341eb07eaefdee11521/login.png" width="80%">
+   <img src="/uploads/b31c0232ac799341eb07eaefdee11521/login.png" width="50%">
 
 2. **[이야기방 생성]** 원하는 주제의 이야기 방을 생성하세요.
 
    - 로그인한 사용자는 원하는 이야기 방을 생성할 수 있습니다.  
      방 제목, 설명을 기입하고 썸네일로 지정할 사진을 업로드 후 분류 카테고리를 지정합니다.
 
-     <img src="/uploads/e31b627099be4115990126437a017402/create.png" width="80%">
+     <img src="/uploads/e31b627099be4115990126437a017402/create.png" width="50%">
 
    - 원하는 해시테그 키워드를 5개까지 설정할 수 있습니다.  
      해당 키워드 구독을 원하는 사용자에게 이야기 방 알림 메일이 전송됩니다!
 
-     <img src="/uploads/25b03ee9ccacfda98cc7c5d487dd164c/alarm.png" width="80%">
+     <img src="/uploads/25b03ee9ccacfda98cc7c5d487dd164c/alarm.png" width="50%">
 
    - 호스트가 방을 나가면 방은 사라집니다.
 
-     <img src="/uploads/f68eaef165839f3524b98478f59165b7/exit.png" width="80%">
+     <img src="/uploads/f68eaef165839f3524b98478f59165b7/exit.png" width="50%">
 
 3. **[이야기방 참여]** 생성된 이야기 방에 참여하세요.
 
-   <img src="/uploads/1a086db0767af8171688f4f1b6ac9158/room.png" width="80%">
+   <img src="/uploads/1a086db0767af8171688f4f1b6ac9158/room.png" width="50%">
 
-   <img src="/uploads/b79d7205dcf7f6d95f73df1c46477156/enter.png" width="80%">
+   <img src="/uploads/b79d7205dcf7f6d95f73df1c46477156/enter.png" width="50%">
 
    - 모든 유저는 익명의 닉네임을 부여받아 이야기 방에 참여합니다.
 
@@ -121,18 +121,18 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
      - 로그인 하지 않은 사용자는 방송 청취와 이모티콘 리액션, 채팅 보기만가능합니다.
 
-     <img src="/uploads/fe17855ed0a38918278112b3e49a04a9/chat.png" width="80%">
+     <img src="/uploads/fe17855ed0a38918278112b3e49a04a9/chat.png" width="5%">
 
-     <img src="/uploads/797f5753d7f83191ff1e7bc36bf48d9d/emoji.png" width="80%">
+     <img src="/uploads/797f5753d7f83191ff1e7bc36bf48d9d/emoji.png" width="50%">
 
 4. **[마이페이지]** 마이 페이지에서 회원 정보를 수정하세요
 
    - 최대 5개까지 알림 설정을 원하는 해시테그 키워드를 설정할 수 있습니다. 알람 설정이 on이라면 해당 키워드의 이야기 방이 개설되면 이메일 알람을 보내드립니다.
 
-     <img src="/uploads/09c6ab4f84891f85aac6f320ca0ca1c7/keyword.png" width="80%">
+     <img src="/uploads/09c6ab4f84891f85aac6f320ca0ca1c7/keyword.png" width="50%">
 
    - 이야기 방 시청 이력과 방 생성 이력을 확인할 수 있습니다.
 
-     <img src="/uploads/e6210e160f71f1d256b5120700f11f10/mypage.png" width="80%">
+     <img src="/uploads/e6210e160f71f1d256b5120700f11f10/mypage.png" width="50%">
 
 
