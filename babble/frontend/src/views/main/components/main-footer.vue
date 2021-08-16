@@ -25,7 +25,8 @@ export default {
     const route = useRoute()
 
     const aboutUs = function() {
-      alert("about us 페이지!!");
+      // store.commit("menu/setActiveCategory", null);
+      // store.commit("menu/setMenuActive", 0);
       router.push({
         name: 'about-us'
       })
