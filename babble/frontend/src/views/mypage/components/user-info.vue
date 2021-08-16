@@ -21,10 +21,10 @@
           <button class="btn-upload" @click="updateProfile">프로필 업로드</button>
           <button class="btn-delete" @click="deleteProfile">프로필 삭제</button>
           <div v-if="state.provider =='google'" class="provider-circle">
-            <img class="provider-logo" :src="require('@/assets/images/free-icon-google-plus.png')" />
+            <img class="provider-logo" :src="require('@/assets/images/google-icon.png')" />
           </div>
           <div v-else-if="state.provider == 'kakao'" class="provider-circle">
-            <img class="provider-logo" :src="require('@/assets/images/kakaolink_btn_medium.png')" />
+            <img class="provider-logo" :src="require('@/assets/images/kakao-icon.png')" />
           </div>
           <div v-else class="provider-circle">
             <img class="provider-babble" :src="require('@/assets/images/provider_babble.png')" />
@@ -552,7 +552,7 @@ export default {
   color: rgb(66, 64, 64)
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
   .profile-change-form>label {
     left: 16rem;
   }

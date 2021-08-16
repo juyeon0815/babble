@@ -4,7 +4,7 @@
     v-model="state.dialogVisible"
     @close="handleClose"
     width="30%"
-  >
+    >
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -61,7 +61,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickJoin" :disabled="!state.isVal"
+        <el-button type="primary" round @click="clickJoin" :disabled="!state.isVal"
           >회원가입</el-button
         >
       </span>
@@ -92,6 +92,7 @@ export default {
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
 
     const state = reactive({
+      temp: '30%',
       form: {
         email: "",
         emailConfirm: "",
