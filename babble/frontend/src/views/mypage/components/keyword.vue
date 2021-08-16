@@ -46,7 +46,7 @@
       placement="top-start"
       title="Let's Ba:bble"
       trigger="hover"
-      content="오늘의 추천 키워드는 고양이입니다!"
+      content="당신을 위한 오늘의 추천 키워드는 싸피입니다!"
        >
       <template #reference>
         <img class="keyword-profile" :src="require('@/assets/images/default_profile.png')" />

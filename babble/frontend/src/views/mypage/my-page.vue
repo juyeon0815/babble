@@ -63,11 +63,11 @@ export default {
   }
 
   .el-tabs__item.is-active{
-    color: #8860D8;
+    color: #341a63;
   }
 
   .el-tabs__item:hover {
-    color: #8860D8;
+    color: #341a63;
   }
 
   @media screen and (max-width: 480px) {
