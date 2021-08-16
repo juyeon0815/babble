@@ -105,7 +105,7 @@ public class RoomController {
         if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
             for(String userEmail: userHashtagMap.keySet()) {
                 System.out.println(userEmail + " "  + userHashtagMap.get(userEmail) + " 이메일 전송");
-                emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail), room.getId());
+                emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail));
             }
         }
 
