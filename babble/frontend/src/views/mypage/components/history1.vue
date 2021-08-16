@@ -1,5 +1,5 @@
 <template>
-  <div class="tab">
+  <div class="history-tab">
     <h3>{{ state.email }}님의 시청이력</h3>
     <!-- <div>{{state.historyData}}</div> -->
     <el-table
@@ -93,10 +93,21 @@ export default {
 </script>
 
 <style>
-.tab {
+.history-tab {
   margin-left: 60px;
 }
 .table {
   width: 90%;
+}
+
+@media screen and (max-width: 480px) {
+  .history-tab {
+    margin-left: 8%;
+    margin-top: 8%;
+  }
+
+  .history-tab>h3 {
+    margin-bottom: 8%;
+  }
 }
 </style>

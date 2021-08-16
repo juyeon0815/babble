@@ -1,6 +1,6 @@
 <template>
   <el-row class="result-container">
-    <el-col :offset="1"><h2>"{{ state.searchWord }}"의 검색 결과</h2></el-col>
+    <el-col :offset="1" class="result-title"><h2>"{{ state.searchWord }}"의 검색 결과</h2></el-col>
     <el-col>
       <el-row class="conference-row">
         <div v-if="state.roomList.length == 0">검색 결과에 해당하는 방이 없습니다. 다른 키워드를 검색해보세요!</div>
@@ -122,5 +122,12 @@ export default {
   .conference-row {
     justify-content: center;
     align-items: center;
+  }
+
+  @media screen and (max-width: 480px) {
+    .result-container .result-title>h2 {
+      margin-left: 13%;
+
+    }
   }
 </style>

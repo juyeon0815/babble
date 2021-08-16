@@ -55,6 +55,12 @@
   margin-left: 5%;
   width: 90%;
 }
+
+@media screen and (max-width: 480px) {
+  .head-label {
+    margin-top: 50px;
+  }
+}
 </style>
 <script>
 import { reactive, onMounted } from "vue";

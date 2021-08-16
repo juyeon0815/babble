@@ -61,8 +61,12 @@
     <div class="overlay">
       <div class="header-text">
         <h2>당신을 위한 공간, Ba:bble</h2>
-        <p style="color:#fce3ff">
+        <p class="desc">
           ba:bble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
+        </p>
+        <p class="desc2">
+          ba:bble : 와글와글, 왁자지껄<br>
+          여럿이 한꺼번에 떠드는 소리
         </p>
       </div>
       <img
@@ -94,6 +98,14 @@
   /* display: inline-block; */
   float: left;
   padding-left: 70px;
+}
+
+.header-space .overlay .header-text .desc {
+  color: #fce3ff;
+}
+
+.header-space .overlay .header-text .desc2 {
+  display: none;
 }
 
 .illust {
@@ -221,12 +233,18 @@
   }
 
   .seen-media {
+    width: 100%;
     text-align: center;
   }
 
   .seen-media .navbar-search {
     display: block;
+    width: 100%;
     padding-bottom: 10px;
+  }
+
+  .seen-media .navbar-search .search-bar {
+    width: 90%;
   }
 
   .seen-media .navbar-logo {
@@ -269,6 +287,42 @@
   .textline {
     display: block;
   }
+
+  .header-space .overlay {
+    padding-top: 0px;
+    border-radius: 0 0 70% 70% /30%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .header-space .overlay .header-text {
+    margin-top: 7%;
+    padding-left: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 80%;
+    opacity: 0;
+  }
+
+  .header-space .overlay .header-text .desc {
+    display: none;
+  }
+
+  .header-space .overlay .header-text .desc2 {
+    display: block;
+    margin-top: 12%;
+    color: #341a63;
+    text-shadow: none;
+    font-weight: bold;
+  }
+
+  .header-space .overlay .illust {
+    display: none;
+  }
+
+
 }
 </style>
 
@@ -419,6 +473,16 @@ export default {
       }
 
     };
+
+     window.addEventListener('scroll', function(e) {
+        if (document.documentElement.scrollTop > 100) {
+          let text = document.querySelector(".header-text")
+          text.style.opacity = "1"
+        } else {
+          let text = document.querySelector(".header-text")
+          text.style.opacity = "0"
+        }
+      })
 
     return {
       state,

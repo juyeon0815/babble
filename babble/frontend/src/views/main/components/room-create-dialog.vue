@@ -64,11 +64,11 @@
             placeholder="키워드를 입력해주세요(최대 5개)"
             ref="saveTagInput"
             v-model="state.form.inputValue"
-            @blur="handleInputConfirm"
             @keydown.enter="handleInputConfirm"
-            :disabled="state.form.count == 5">
+            :disabled="state.form.count == 5"
+            maxlength="15">
             <template #append>
-              <el-button icon="el-icon-plus"></el-button>
+              <el-button icon="el-icon-plus" @click="handleInputConfirm"></el-button>
             </template>
           </el-input>
         </div>
@@ -313,15 +313,25 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
   .select-box {
-    width: 100px; 
+    width: 100px;
     padding: 5px;
     border: 1px solid #999;
-    border-radius: 3px; 
+    border-radius: 3px;
   }
   .create-btn {
     background-color: #a8a0ff;
     width: 100%;
+  }
+
+  .el-dialog {
+    width: 30% !important;
+  }
+
+  @media screen and (max-width: 480px) {
+    .el-dialog {
+      width: 80% !important;
+    }
   }
 </style>
