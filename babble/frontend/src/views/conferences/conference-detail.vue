@@ -29,7 +29,7 @@
     font-size: 24px;
     color: #341a63;
   }
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 480px) {
   .sidebar-toggleBtn {
     display: block;
     position: absolute;

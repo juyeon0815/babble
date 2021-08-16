@@ -128,7 +128,10 @@ router.beforeEach(function (to, from, next) {
         .catch(function (err) {
           if (err) {
             console.log(err, '토큰이 풀려버림 로그아웃 처리')
-            alert('토큰이 풀렸습니다. 다시 로그인해주세요.')
+            swal({
+              text: "세션이 만료되었습니다.\n 다시 로그인해주세요.",
+              icon: "warning",
+            });
             logout()
           }
         })

@@ -121,7 +121,10 @@ export default {
 
     const handleInputConfirm = function() {
       if (state.inputValue == "") {
-        alert("빈 키워드는 입력되지 않아요!");
+        swal({
+          text: "빈 키워드는 입력되지 않아요!",
+          icon: "warning",
+        });
       } else {
         store.commit("auth/setUserHashtagPush", state.inputValue);
         store

@@ -196,7 +196,7 @@
   display: none;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 480px) {
   .navbar {
     flex-direction: column;
   }
@@ -347,9 +347,9 @@ export default {
     };
 
     const clickMyPage = function() {
-      let nowIndex = store.getters["root/getActiveMenuIndex"];
+      let nowIndex = store.getters["menu/getActiveMenuIndex"];
         if (nowIndex != 2) {
-          store.commit("root/setMenuActive", 2);
+          store.commit("menu/setMenuActive", 2);
           router.push({
             path: "/mypage/keyword"
           });
