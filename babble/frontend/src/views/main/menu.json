@@ -15,5 +15,9 @@
   "search-result" : {
     "name" : "검색결과",
     "path" : "/search/:searchword"
+  },
+  "about-us" : {
+    "name" : "About Us",
+    "path" : "/aboutus"
   }
 }
