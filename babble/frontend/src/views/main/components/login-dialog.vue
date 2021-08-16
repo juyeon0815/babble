@@ -1,5 +1,5 @@
 <template>
- <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="30%">
+ <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="30%" v-if="!state.findPassword">
     <el-form
       :model="state.form"
       :rules="state.rules"
@@ -27,7 +27,7 @@
     </el-form>
     <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
     <el-button class="login-btn" type="primary" round @click="clickLogin" :disabled="!state.isVal">로그인</el-button>
-    <a href="#" class="find-pwd">비밀번호 찾기</a>
+    <a href="#" @click="findPassword" class="find-pwd">비밀번호 찾기</a>
     <template #footer>
       <span class="dialog-footer">
         <el-divider></el-divider>
@@ -41,6 +41,20 @@
           </a>
         </div>
       </span>
+    </template>
+  </el-dialog>
+  <el-dialog title="비밀번호 찾기" v-model="state.dialogVisible" @close="handleClose" width="30%" v-if="state.findPassword">
+    <div class="findPassword">
+    <el-input placeholder="Email" v-model="state.email"></el-input>
+    <el-button class="checkEmail" type="primary" @click="checkEmail">이메일확인</el-button>
+    </div>
+    <template #footer>
+       <el-button class="temporaryPassword"
+          @click="checkConfirm"
+          :disabled="!state.isOnlyEmail"
+          >임시비밀번호발급</el-button
+        >
+
     </template>
   </el-dialog>
 </template>
@@ -94,7 +108,15 @@
     text-align: center;
     margin-bottom: 10px;
   }
-
+  .findPassword{
+    display: flex;
+  }
+  .el-button.el-button--primary.checkEmail{
+    margin-left: 5px;
+  }
+  .el-button.el-button--default.is-disabled.temporaryPassword{
+    width: 100%;
+  }
 </style>
 
 
@@ -124,6 +146,8 @@ export default {
     // Element UI Validators
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
     const state = reactive({
+      findPassword:false,
+      email:"",
       isCheck:false,
       form: {
         email: "",
@@ -196,6 +220,7 @@ export default {
       state.form.email = "";
       state.form.password = "";
       state.isCheck=false;
+      state.findPassword = false;
       emit("closeLoginDialog");
     };
 
@@ -244,8 +269,17 @@ export default {
       })
     }
 
+    const findPassword = function(){
+      console.log("하이하이");
+      state.findPassword = true;
+    }
 
-    return { loginForm, state, isValid, clickLogin, handleClose};
+    const checkEmail = function(){
+      console.log("이메일 확인합니다 : ", state.email)
+    }
+
+
+    return { loginForm, state, isValid, clickLogin, handleClose,findPassword,checkEmail};
   }
 };
 </script>
