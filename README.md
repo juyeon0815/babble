@@ -121,9 +121,9 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
      - 로그인 하지 않은 사용자는 방송 청취와 이모티콘 리액션, 채팅 보기만가능합니다.
 
-     <img src="/uploads/fe17855ed0a38918278112b3e49a04a9/chat.png" width="5%">
+     <img src="/uploads/fe17855ed0a38918278112b3e49a04a9/chat.png" width="50%">
 
-     <img src="/uploads/797f5753d7f83191ff1e7bc36bf48d9d/emoji.png" width="50%">
+     <img src="/uploads/797f5753d7f83191ff1e7bc36bf48d9d/emoji.png" width="30%">
 
 4. **[마이페이지]** 마이 페이지에서 회원 정보를 수정하세요
 
