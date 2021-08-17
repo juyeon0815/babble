@@ -68,7 +68,7 @@
           ba:bble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
         </p>
         <p class="desc2">
-          ba:bble : 와글와글, 왁자지껄<br>
+          ba:bble : 와글와글, 왁자지껄<br />
           여럿이 한꺼번에 떠드는 소리
         </p>
       </div>
@@ -141,6 +141,33 @@
 .navbar-logo mark {
   color: white;
   background: none;
+}
+
+.navbar-logo h2 .purple {
+  position: relative;
+  top: 20px;
+  display: inline-block;
+  animation: bounce 0.4s ease infinite alternate;
+  font-family: this_is_font_name;
+  margin: 5px;
+  font-size: 70pt;
+  color: #fff;
+  text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
+    0 5px 0 #ccc, 0 6px 0 transparent, 0 7px 0 transparent, 0 8px 0 transparent,
+    0 9px 0 transparent, 0 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-logo h2 .purple:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+@keyframes bounce {
+  100% {
+    top: -20px;
+    text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
+      0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
+      0 50px 25px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .navbar-logo h2:hover .purple {
@@ -324,8 +351,6 @@
   .header-space .overlay .illust {
     display: none;
   }
-
-
 }
 </style>
 
@@ -370,7 +395,6 @@ export default {
     //     store.commit("auth/setUserProfile", result.data.picture);
     //   });
 
-
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
       store.commit("menu/setMenuActive", 0);
@@ -405,12 +429,12 @@ export default {
 
     const clickMyPage = function() {
       let nowIndex = store.getters["menu/getActiveMenuIndex"];
-        if (nowIndex != 2) {
-          store.commit("menu/setMenuActive", 2);
-          router.push({
-            path: "/mypage/keyword"
-          });
-        }
+      if (nowIndex != 2) {
+        store.commit("menu/setMenuActive", 2);
+        router.push({
+          path: "/mypage/keyword"
+        });
+      }
     };
 
     //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
@@ -475,15 +499,15 @@ export default {
       }
     };
 
-     window.addEventListener('scroll', function(e) {
-        if (document.documentElement.scrollTop > 100) {
-          let text = document.querySelector(".header-text")
-          text.style.opacity = "1"
-        } else {
-          let text = document.querySelector(".header-text")
-          text.style.opacity = "0"
-        }
-      })
+    window.addEventListener("scroll", function(e) {
+      if (document.documentElement.scrollTop > 100) {
+        let text = document.querySelector(".header-text");
+        text.style.opacity = "1";
+      } else {
+        let text = document.querySelector(".header-text");
+        text.style.opacity = "0";
+      }
+    });
 
     return {
       state,
@@ -496,7 +520,7 @@ export default {
       clickLogout,
       enterSearch,
       clickToggle,
-      loadProfile,
+      loadProfile
     };
   }
 };

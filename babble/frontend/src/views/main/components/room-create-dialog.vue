@@ -288,7 +288,6 @@ export default {
               })
             );
             store.dispatch("root/requestHashtagEmail", joinHashtag);
-
             store.commit("root/setIsHost", true);
             handleClose();
           },
