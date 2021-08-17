@@ -28,8 +28,11 @@
         <el-input v-model="state.form.content" autocomplete="off"></el-input>
       </el-form-item>
 
-      <el-form-item label="방 썸네일 업데이트"
-      :label-width="state.formLabelWidth" class="thumbnail-change">
+      <el-form-item
+        label="방 썸네일 업데이트"
+        :label-width="state.formLabelWidth"
+        class="thumbnail-change"
+      >
         <input
           type="file"
           ref="fileInput"
@@ -160,7 +163,7 @@ export default {
             message: "필수 입력 항목입니다.",
             trigger: "change"
           }
-        ],
+        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
@@ -193,9 +196,9 @@ export default {
         console.log("빈 키워드는 입력되지 않고 넘어가기");
         // alert('빈 키워드는 입력되지 않아요!')
       } else if (state.form.inputValue.includes(" ")) {
-        console.log("공백문자 포함되지 않도록")
+        console.log("공백문자 포함되지 않도록");
       } else if (state.form.roomHashtags.includes(state.form.inputValue)) {
-        console.log("같은 키워드는 입력되지 않도록")
+        console.log("같은 키워드는 입력되지 않도록");
       } else {
         state.form.roomHashtags.push(state.form.inputValue);
         state.form.inputValue = "";
@@ -242,6 +245,10 @@ export default {
             }
           })
         );
+        console.log(joinHashtag, "해시태그조인");
+        store.dispatch("root/requestHashtagEmail", joinHashtag).then(res => {
+          console.log(res);
+        });
         store.commit("root/setIsHost", true);
         handleClose();
       } else {
@@ -280,6 +287,8 @@ export default {
                 }
               })
             );
+            store.dispatch("root/requestHashtagEmail", joinHashtag);
+
             store.commit("root/setIsHost", true);
             handleClose();
           },
@@ -330,48 +339,48 @@ export default {
   width: 100%;
 }
 
-  .thumbnail-change input[type="file"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    clip: rect(0, 0, 0, 0);
-    overflow: hidden;
-    padding: 0;
-  }
+.thumbnail-change input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  padding: 0;
+}
 
-  .thumbnail-change .file-search {
-    display: flex;
-    align-items: center;
-  }
+.thumbnail-change .file-search {
+  display: flex;
+  align-items: center;
+}
 
-  .thumbnail-change .file-name {
-    display: inline-block;
-    width: 100%;
-    height: 35px;
-    border: 1px solid #dcdfe6;
-    border-radius: 5px;
-    background: transparent;
-  }
+.thumbnail-change .file-name {
+  display: inline-block;
+  width: 100%;
+  height: 35px;
+  border: 1px solid #dcdfe6;
+  border-radius: 5px;
+  background: transparent;
+}
 
-  .thumbnail-change .file-search>label {
-    display: inline-block;
-    width: 70px;
-    height: 38px;
-    margin-left: 5px;
-    background-color:#a8a0ff;
-    color: white;
-    cursor: pointer;
-    line-height: 35px;
-    border-radius: 5px;
-    text-align: center;
-  }
+.thumbnail-change .file-search > label {
+  display: inline-block;
+  width: 70px;
+  height: 38px;
+  margin-left: 5px;
+  background-color: #a8a0ff;
+  color: white;
+  cursor: pointer;
+  line-height: 35px;
+  border-radius: 5px;
+  text-align: center;
+}
 
-  .thumbnail-change .file-name>p {
-    position: relative;
-    top: -15px;
-    margin-left: 10px;
-  }
+.thumbnail-change .file-name > p {
+  position: relative;
+  top: -15px;
+  margin-left: 10px;
+}
 
 @media screen and (max-width: 480px) {
   .el-dialog {

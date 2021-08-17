@@ -12,7 +12,13 @@ axios.defaults.headers['Content-Type'] = DEFAULT_ACCEPT_TYPE
 
 axios.interceptors.request.use(
     config => {
-        store.commit('root/startSpinner');
+        console.log("%%%%%%%%%%");
+        console.log(config);
+        // 이메일 보낼 때 스피너 처리 x
+        if (config.url != "/room/sendEmail") {
+            store.commit('root/startSpinner');
+        }
+
         return config;
     },
     error => {
@@ -24,7 +30,9 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
-        store.commit('root/endSpinner');
+        if (!response.url != "/room/sendEmail") {
+            store.commit('root/endSpinner');
+        }
         return response;
     },
     error => {
