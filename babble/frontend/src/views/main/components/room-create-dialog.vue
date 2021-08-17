@@ -161,26 +161,6 @@ export default {
             trigger: "change"
           }
         ],
-        hashtag: [
-          {
-            trigger: "blur",
-            validator(rule, value, callback) {
-              if (state.form.roomHashtags.length <= 5) {
-                callback();
-              } else {
-                callback(new Error("최대 5개까지만 입력해주세요"));
-              }
-            }
-          },
-          {
-            trigger: "blur",
-            validator(rule, value, callback) {
-              if (state.form.roomHashtags.includes(state.form.inputValue)) {
-                callback(new Error("다른 해시태그를 입력해주세요"));
-              }
-            }
-          }
-        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
