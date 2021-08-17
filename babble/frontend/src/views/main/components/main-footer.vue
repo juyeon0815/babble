@@ -25,11 +25,11 @@ export default {
     const route = useRoute()
 
     const aboutUs = function() {
-      // store.commit("menu/setActiveCategory", null);
-      // store.commit("menu/setMenuActive", 0);
+      store.commit('menu/setMenuActive', 4)
       router.push({
         name: 'about-us'
       })
+      .then((() =>window.scrollTo(0,0) ))
     }
     return { state, aboutUs }
   }
@@ -57,6 +57,7 @@ export default {
   margin:5px 0 20px 0;
   letter-spacing:2px;
   text-align: center;
+  cursor: pointer;
 }
 .site-footer a {
   text-decoration: none;
