@@ -457,6 +457,9 @@ export default {
               document
                 .querySelector(`#${event.connection.connectionId} .vid`)
                 .classList.add("gradient-box");
+              document
+                .querySelector(`#${event.connection.connectionId} .subvid`)
+                .classList.add("gradient-box");
             }
           });
 
@@ -465,6 +468,9 @@ export default {
             if (document.querySelector(`#${event.connection.connectionId}`)) {
               document
                 .querySelector(`#${event.connection.connectionId} .vid`)
+                .classList.remove("gradient-box");
+              document
+                .querySelector(`#${event.connection.connectionId} .subvid`)
                 .classList.remove("gradient-box");
             }
           });
