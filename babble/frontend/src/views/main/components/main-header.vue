@@ -64,10 +64,6 @@
         <p class="desc">
           ba:bble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
         </p>
-        <p class="desc2">
-          ba:bble : 와글와글, 왁자지껄<br>
-          여럿이 한꺼번에 떠드는 소리
-        </p>
       </div>
       <img
         :src="require('@/assets/images/Visionary technology-rafiki.png')"
@@ -90,7 +86,7 @@
   color: #fff;
   border-radius: 0 0 90% 50% /30%;
   text-shadow: 1px 1px 1px #333;
-  background-image: linear-gradient(135deg, #9f05ff69 10%, #4a63cfc2 100%);
+  background-image: linear-gradient(90deg, #9f05ff69 40%, #4a63cfc2 100%);
   position: relative;
 }
 
@@ -102,10 +98,7 @@
 
 .header-space .overlay .header-text .desc {
   color: #fce3ff;
-}
-
-.header-space .overlay .header-text .desc2 {
-  display: none;
+  font-weight: bold;
 }
 
 .illust {
@@ -121,7 +114,7 @@
   justify-content: space-between;
   align-items: center;
   background: transparent;
-  background-image: linear-gradient(40deg, #9f05ff69 40%, #4a63cfc2 100%);
+  background-image: linear-gradient(90deg, #9f05ff69 40%, #4a63cfc2 100%);
   padding: 10px 42px;
 }
 
@@ -288,34 +281,26 @@
     display: block;
   }
 
+  .header-space {
+    height: 130px;
+  }
+
   .header-space .overlay {
     padding-top: 0px;
-    border-radius: 0 0 70% 70% /30%;
+    border-radius: 0;
     width: 100%;
     display: flex;
     justify-content: center;
   }
 
   .header-space .overlay .header-text {
-    margin-top: 7%;
+    margin-top: 0;
     padding-left: 0px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     width: 80%;
-    opacity: 0;
-  }
-
-  .header-space .overlay .header-text .desc {
-    display: none;
-  }
-
-  .header-space .overlay .header-text .desc2 {
-    display: block;
-    margin-top: 12%;
-    color: #341a63;
-    text-shadow: none;
-    font-weight: bold;
+    font-size: smaller;
   }
 
   .header-space .overlay .illust {
@@ -474,15 +459,15 @@ export default {
 
     };
 
-     window.addEventListener('scroll', function(e) {
-        if (document.documentElement.scrollTop > 100) {
-          let text = document.querySelector(".header-text")
-          text.style.opacity = "1"
-        } else {
-          let text = document.querySelector(".header-text")
-          text.style.opacity = "0"
-        }
-      })
+    //  window.addEventListener('scroll', function(e) {
+    //     if (document.documentElement.scrollTop > 100) {
+    //       let text = document.querySelector(".header-text")
+    //       text.style.opacity = "1"
+    //     } else {
+    //       let text = document.querySelector(".header-text")
+    //       text.style.opacity = "0"
+    //     }
+    //   })
 
     return {
       state,

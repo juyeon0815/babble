@@ -41,7 +41,7 @@
       ></el-switch>
     </div>
   </div>
-  <div class="keyword-circle">
+  <div class="keyword-circle" id="rotateme">
     <el-popover
       placement="top-start"
       title="Let's Ba:bble"
@@ -141,6 +141,19 @@ export default {
           text: "빈 키워드는 입력되지 않아요!",
           icon: "warning",
         });
+      } else if (state.inputValue.includes(" ")) {
+         swal({
+          text: "공백 문자는 포함하지 않아요!",
+          icon: "warning",
+        });
+        state.inputValue = ""
+      } else if (state.userHashtags.includes(state.inputValue)) {
+        // console.log("같은 키워드는 입력되지 않도록")
+         swal({
+          text: "같은 키워드는 입력되지 않아요!",
+          icon: "warning",
+        });
+        state.inputValue = ""
       } else {
         store.commit("auth/setUserHashtagPush", state.inputValue);
         store
@@ -206,7 +219,7 @@ export default {
 }
 
 .keyword-box .tag-group .tag {
-  height: 5vh;
+  height: 38px;
   margin-right: 1%;
   background-image: linear-gradient(130deg, #9f05ff69 20%, #4a63cfc2 100%);
   color: white;
@@ -261,7 +274,6 @@ export default {
 
 .keyword-circle {
   margin-left: 3%;
-  border-radius: 50%;
 }
 
 .keyword-profile {
@@ -269,8 +281,6 @@ export default {
   position: fixed;
   bottom: 3%;
   width: 15%;
-  height: 25%;
-
   object-fit: cover;
   animation: rotate 3s infinite
 }
@@ -298,8 +308,7 @@ export default {
   .keyword-profile {
     position: fixed;
     bottom: 3%;
-    width: 30%;
-    height: 20%;
+    width: 20%;
     border-radius: 30%;
     object-fit: cover;
     animation: rotate 3s infinite
