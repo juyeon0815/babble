@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Getter
 @ApiModel("RoomCreatePostRequest")
+@ToString
 public class RoomCreateReq {
 
     @ApiModelProperty(name="유저 Email", example="your_email")
@@ -29,7 +31,6 @@ public class RoomCreateReq {
     String category;
     @ApiModelProperty(name="hashtag", example="room_hashtag")
     String hashtag;
-    @ApiModelProperty(name="room speakOption", example="room_speakOption")
-    boolean speak;
+
 
 }

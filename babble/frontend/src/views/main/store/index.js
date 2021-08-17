@@ -12,4 +12,4 @@ const root = {
   actions
 }
 
-export default root
+export default root 

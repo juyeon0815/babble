@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -21,10 +22,10 @@ public class RoomWaitRes {
     @ApiModelProperty(name="room_content")
     String content;
     @ApiModelProperty(name="room_createTime")
-    Date createTime;
+    LocalDateTime createTime;
 
     @Builder
-    public RoomWaitRes(Long id, String title, String content, Date createTime){
+    public RoomWaitRes(Long id, String title, String content, LocalDateTime createTime){
         this.id = id;
         this.title = title;
         this.content = content;

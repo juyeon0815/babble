@@ -3,6 +3,7 @@ package com.babble.api.controller;
 
 import com.babble.api.request.room.RoomCreateReq;
 import com.babble.api.request.room.RoomRelationReq;
+import com.babble.api.response.room.RoomHostRes;
 import com.babble.api.response.room.RoomRes;
 import com.babble.api.response.room.RoomWaitRes;
 import com.babble.api.service.*;
@@ -15,8 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Room 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -40,8 +47,10 @@ public class RoomController {
     UserRoomService userRoomService;
     @Autowired
     RoomHistoryService roomHistoryService;
-
-
+    @Autowired
+    UserHashtagService userHashtagService;
+    @Autowired
+    EmailService emailService;
 
     @PostMapping(value = "/create" )
     @ApiOperation(value = "방 생성", notes = "방에 대한 정보를 입력한다.")
@@ -51,34 +60,67 @@ public class RoomController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) {
+    public ResponseEntity<? extends BaseResponseBody> roomCreate(@RequestBody RoomCreateReq roomCreateReq) throws Exception {
+        //방 생성 시 email, title, content, thumbnail_url, category, hashtag, 정보 넘어옴
 
+        //category 테이블에서 category_name과 일치한 id 가져와 저장
+        Category category = categoryService.getCategoryByCategoryName(roomCreateReq.getCategory());
 
-            //방 생성 시 email, title, content, thumbnail_url, category, hashtag, speak 정보 넘어옴
+        //hostId는 현재 로그인된 유저 id
+        User user = userService.getUserByUserEmail(roomCreateReq.getEmail());
 
-            //category 테이블에서 category_name과 일치한 id 가져와 저장
-            Category category = categoryService.getCategoryByCategoryName(roomCreateReq.getCategory());
+        //room create
+        Room room = roomService.createRoom(category, user, roomCreateReq);
 
-            //hostId는 현재 로그인된 유저 id
-            User user = userService.getUserByUserEmail(roomCreateReq.getEmail());
+        //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
+        String[] tagList = roomCreateReq.getHashtag().split(" ");
+        for (int i = 0; i < tagList.length; i++) {
+            Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
+            if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
+                Hashtag hashtag = hashtagService.createHashtag(tagList[i]);
+                RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
+            } else { //해당 해시태그 있을 경우
+                RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
+            }
+        } //for
 
-            //room create
-            Room room = roomService.createRoom(category, user, roomCreateReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
+    }
 
-
-            //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
-            String[] tagList = roomCreateReq.getHashtag().split(" ");
-            for (int i = 0; i < tagList.length; i++) {
-                Hashtag tag = hashtagService.getHashtagByHashtagName(tagList[i]);
-                if (tag == null) { //해당 해시태그 없음 -> 해시태그 테이블에 넣고, 룸해시 테이블에 넣고
-                    Hashtag hashtag = hashtagService.createHashtag(tagList[i]);
-                    RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(hashtag, room);
-                } else { //해당 해시태그 있을 경우
-                    RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
+    @PostMapping("/sendEmail")
+    @ApiOperation(value = "이메일 알람", notes = "설정한 키워드 방 생성시 이메일 알람")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity categoryBestList(@RequestBody @ApiParam(value="입장", required = true) String hashtag) throws Exception {
+        HashMap<String, String> userHashtagMap = new HashMap<String, String>();
+        String[] tagList = hashtag.split(" ");
+        for (int i = 0; i < tagList.length; i++) {
+            // 해당 해시테그를 가지고 있으면서 이메일 알림을 설정한 유저들을 조회
+            List<String> userList = userHashtagService.getUserByHashtag(tagList[i]);
+            System.out.println(" >>>>> userList: " + userList);
+            if(!userList.isEmpty() && userList.size()>0 && userList.get(0)!=null) {
+                for(String userEmail: userList) {
+                    if(userHashtagMap.containsKey(userEmail)) {
+                        String hastagValue = userHashtagMap.get(userEmail);
+                        userHashtagMap.put(userEmail, hastagValue + ", " + tagList[i]);
+                    } else {
+                        userHashtagMap.put(userEmail, tagList[i]);
+                    }
                 }
             }
-
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
+        } //for
+        // HashMap에 담긴 정보로 이메일 전송
+        if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
+            for(String userEmail: userHashtagMap.keySet()) {
+                System.out.println(userEmail + " "  + userHashtagMap.get(userEmail) + " 이메일 전송");
+                emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail));
+            }
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @PostMapping("/enter")
@@ -118,22 +160,6 @@ public class RoomController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @GetMapping(value = "/list")
-    @ApiOperation(value = "방 정보", notes = "모든 방의 정보를 보여준다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity roomList() {
-
-        List<Tuple> roomInfo = roomService.getRoomInfo();
-        System.out.println(roomInfo.size());
-        List<RoomRes> roomList = roomService.roomList(roomInfo);
-        System.out.println(roomList.size());
-        return ResponseEntity.status(200).body(roomList);
-    }
 
 
     @GetMapping("/{categoryName}/best/{pageNum}")
@@ -188,9 +214,8 @@ public class RoomController {
         return ResponseEntity.status(200).body(categoryList);
     }
 
-
     @Transactional
-    @DeleteMapping("/{roomId}")
+    @PostMapping("/{roomId}")
     @ApiOperation(value = "방 종료", notes = "화상회의 방 종료하기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -198,8 +223,9 @@ public class RoomController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity roomClose(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
-        roomService.roomClose(roomId);
+    public ResponseEntity roomClose(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId,
+                                    @RequestBody @ApiParam(value="퇴장", required = true) Long maxView) {
+        roomService.roomClose(roomId, maxView);
         userRoomService.deleteUserRoom(roomId);
         roomHashtagService.deleteRoomHashtag(roomId);
         roomHistoryService.updateEndTime(roomId);
@@ -224,5 +250,47 @@ public class RoomController {
                 .build();
 
         return ResponseEntity.status(200).body(roomWaitRes);
+    }
+
+    @GetMapping("/host/{roomId}")
+    @ApiOperation(value = "호스트포함 방정보", notes = "호스트 및 방 제목 보여주기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity hostRoomInfo(@PathVariable("roomId") @ApiParam(value="roomId", required = true) Long roomId) {
+        Room room = roomService.getRoomByRoomId(roomId);
+        RoomHostRes roomHostRes = RoomHostRes.builder()
+                .hostId(room.getHostId())
+                .title(room.getTitle())
+                .build();
+
+        return ResponseEntity.status(200).body(roomHostRes);
+    }
+
+    @GetMapping("/random")
+    public String callRandomApi() throws IOException{
+        StringBuilder result = new StringBuilder();
+        String urlStr = "https://nickname.hwanmoo.kr/?format=text&count=1";
+        URL url = new URL(urlStr);
+
+        HttpURLConnection urlConnection = (HttpURLConnection)  url.openConnection();
+        urlConnection.setRequestMethod("GET");
+
+        BufferedReader br;
+
+        br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),"UTF-8"));
+
+        String returnLine;
+
+        while((returnLine = br.readLine()) != null){
+            result.append(returnLine + "\n\r");
+        }
+
+        urlConnection.disconnect();
+
+        return result.toString();
     }
 }

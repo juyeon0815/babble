@@ -11,4 +11,5 @@ public interface UserHashtagService {
     void deleteHashtag(User user, Hashtag hashtag);
     void deleteUserHashtag(User user);
     List<String> getUserHashtag(Long userId);
+    List<String> getUserByHashtag(String hashtag);
 }

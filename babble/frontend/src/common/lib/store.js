@@ -1,11 +1,15 @@
 import { createStore } from "vuex";
 import root from '@/views/main/store';
+import auth from '@/views/main/store/auth';
+import menu from '@/views/main/store/menu';
 import createPersistedState from 'vuex-persistedstate'
 
 export default createStore({
-  modules: { root },
+  modules: { root, auth, menu },
   plugins: [
-    createPersistedState(),
+    createPersistedState({
+      paths:['auth', 'menu']
+    }),
   ]
 }
 );

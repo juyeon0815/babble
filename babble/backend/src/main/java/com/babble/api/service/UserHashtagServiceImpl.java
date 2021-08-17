@@ -48,4 +48,11 @@ public class UserHashtagServiceImpl implements UserHashtagService {
         List<String> list = userHashtagRepositorySupport.getUserHashtag(userId);
         return list;
     }
+
+    @Override
+    public List<String> getUserByHashtag(String hashtag) {
+        System.out.println(">>>>>>>>> getUserHashTagImp " + hashtag);
+        List<String> list = userHashtagRepositorySupport.getUserByHashtag(hashtag);
+        return list;
+    }
 }

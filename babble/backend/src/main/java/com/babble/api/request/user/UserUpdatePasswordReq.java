@@ -3,8 +3,8 @@ package com.babble.api.request.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @ApiModel("UserUpdatePasswordPatchRequest")
@@ -13,4 +13,10 @@ public class UserUpdatePasswordReq {
     String email;
     @ApiModelProperty(name="유저 Password", example="your_password")
     String password;
+
+    @Builder
+    public UserUpdatePasswordReq(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
 }

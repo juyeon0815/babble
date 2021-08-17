@@ -1,25 +1,32 @@
 <template>
-	<video ref="el" autoplay/>
+  <video class="vid" ref="el" autoplay />
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
 export default {
-	name: 'OvVideo',
+  name: "OvVideo",
 
-	props: {
-		streamManager: Object,
-	},
+  props: {
+    streamManager: Object
+  },
 
   setup(props) {
-		const el = ref(null)
+    const el = ref(null);
 
     onMounted(() => {
-		  props.streamManager.addVideoElement(el.value)
-	  })
+      console.log("OV-VIDEO");
+      props.streamManager.addVideoElement(el.value);
+    });
 
-		return { el }
+    return { el };
   }
-}
+};
 </script>
+<style scoped>
+.vid {
+  border-radius: 10px;
+  width: 90%;
+}
+</style>

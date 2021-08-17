@@ -3,6 +3,7 @@ package com.babble.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Hashtag extends BaseEntity {
     String name;
 
