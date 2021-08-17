@@ -7,11 +7,11 @@
       <!-- 카메라 꺼짐 이미지 대체 -->
       <div v-if="gridCount">
         <!-- <img :src="profile.url" class="image-alone"> -->
-        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone vid" />
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image-alone subvid" />
       </div>
       <div v-else>
         <!-- <img :src="profile.url" class="image"> -->
-        <img src="https://i.imgur.com/d6Yug9x.png" class="image vid" />
+        <img src="https://i.imgur.com/d6Yug9x.png" class="image subvid" />
       </div>
     </div>
 
