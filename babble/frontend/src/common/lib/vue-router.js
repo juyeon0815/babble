@@ -147,6 +147,11 @@ router.beforeEach(function (to, from, next) {
   if (categories_list.indexOf(to.name) >= 0) {
     store.commit('menu/setActiveCategory', to.name)
   }
+
+  // 검색 페이지
+  if (to.name == 'search-result') {
+    store.commit("menu/setSearchWord", to.params.searchword);
+  }
   next()
 })
 

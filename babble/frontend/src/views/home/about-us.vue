@@ -1,40 +1,5 @@
 <template>
   <div class="about-us-container">
-  <h1 class="page-title">About Us</h1>
-  <h1 class="">👋 Ba:bble</h1>
-    <p><em>관심사에 대해 쉽게, 편하게, 다같이! 떠드는 익명의 플랫폼</em></p>
-    <p>여럿의 친구들이 와글와글 떠는 장면을 상상해보세요! </p>
-    <p>이러한 모습을 나타내는 영단어 babble에서 유추할 수 있듯이, <strong><code>Ba:bble</code></strong>은 <mark class="highlight-yellow_background">좋아하는 취미와 관심사에 대해 이야기하는 화상 플랫폼</mark> 입니다. </p>
-    <p>좋아하는 영화에 대해 이야기할 친구를 원하거나, 뜨개질 손 동작을 서로 화면을 통해 보며 이야기 하고 싶어하는 등 개발 팀원들의 니즈에서 이 프로젝트는 시작되었습니다.</p>
-    <p>또한, 관심사를 통해 개성을 표현하고 싶어 하면서도 부담스러운 자리는 피하고 싶은 MZ 세대의 특성 또한 기획 배경이 되었습니다.  </p> <br>
-  <h1>🙋 Who&#x27;s Team Ba:bble?</h1>
-    <img :class="resize" :src="require('@/assets/images/about_us/team_bubble_members.png')">
-    <p><strong><code>Team Ba:bble</code></strong>은 익명의 관심사 공유 플랫폼, <code>Ba:bble</code>을 개발하기 위해 뭉친 5명의 젊은 개발자 모임입니다. <br>
-      삼성 청년 SW 아카데미 5기의 서울반에서 모인 이들은 다양한 기술을 습득하고 회의를 거듭하며 개발에 열을 다하곤 합니다!</p>
-    <ul class="bulleted-list">
-      <li>Backend-Developers
-        <ul class="bulleted-list">
-          <li>Kim Juhyun - j828h@naver.com</li>
-        </ul>
-        <ul class="bulleted-list">
-          <li>Kim Juyeon - wndusx1@gmail.com </li>
-        </ul>
-        <ul  class="bulleted-list">
-          <li>Hwang Sunghyun - ppko1233@gmail.com</li>
-        </ul>
-      </li>
-    </ul>
-    <ul class="bulleted-list">
-      <li>Frontend-Developers
-        <ul class="bulleted-list">
-          <li>Lee Jimin - jm9521@hanmail.net</li>
-        </ul>
-        <ul class="bulleted-list">
-          <li>Cho Eunji - bagjo28841@gmail.com</li>
-        </ul>
-      </li>
-  </ul>
-
   <h1 >🧐 How To Use This Service? </h1>
   <ol type="1" class="numbered-list" start="1">
     <li>E-mail / SNS로 쉽게 가입하세요.</li>
@@ -98,6 +63,40 @@
         </ol>
     </li>
   </ol>
+  <h1 class="page-title">About Us</h1>
+  <h1 class="">👋 Ba:bble</h1>
+    <p><em>관심사에 대해 쉽게, 편하게, 다같이! 떠드는 익명의 플랫폼</em></p>
+    <p>여럿의 친구들이 와글와글 떠는 장면을 상상해보세요! </p>
+    <p>이러한 모습을 나타내는 영단어 babble에서 유추할 수 있듯이, <strong><code>Ba:bble</code></strong>은 <mark class="highlight-yellow_background">좋아하는 취미와 관심사에 대해 이야기하는 화상 플랫폼</mark> 입니다. </p>
+    <p>좋아하는 영화에 대해 이야기할 친구를 원하거나, 뜨개질 손 동작을 서로 화면을 통해 보며 이야기 하고 싶어하는 등 개발 팀원들의 니즈에서 이 프로젝트는 시작되었습니다.</p>
+    <p>또한, 관심사를 통해 개성을 표현하고 싶어 하면서도 부담스러운 자리는 피하고 싶은 MZ 세대의 특성 또한 기획 배경이 되었습니다.  </p> <br>
+  <h1>🙋 Who&#x27;s Team Ba:bble?</h1>
+    <img :class="resize" :src="require('@/assets/images/about_us/team_bubble_members.png')">
+    <p><strong><code>Team Ba:bble</code></strong>은 익명의 관심사 공유 플랫폼, <code>Ba:bble</code>을 개발하기 위해 뭉친 5명의 젊은 개발자 모임입니다. <br>
+      삼성 청년 SW 아카데미 5기의 서울반에서 모인 이들은 다양한 기술을 습득하고 회의를 거듭하며 개발에 열을 다하곤 합니다!</p>
+    <ul class="bulleted-list">
+      <li>Backend-Developers
+        <ul class="bulleted-list">
+          <li>Kim Juhyun - j828h@naver.com</li>
+        </ul>
+        <ul class="bulleted-list">
+          <li>Kim Juyeon - wndusx1@gmail.com </li>
+        </ul>
+        <ul  class="bulleted-list">
+          <li>Hwang Sunghyun - ppko1233@gmail.com</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="bulleted-list">
+      <li>Frontend-Developers
+        <ul class="bulleted-list">
+          <li>Lee Jimin - jm9521@hanmail.net</li>
+        </ul>
+        <ul class="bulleted-list">
+          <li>Cho Eunji - bagjo28841@gmail.com</li>
+        </ul>
+      </li>
+  </ul>
   </div>
 </template>
 

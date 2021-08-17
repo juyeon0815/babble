@@ -875,13 +875,12 @@ export default {
 }
 
 .nologin-video {
-  padding-top: 50px;
   text-align: center;
 }
 
-.nologin-profile {
-  width: 200px;
-  height: 200px;
+.nologin-video .nologin-profile {
+  width: 60%;
+  height: 0%;
   object-fit: cover;
 }
 </style>

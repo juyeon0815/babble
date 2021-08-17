@@ -1,5 +1,5 @@
 <template>
- <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="30%">
+ <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="23%">
     <el-form
       :model="state.form"
       :rules="state.rules"
