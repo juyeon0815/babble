@@ -136,8 +136,29 @@
   background: none;
 }
 
+.navbar-logo h2 .purple {
+  position: relative;
+  top: 0px;
+  display: inline-block;
+  animation: bounce 0.6s ease infinite alternate;
+  margin: 5px;
+  font-size: 30pt;
+  color: #fff;
+}
+
+.navbar-logo h2 .purple:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+@keyframes bounce {
+  100% {
+    top: -10px;
+    text-shadow: 0 50px 25px rgba(0, 0, 0, 0.2);
+  }
+}
+
 .navbar-logo h2:hover .purple {
-  color: #341a63;
+  color: #4a1ca0;
   background: none;
 }
 
@@ -309,8 +330,6 @@
   .header-space .overlay .illust {
     display: none;
   }
-
-
 }
 </style>
 
@@ -355,7 +374,6 @@ export default {
     //     store.commit("auth/setUserProfile", result.data.picture);
     //   });
 
-
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
       store.commit("menu/setMenuActive", 0);
@@ -390,12 +408,12 @@ export default {
 
     const clickMyPage = function() {
       let nowIndex = store.getters["menu/getActiveMenuIndex"];
-        if (nowIndex != 2) {
-          store.commit("menu/setMenuActive", 2);
-          router.push({
-            path: "/mypage/keyword"
-          });
-        }
+      if (nowIndex != 2) {
+        store.commit("menu/setMenuActive", 2);
+        router.push({
+          path: "/mypage/keyword"
+        });
+      }
     };
 
     //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
@@ -481,7 +499,7 @@ export default {
       clickLogout,
       enterSearch,
       clickToggle,
-      loadProfile,
+      loadProfile
     };
   }
 };
