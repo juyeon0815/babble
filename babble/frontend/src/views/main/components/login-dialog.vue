@@ -299,6 +299,7 @@ export default {
       store
         .dispatch("auth/requestTemporaryPassword", {email : state.email})
         .then(function(result){
+          state.isOnlyEmail = false;
         })
         .catch(function(err){
           console.error(err)
