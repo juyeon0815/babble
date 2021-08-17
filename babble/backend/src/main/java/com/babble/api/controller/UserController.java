@@ -172,6 +172,23 @@ public class UserController {
 		return ResponseEntity.status(200).body("success");
 	}
 
+	@GetMapping("/findPassword/{email}")
+	@ApiOperation(value = "임시비밀번호 변경 전 이메일 확인", notes = "임시비밀번호 변경 전 이메일 확인을 한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity getUserCheckEmail2(
+			@PathVariable("email") @ApiParam(value = "이메일 정보", required = true) String email) {
+		User user = userService.checkEmail(email);
+		if (user == null) { //중복된 아이디 있음
+			return ResponseEntity.status(403).body(BaseResponseBody.of(404, "가입되어있지 않은 이메일 입니다."));
+		} else return ResponseEntity.status(200).body(BaseResponseBody.of(200, "가입되어있는 이메일 입니다." ));
+	}
+
+
 	// 이메일로 임시 비밀번호 발급
 	@PatchMapping("/findPassword")
 	@ApiResponses({
@@ -181,12 +198,6 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity findPassword(@RequestBody @ApiParam(value = "이메일", required = true) UserFindPasswordReq userFindPasswordReq) throws Exception {
-		System.out.println(">>> email " + userFindPasswordReq.getEmail());
-		// 존재하는 아이디인지 확인 후 임시 비밀번호 변경
-		User user = userService.checkEmail(userFindPasswordReq.getEmail());
-		if (user == null) { // 존재하는 ID가 아님
-			return ResponseEntity.status(404).body(BaseResponseBody.of(404, "가입되어있지 않은 e-mail 입니다."));
-		}
 
 		String tempPassword = emailService.sendTempPassword(userFindPasswordReq.getEmail());
 
