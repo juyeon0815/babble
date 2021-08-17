@@ -202,4 +202,13 @@ export default {
     font-size: 18px;
   }
 
+  @media screen and (max-width: 480px) {
+    .switch-order {
+      display: none;
+    }
+    .backtop {
+      display: none;
+    }
+  }
+
 </style>
