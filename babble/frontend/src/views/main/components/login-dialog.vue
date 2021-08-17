@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
- <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="23%">
-=======
  <el-dialog title="Login" v-model="state.dialogVisible" @close="handleClose" width="30%" v-if="!state.findPassword">
->>>>>>> dca88abe17a91fde9d83067b66fe0bc479fab36a
     <el-form
       :model="state.form"
       :rules="state.rules"
