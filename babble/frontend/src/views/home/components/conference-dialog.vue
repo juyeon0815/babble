@@ -1,5 +1,10 @@
 <template>
-  <el-dialog title="Ba:bble" v-model="state.dialogVisible" @close="handleClose" width="45%">
+  <el-dialog
+    title="Ba:bble"
+    v-model="state.dialogVisible"
+    @close="handleClose"
+    width="45%"
+  >
     <el-row class="description">
       <el-col :offset="1">
         <h2>방 제목 : {{ state.title }}</h2>
@@ -125,9 +130,6 @@ export default {
                 result.data.createTime.slice(0, 10) +
                 " " +
                 result.data.createTime.slice(11, 19);
-            })
-            .catch(function(err) {
-              alert(err + "!!!!!!");
             });
 
           if (state.isLoggedin) {

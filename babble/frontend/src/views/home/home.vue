@@ -99,9 +99,6 @@ export default {
       .then(function(result) {
         state.bestRoomList = result.data;
         state.bestRoomCount = result.data.length;
-      })
-      .catch(function(err) {
-        alert(err);
       });
 
     const payloadRecent = {
@@ -114,9 +111,6 @@ export default {
       .then(function(result) {
         state.recentRoomList = result.data;
         state.recentRoomCount = result.data.length;
-      })
-      .catch(function(err) {
-        alert(err);
       });
 
     const clickConference = function(id) {

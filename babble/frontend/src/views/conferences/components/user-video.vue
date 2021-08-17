@@ -1,9 +1,9 @@
 <template>
   <div v-if="streamManager" class="user-video">
-    <div v-if="streamManager.stream.videoActive">
+    <div v-show="streamManager.stream.videoActive">
       <OvVideo :stream-manager="streamManager" />
     </div>
-    <div v-else class="align">
+    <div v-show="!streamManager.stream.videoActive" class="align">
       <!-- 카메라 꺼짐 이미지 대체 -->
       <div v-if="gridCount">
         <!-- <img :src="profile.url" class="image-alone"> -->
