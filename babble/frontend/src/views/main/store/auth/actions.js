@@ -117,3 +117,13 @@ export function requestViewHistory2 ({ state }, payload) {
   console.log('requestViewHistory2', state, payload)
   return $axios.get(`/users/createRoomHistory/${payload.email}`)
 }
+
+export function requestFindPassword({state}, payload) {
+  console.log('requestFindPassword', state, payload)
+  return $axios.get(`/users/findPassword/`+payload);
+}
+
+export function requestTemporaryPassword({state}, payload) {
+  console.log('requestTemporaryPassword', state, payload)
+  return $axios.patch(`/users/findPassword/`,payload);
+}
