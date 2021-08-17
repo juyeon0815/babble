@@ -67,10 +67,6 @@
         <p class="desc">
           ba:bble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
         </p>
-        <p class="desc2">
-          ba:bble : 와글와글, 왁자지껄<br />
-          여럿이 한꺼번에 떠드는 소리
-        </p>
       </div>
       <img
         :src="require('@/assets/images/Visionary technology-rafiki.png')"
@@ -105,10 +101,7 @@
 
 .header-space .overlay .header-text .desc {
   color: #fce3ff;
-}
-
-.header-space .overlay .header-text .desc2 {
-  display: none;
+  font-weight: bold;
 }
 
 .illust {
@@ -145,16 +138,12 @@
 
 .navbar-logo h2 .purple {
   position: relative;
-  top: 20px;
+  top: 0px;
   display: inline-block;
-  animation: bounce 0.4s ease infinite alternate;
-  font-family: this_is_font_name;
+  animation: bounce 0.6s ease infinite alternate;
   margin: 5px;
-  font-size: 70pt;
+  font-size: 30pt;
   color: #fff;
-  text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
-    0 5px 0 #ccc, 0 6px 0 transparent, 0 7px 0 transparent, 0 8px 0 transparent,
-    0 9px 0 transparent, 0 10px 10px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-logo h2 .purple:nth-child(2) {
@@ -163,15 +152,13 @@
 
 @keyframes bounce {
   100% {
-    top: -20px;
-    text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
-      0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
-      0 50px 25px rgba(0, 0, 0, 0.2);
+    top: -10px;
+    text-shadow: 0 50px 25px rgba(0, 0, 0, 0.2);
   }
 }
 
 .navbar-logo h2:hover .purple {
-  color: #341a63;
+  color: #4a1ca0;
   background: none;
 }
 
@@ -318,34 +305,26 @@
     display: block;
   }
 
+  .header-space {
+    height: 130px;
+  }
+
   .header-space .overlay {
     padding-top: 0px;
-    border-radius: 0 0 70% 70% /30%;
+    border-radius: 0;
     width: 100%;
     display: flex;
     justify-content: center;
   }
 
   .header-space .overlay .header-text {
-    margin-top: 7%;
+    margin-top: 0;
     padding-left: 0px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     width: 80%;
-    opacity: 0;
-  }
-
-  .header-space .overlay .header-text .desc {
-    display: none;
-  }
-
-  .header-space .overlay .header-text .desc2 {
-    display: block;
-    margin-top: 12%;
-    color: #341a63;
-    text-shadow: none;
-    font-weight: bold;
+    font-size: smaller;
   }
 
   .header-space .overlay .illust {
@@ -499,15 +478,15 @@ export default {
       }
     };
 
-    window.addEventListener("scroll", function(e) {
-      if (document.documentElement.scrollTop > 100) {
-        let text = document.querySelector(".header-text");
-        text.style.opacity = "1";
-      } else {
-        let text = document.querySelector(".header-text");
-        text.style.opacity = "0";
-      }
-    });
+    //  window.addEventListener('scroll', function(e) {
+    //     if (document.documentElement.scrollTop > 100) {
+    //       let text = document.querySelector(".header-text")
+    //       text.style.opacity = "1"
+    //     } else {
+    //       let text = document.querySelector(".header-text")
+    //       text.style.opacity = "0"
+    //     }
+    //   })
 
     return {
       state,

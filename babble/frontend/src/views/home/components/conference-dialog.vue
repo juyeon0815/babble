@@ -328,4 +328,21 @@ export default {
 .btn-group {
   margin-top: 5px;
 }
+
+@media screen and (max-width: 480px) {
+  .description h2 {
+    font-size: 15px;
+    margin-left: 5%;
+  }
+
+  .instruction p {
+    font-size: 12px;
+    margin-left: 3%;
+    width: 40%;
+  }
+
+  .instruction .btn-group {
+    width: 35%;
+  }
+}
 </style>
