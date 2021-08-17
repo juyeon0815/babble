@@ -361,7 +361,8 @@ export default {
                 icon: "info",
               })
               store.commit("auth/setLogout");
-              router.push("/");
+              router.push("/")
+              .then((() =>window.scrollTo(0,0) ))
             });
         }
       });

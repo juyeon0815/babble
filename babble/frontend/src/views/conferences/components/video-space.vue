@@ -165,14 +165,19 @@
       <UserVideo
         v-if="state.publisher"
         :stream-manager="state.publisher"
-        @click="updateMainVideoStreamManager(publisher)"
+        :profile="state.profile"
+        :isMe="true"
+        @toMain="updateMainVideoStreamManager(state.publisher)"
         style="width:20vw"
       />
       <UserVideo
         v-for="sub in state.subscribers"
         :key="sub.stream.connection.connectionId"
+        :isMe="false"
+        :profile="state.profile"
         :stream-manager="sub"
-        @click="updateMainVideoStreamManager(sub)"
+        @toMain="updateMainVideoStreamManager(sub)"
+        @unpublishMe="unpublish(sub)"
         style="width:20vw"
       />
     </div>
@@ -190,26 +195,24 @@
           @click="state.showMainVideo = false"
         />
       </el-col>
-      <el-col :offset="1" :span="8">
-        <el-row>
-          <UserVideo
-            :stream-manager="state.publisher"
-            :isMe="true"
-            :profile="state.profile"
-            :id="state.publisher.stream.connection.connectionId"
-            @toMain="updateMainVideoStreamManager(state.publisher)"
-          />
-        </el-row>
-        <el-row v-if="state.subscribers.length != 0">
-          <UserVideo
-            :stream-manager="state.subscribers[0]"
-            :isMe="false"
-            :profile="state.profile"
-            :id="state.subscribers[0].stream.connection.connectionId"
-            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
-            @unpublishMe="unpublish(state.subscribers[0])"
-          />
-        </el-row>
+      <el-col :offset="1" :span="8" class="video-scroll">
+        <UserVideo
+          :stream-manager="state.publisher"
+          :isMe="true"
+          :profile="state.profile"
+          :id="state.publisher.stream.connection.connectionId"
+          @toMain="updateMainVideoStreamManager(state.publisher)"
+        />
+        <UserVideo
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          :isMe="false"
+          :profile="state.profile"
+          :id="sub.stream.connection.connectionId"
+          @toMain="updateMainVideoStreamManager(sub)"
+          @unpublishMe="unpublish(sub)"
+        />
       </el-col>
     </el-row>
   </div>
@@ -908,4 +911,22 @@ export default {
   height: 0%;
   object-fit: cover;
 }
+
+.video-scroll {
+  overflow-y: auto;
+  height: 75vh;
+}
+/* .video-scroll h5 {
+  margin: 10px 0 5px 0;
+} */
+.video-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.video-scroll::-webkit-scrollbar-thumb {
+  background-color: #9f05ff69;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
 </style>
