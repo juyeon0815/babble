@@ -40,43 +40,9 @@
               type="warning"
               class="h-tag"
               v-for="i in roomInfo.hashtag.length" :key="i"
-              @click.stop="clickHashtag(roomInfo.hashtag[0])">{{ roomInfo.hashtag[0] }}
+              @click.stop="clickHashtag(roomInfo.hashtag[i-1])">{{ roomInfo.hashtag[i-1] }}
             </el-tag>
           </div>
-
-          
-          <!-- 해쉬태그 1개 -->
-          <!-- <div v-else-if="roomInfo.hashtag.length == 1">
-            <el-tag
-              type="warning"
-              @click.stop="clickHashtag(roomInfo.hashtag[0])"
-              >{{ roomInfo.hashtag[0] }}</el-tag
-            >
-          </div> -->
-          <!-- 해쉬태그 2개 이상 -->
-          <!-- <div v-else>
-            <el-tag
-              type="warning"
-              @click.stop="clickHashtag(roomInfo.hashtag[0])"
-              >{{ roomInfo.hashtag[0] }}</el-tag
-            >
-            <el-popover placement="bottom" trigger="click">
-              <template #reference>
-                <button
-                  class="el-icon-more"
-                  style="background-color: #11ffee00; border:none"
-                ></button>
-              </template>
-              <div v-for="i in roomInfo.hashtag.length - 1" :key="i">
-                <el-tag
-                  type="warning"
-                  style="margin:5px;"
-                  @click.stop="clickHashtag(roomInfo.hashtag[i])"
-                  >{{ roomInfo.hashtag[i] }}</el-tag
-                >
-              </div>
-            </el-popover>
-          </div> -->
         </div>
 
         <div class="viewers">
@@ -167,9 +133,6 @@ export default {
   border: 6px solid transparent;
   visibility: visible;
 }
-.chatlog::-webkit-scrollbar-thumb:hover {
-  visibility: visible;
-}
 
 .h-scroll .h-tag {
   display: inline-block;
@@ -182,7 +145,7 @@ export default {
 .conference-card {
   margin: 10px;
   max-width: 240px;
-  max-height: 330px;
+  max-height: 350px;
   padding-bottom: 20px;
   transition: all 0.2s linear;
   position: relative;

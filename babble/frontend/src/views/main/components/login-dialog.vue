@@ -4,6 +4,7 @@
     v-model="state.dialogVisible"
     @close="handleClose"
     width="30%"
+    v-if="!state.findPassword"
   >
     <el-form
       :model="state.form"
@@ -24,7 +25,9 @@
         ></el-input>
       </el-form-item>
     </el-form>
-    <div id="msg" v-if="state.isCheck">아이디, 비밀번호를 다시확인해주세요</div>
+    <div id="msg" v-if="state.isCheck">
+      이메일, 비밀번호를 다시 확인해주세요
+    </div>
     <el-button
       class="login-btn"
       type="primary"
@@ -33,7 +36,7 @@
       :disabled="!state.isVal"
       >로그인</el-button
     >
-    <a href="#" class="find-pwd">비밀번호 찾기</a>
+    <a href="#" @click="findPassword" class="find-pwd">비밀번호 찾기</a>
     <template #footer>
       <span class="dialog-footer">
         <el-divider></el-divider>
@@ -54,6 +57,29 @@
           </a>
         </div>
       </span>
+    </template>
+  </el-dialog>
+  <el-dialog
+    title="비밀번호 찾기"
+    v-model="state.dialogVisible"
+    @close="handleClose"
+    width="30%"
+    v-if="state.findPassword"
+  >
+    <div class="findPassword">
+      <el-input placeholder="Email" v-model="state.email"></el-input>
+      <el-button class="checkEmail" type="primary" @click="checkEmail"
+        >이메일확인</el-button
+      >
+    </div>
+    <div id="msg" v-if="state.isCheck">이메일을 다시 확인해주세요</div>
+    <template #footer>
+      <el-button
+        class="temporaryPassword"
+        @click="temporaryPassword"
+        :disabled="!state.isOnlyEmail"
+        >임시비밀번호발급</el-button
+      >
     </template>
   </el-dialog>
 </template>
@@ -104,8 +130,16 @@
 }
 #msg {
   color: red;
-  text-align: center;
   margin-bottom: 10px;
+}
+.findPassword {
+  display: flex;
+}
+.el-button.el-button--primary.checkEmail {
+  margin-left: 5px;
+}
+.temporaryPassword {
+  width: 100%;
 }
 </style>
 
@@ -133,6 +167,9 @@ export default {
     // Element UI Validators
     // rules의 객체 키 값과 form의 객체 키 값이 같아야 매칭되어 적용됨
     const state = reactive({
+      isOnlyEmail: false,
+      findPassword: false,
+      email: "",
       isCheck: false,
       form: {
         email: "",
@@ -204,6 +241,7 @@ export default {
       state.form.email = "";
       state.form.password = "";
       state.isCheck = false;
+      state.findPassword = false;
       emit("closeLoginDialog");
     };
 
@@ -256,7 +294,52 @@ export default {
         });
     }
 
-    return { loginForm, state, isValid, clickLogin, handleClose };
+    const findPassword = function() {
+      console.log("하이하이");
+      state.findPassword = true;
+    };
+
+    const checkEmail = function() {
+      store
+        .dispatch("auth/requestFindPassword", state.email)
+        .then(function(result) {
+          state.isCheck = false;
+          state.isOnlyEmail = true;
+        })
+        .catch(function(err) {
+          state.email = "";
+          state.isCheck = true;
+          state.isOnlyEmail = false;
+        });
+    };
+
+    const temporaryPassword = function() {
+      swal({
+        text:
+          "임시 비밀번호가 발급되었습니다. 해당 이메일로 전송된 비밀번호로 로그인해주세요!",
+        icon: "success"
+      });
+      state.findPassword = false;
+      store
+        .dispatch("auth/requestTemporaryPassword", { email: state.email })
+        .then(function(result) {
+          state.isOnlyEmail = false;
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+    };
+
+    return {
+      loginForm,
+      state,
+      isValid,
+      clickLogin,
+      handleClose,
+      findPassword,
+      checkEmail,
+      temporaryPassword
+    };
   }
 };
 </script>

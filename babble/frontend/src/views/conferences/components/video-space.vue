@@ -156,11 +156,36 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 6인 이상 추가 예정 -->
+    <div
+      v-if="state.videoGrid == 'more6'"
+      class="video-container"
+      style="display:flex; flex-wrap:wrap"
+    >
+      <UserVideo
+        v-if="state.publisher"
+        :stream-manager="state.publisher"
+        :profile="state.profile"
+        :isMe="true"
+        @toMain="updateMainVideoStreamManager(state.publisher)"
+        style="width:20vw"
+      />
+      <UserVideo
+        v-for="sub in state.subscribers"
+        :key="sub.stream.connection.connectionId"
+        :isMe="false"
+        :profile="state.profile"
+        :stream-manager="sub"
+        @toMain="updateMainVideoStreamManager(sub)"
+        @unpublishMe="unpublish(sub)"
+        style="width:20vw"
+      />
+    </div>
   </div>
 
   <!-- 메인 비디오 크게보기  -->
   <div v-if="state.showMainVideo" class="video-container main-video">
-    <el-row>
+    <el-row align="middle">
       <el-col :span="15">
         <UserVideo
           :streamManager="state.mainStreamManager"
@@ -170,31 +195,27 @@
           @click="state.showMainVideo = false"
         />
       </el-col>
-      <el-col :offset="1" :span="8">
-        <el-row>
-          <UserVideo
-            :stream-manager="state.publisher"
-            :isMe="true"
-            :profile="state.profile"
-            :id="state.publisher.stream.connection.connectionId"
-            @toMain="updateMainVideoStreamManager(state.publisher)"
-          />
-        </el-row>
-        <el-row v-if="state.subscribers.length != 0">
-          <UserVideo
-            :stream-manager="state.subscribers[0]"
-            :isMe="false"
-            :profile="state.profile"
-            :id="state.subscribers[0].stream.connection.connectionId"
-            @toMain="updateMainVideoStreamManager(state.subscribers[0])"
-            @unpublishMe="unpublish(state.subscribers[0])"
-          />
-        </el-row>
+      <el-col :offset="1" :span="8" class="video-scroll">
+        <UserVideo
+          :stream-manager="state.publisher"
+          :isMe="true"
+          :profile="state.profile"
+          :id="state.publisher.stream.connection.connectionId"
+          @toMain="updateMainVideoStreamManager(state.publisher)"
+        />
+        <UserVideo
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          :isMe="false"
+          :profile="state.profile"
+          :id="sub.stream.connection.connectionId"
+          @toMain="updateMainVideoStreamManager(sub)"
+          @unpublishMe="unpublish(sub)"
+        />
       </el-col>
     </el-row>
   </div>
-
-  <!-- 6인 이상 추가 예정 -->
 
   <!-- 버튼 -->
   <div v-if="state.isLoggedin" class="nav-icons">
@@ -864,13 +885,30 @@ export default {
 }
 
 .nologin-video {
-  padding-top: 50px;
   text-align: center;
 }
 
-.nologin-profile {
-  width: 200px;
-  height: 200px;
+.nologin-video .nologin-profile {
+  width: 60%;
+  height: 0%;
   object-fit: cover;
 }
+
+.video-scroll {
+  overflow-y: auto;
+  height: 75vh;
+}
+/* .video-scroll h5 {
+  margin: 10px 0 5px 0;
+} */
+.video-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.video-scroll::-webkit-scrollbar-thumb {
+  background-color: #9f05ff69;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
 </style>

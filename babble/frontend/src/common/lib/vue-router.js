@@ -10,8 +10,8 @@ import UserInfo from '@/views/mypage/components/user-info'
 import CategoryResult from '@/views/categories/components/category-result'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 import SearchResult from '@/views/search/search-result'
-import AboutUs from '@/views/home/about-us'
 import ErrorPage from '@/views/error/error-page'
+import AboutUs from '@/views/home/about-us'
 
 const fullMenu = require('@/views/main/menu.json')
 const categories_list = ['all', 'sports', 'cooking', 'handcraft', 'music', 'finance', 'game', 'movie', 'drawing', 'book', 'pet']
@@ -56,6 +56,7 @@ function makeRoutesFromMenu() {
           path: 'user-info',
           component: UserInfo
         },
+
       ]}
     } else if (key === 'search-result') {
       store.commit('menu/setMenuActive', 3)
@@ -63,7 +64,6 @@ function makeRoutesFromMenu() {
     } else if (key === 'about-us') {
       store.commit('menu/setMenuActive', 4)
       return { path: fullMenu[key].path, name: key, component: AboutUs  }
-
     } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }
@@ -71,7 +71,6 @@ function makeRoutesFromMenu() {
 
   // 로그아웃 파싱한 부분 제거
   routes = routes.filter(item => item)
-
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
@@ -86,11 +85,23 @@ function makeRoutesFromMenu() {
     component: ErrorPage
   })
 
+  // 카카오 라우터에 추가해주기
+  routes.push({
+    path: '/oauth/:pathMatch(.*)*',
+  })
+
+  // 구글 라우터에 추가해주기
+  routes.push({
+    path: '/login/oauth2/code/google/:pathMatch(.*)*',
+  })
+
   // 라우터에 존재하지 않을 경우 에러페이지로 이동
   routes.push({
     path: '/:pathMatch(.*)*',
     redirect: "/error"
-},)
+  })
+
+
 
 
   return routes
@@ -103,49 +114,29 @@ const router = createRouter({
   routes
 })
 
-function logout () {
-  store
-    .dispatch("auth/requestLogout")
-    .then(()=> store.commit("auth/setLogout"))
-    .then(()=>router.push("/"))
-}
-
 router.beforeEach(function (to, from, next) {
   // 마이페이지
   if (to.name == 'keyword' || to.name == 'history1' || to.name == 'history2' || to.name == 'user-info') {
     // 로그인 확인
-    let provider = store.getters['auth/getProvider']
-    console.log(provider, 'provider 확인!!')
-
-    if (provider == '') {
-      alert('로그인이 필요한 페이지입니다.')
-      router.push('/')
+    let isAuthenticated = false
+    if (store.getters['auth/getToken'] != null) {
+      isAuthenticated = true
     }
-    if (provider == 'babble') {
-      console.log('일반 유저 토큰 유효여부 axios 검증')
-      store
-        .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-        .then(function () {
-          console.log('문제없음');
-        })
-        .catch(function (err) {
-          if (err) {
-            console.log(err, '토큰이 풀려버림 로그아웃 처리')
-            swal({
-              text: "세션이 만료되었습니다.\n 다시 로그인해주세요.",
-              icon: "warning",
-            });
-            logout()
-          }
-        })
-       } else if (provider == 'kakao' || provider == 'google') {
-         console.log('소셜로그인 유저입니다')
-       }
+    // 로그인 안됐으면 alert
+    if (!isAuthenticated) {
+      alert('로그인이 필요한 페이지입니다.')
+      router.go('-1')
+    }
   }
-
+  
   // 카테고리 페이지
   if (categories_list.indexOf(to.name) >= 0) {
     store.commit('menu/setActiveCategory', to.name)
+  }
+
+  // 검색 페이지
+  if (to.name == 'search-result') {
+    store.commit("menu/setSearchWord", to.params.searchword);
   }
   next()
 })

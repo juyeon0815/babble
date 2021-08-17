@@ -27,7 +27,10 @@
         <li class="circle-img">
           <button @click="clickMyPage" class="circle">
             <div v-if="state.profile == 'default'">
-              <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+              <img
+                class="profile"
+                :src="require('@/assets/images/default_profile.png')"
+              />
             </div>
             <div v-else>
               <img class="profile" :src="state.profile" />
@@ -64,10 +67,6 @@
         <p class="desc">
           ba:bble : 와글와글, 왁자지껄 (여럿이 한꺼번에 떠드는 소리)
         </p>
-        <p class="desc2">
-          ba:bble : 와글와글, 왁자지껄<br>
-          여럿이 한꺼번에 떠드는 소리
-        </p>
       </div>
       <img
         :src="require('@/assets/images/Visionary technology-rafiki.png')"
@@ -86,11 +85,11 @@
 .header-space .overlay {
   width: 100%;
   height: 100%;
-  padding-top : 50px;
+  padding-top: 50px;
   color: #fff;
   border-radius: 0 0 90% 50% /30%;
   text-shadow: 1px 1px 1px #333;
-  background-image: linear-gradient(135deg, #9f05ff69 10%, #4a63cfc2 100%);
+  background-image: linear-gradient(to right, #9f05ff69 10%, #4a63cfc2 100%);
   position: relative;
 }
 
@@ -102,10 +101,7 @@
 
 .header-space .overlay .header-text .desc {
   color: #fce3ff;
-}
-
-.header-space .overlay .header-text .desc2 {
-  display: none;
+  font-weight: bold;
 }
 
 .illust {
@@ -121,7 +117,7 @@
   justify-content: space-between;
   align-items: center;
   background: transparent;
-  background-image: linear-gradient(40deg, #9f05ff69 40%, #4a63cfc2 100%);
+  background-image: linear-gradient(to right, #9f05ff69 10%, #4a63cfc2 100%);
   padding: 10px 42px;
 }
 
@@ -140,8 +136,29 @@
   background: none;
 }
 
+.navbar-logo h2 .purple {
+  position: relative;
+  top: 0px;
+  display: inline-block;
+  animation: bounce 0.6s ease infinite alternate;
+  margin: 5px;
+  font-size: 30pt;
+  color: #fff;
+}
+
+.navbar-logo h2 .purple:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+@keyframes bounce {
+  100% {
+    top: -10px;
+    text-shadow: 0 50px 25px rgba(0, 0, 0, 0.2);
+  }
+}
+
 .navbar-logo h2:hover .purple {
-  color: #341a63;
+  color: #4a1ca0;
   background: none;
 }
 
@@ -288,41 +305,31 @@
     display: block;
   }
 
+  .header-space {
+    height: 130px;
+  }
+
   .header-space .overlay {
     padding-top: 0px;
-    border-radius: 0 0 70% 70% /30%;
+    border-radius: 0;
     width: 100%;
     display: flex;
     justify-content: center;
   }
 
   .header-space .overlay .header-text {
-    margin-top: 7%;
+    margin-top: 0;
     padding-left: 0px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     width: 80%;
-    opacity: 0;
-  }
-
-  .header-space .overlay .header-text .desc {
-    display: none;
-  }
-
-  .header-space .overlay .header-text .desc2 {
-    display: block;
-    margin-top: 12%;
-    color: #341a63;
-    text-shadow: none;
-    font-weight: bold;
+    font-size: smaller;
   }
 
   .header-space .overlay .illust {
     display: none;
   }
-
-
 }
 </style>
 
@@ -349,14 +356,14 @@ export default {
       activeMenuIndex: computed(() => {
         return store.getters["menu/getActiveMenuIndex"];
       }),
-      provider : computed(()=>{
-        return store.getters["auth/getProvider"]
+      provider: computed(() => {
+        return store.getters["auth/getProvider"];
       }),
       token: computed(() => {
         return store.getters["auth/getToken"];
       }),
       email: computed(() => {
-        return store.getters["auth/getEmail"]
+        return store.getters["auth/getEmail"];
       })
     });
 
@@ -366,7 +373,6 @@ export default {
     //     // console.log(result.data.picture)
     //     store.commit("auth/setUserProfile", result.data.picture);
     //   });
-
 
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
@@ -402,34 +408,33 @@ export default {
 
     const clickMyPage = function() {
       let nowIndex = store.getters["menu/getActiveMenuIndex"];
-        if (nowIndex != 2) {
-          store.commit("menu/setMenuActive", 2);
-          router.push({
-            path: "/mypage/keyword"
-          });
-        }
+      if (nowIndex != 2) {
+        store.commit("menu/setMenuActive", 2);
+        router.push({
+          path: "/mypage/keyword"
+        });
+      }
     };
 
     //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
     const clickLogout = function() {
       console.log("clickLogout");
-      console.log(state.provider)
+      console.log(state.provider);
       if (state.provider === "kakao") {
-        store.dispatch("auth/requestKakaoLogout", state.token)
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
-      }
-      else {
         store
-        .dispatch("auth/requestLogout")
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
+          .dispatch("auth/requestKakaoLogout", state.token)
+          .then(() => store.commit("auth/setLogout"))
+          .then(() => router.push("/"));
+      } else {
+        store
+          .dispatch("auth/requestLogout")
+          .then(() => store.commit("auth/setLogout"))
+          .then(() => router.push("/"));
       }
-
     };
 
     const enterSearch = function() {
-      store.commit("menu/setMenuActive", 3)
+      store.commit("menu/setMenuActive", 3);
       store.commit("menu/setSearchWord", state.searchWord);
       router.push({
         path: `/search/${state.searchWord}`
@@ -451,38 +456,37 @@ export default {
     );
 
     const loadProfile = function() {
-      if (state.provider == 'google' || state.provider == 'kakao') {
-         store
-        .dispatch("auth/requestSocialUserInfo", {email: state.email})
-        .then(function (result) {
-          console.log(result, '소셜 로그인 유저 정보 받아오기')
-          store.commit("auth/setUserProfile", result.data.picture);
-        })
+      if (state.provider == "google" || state.provider == "kakao") {
+        store
+          .dispatch("auth/requestSocialUserInfo", { email: state.email })
+          .then(function(result) {
+            console.log(result, "소셜 로그인 유저 정보 받아오기");
+            store.commit("auth/setUserProfile", result.data.picture);
+          });
       } else {
         store
           .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-          .then(function (result) {
+          .then(function(result) {
             store.commit("auth/setUserProfile", result.data.picture);
           })
-          .catch(function (err) {
+          .catch(function(err) {
             if (err) {
-              console.log(err, '헤더에서 프로필로드하며 에러캐치')
+              console.log(err, "헤더에서 프로필로드하며 에러캐치");
               // clickLogout()
             }
-          })
+          });
       }
-
     };
 
-     window.addEventListener('scroll', function(e) {
-        if (document.documentElement.scrollTop > 100) {
-          let text = document.querySelector(".header-text")
-          text.style.opacity = "1"
-        } else {
-          let text = document.querySelector(".header-text")
-          text.style.opacity = "0"
-        }
-      })
+    //  window.addEventListener('scroll', function(e) {
+    //     if (document.documentElement.scrollTop > 100) {
+    //       let text = document.querySelector(".header-text")
+    //       text.style.opacity = "1"
+    //     } else {
+    //       let text = document.querySelector(".header-text")
+    //       text.style.opacity = "0"
+    //     }
+    //   })
 
     return {
       state,
@@ -495,7 +499,7 @@ export default {
       clickLogout,
       enterSearch,
       clickToggle,
-      loadProfile,
+      loadProfile
     };
   }
 };

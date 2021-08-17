@@ -3,7 +3,7 @@
     title="방 생성하기"
     v-model="state.dialogVisible"
     @close="handleClose"
-    width="40%"
+    width="35%"
   >
     <el-form
       @submit.prevent
@@ -28,8 +28,11 @@
         <el-input v-model="state.form.content" autocomplete="off"></el-input>
       </el-form-item>
 
-      <el-form-item label="방 썸네일 업데이트"
-      :label-width="state.formLabelWidth">
+      <el-form-item
+        label="방 썸네일 업데이트"
+        :label-width="state.formLabelWidth"
+        class="thumbnail-change"
+      >
         <input
           type="file"
           ref="fileInput"
@@ -37,13 +40,19 @@
           name="thumbnailUrl"
           @change="handleFileUpload()"
         />
+        <div class="file-search">
+          <div class="file-name">
+            <p v-if="state.form.file">{{ state.form.file.name }}</p>
+          </div>
+          <label for="thumbnailUrl">찾기</label>
+        </div>
       </el-form-item>
-        <el-form-item prop="category" label="카테고리"
-        :label-width="state.formLabelWidth">
-        <select
-        v-model="state.form.category"
-        class="select-box"
-        >
+      <el-form-item
+        prop="category"
+        label="카테고리"
+        :label-width="state.formLabelWidth"
+      >
+        <select v-model="state.form.category" class="select-box">
           <option value="" disabled selected hidden>카테고리</option>
           <option label="sports" value="sports"></option>
           <option label="cooking" value="cooking"></option>
@@ -56,9 +65,12 @@
           <option label="book" value="book"></option>
           <option label="pet" value="pet"></option>
         </select>
-
       </el-form-item>
-      <el-form-item prop="hashtag" label="해시태그" :label-width="state.formLabelWidth">
+      <el-form-item
+        prop="hashtag"
+        label="해시태그"
+        :label-width="state.formLabelWidth"
+      >
         <div class="inputGroup">
           <el-input
             placeholder="키워드를 입력해주세요(최대 5개)"
@@ -66,9 +78,13 @@
             v-model="state.form.inputValue"
             @keydown.enter="handleInputConfirm"
             :disabled="state.form.count == 5"
-            maxlength="15">
+            maxlength="15"
+          >
             <template #append>
-              <el-button icon="el-icon-plus" @click="handleInputConfirm"></el-button>
+              <el-button
+                icon="el-icon-plus"
+                @click="handleInputConfirm"
+              ></el-button>
             </template>
           </el-input>
         </div>
@@ -78,6 +94,7 @@
           closable
           :disable-transitions="false"
           @close="handleCloseTag(tag)"
+          class="room-tag"
         >
           {{ tag }}
         </el-tag>
@@ -146,19 +163,7 @@ export default {
             message: "필수 입력 항목입니다.",
             trigger: "change"
           }
-        ],
-        hashtag: [
-          {
-            trigger: "blur",
-            validator(rule, value, callback) {
-              if (state.form.roomHashtags.length <= 5) {
-                callback();
-              } else {
-                callback(new Error("최대 5개까지만 입력해주세요"));
-              }
-            }
-          }
-        ],
+        ]
       },
       email: computed(() => {
         return store.getters["auth/getEmail"];
@@ -190,6 +195,10 @@ export default {
       if (state.form.inputValue == "") {
         console.log("빈 키워드는 입력되지 않고 넘어가기");
         // alert('빈 키워드는 입력되지 않아요!')
+      } else if (state.form.inputValue.includes(" ")) {
+        console.log("공백문자 포함되지 않도록");
+      } else if (state.form.roomHashtags.includes(state.form.inputValue)) {
+        console.log("같은 키워드는 입력되지 않도록");
       } else {
         state.form.roomHashtags.push(state.form.inputValue);
         state.form.inputValue = "";
@@ -226,7 +235,7 @@ export default {
           content: state.form.content,
           thumbnailUrl: "default",
           category: state.form.category,
-          hashtag: joinHashtag,
+          hashtag: joinHashtag
         };
         store.dispatch("root/requestRoomCreate", payload).then(res =>
           router.push({
@@ -236,7 +245,11 @@ export default {
             }
           })
         );
-        store.commit('root/setIsHost', true)
+        console.log(joinHashtag, "해시태그조인");
+        store.dispatch("root/requestHashtagEmail", joinHashtag).then(res => {
+          console.log(res);
+        });
+        store.commit("root/setIsHost", true);
         handleClose();
       } else {
         let upload = new AWS.S3.ManagedUpload({
@@ -264,7 +277,7 @@ export default {
               content: state.form.content,
               thumbnailUrl: data.Location,
               category: state.form.category,
-              hashtag: joinHashtag,
+              hashtag: joinHashtag
             };
             store.dispatch("root/requestRoomCreate", payload).then(res =>
               router.push({
@@ -274,7 +287,9 @@ export default {
                 }
               })
             );
-            store.commit('root/setIsHost', true)
+            store.dispatch("root/requestHashtagEmail", joinHashtag);
+
+            store.commit("root/setIsHost", true);
             handleClose();
           },
           function(err) {
@@ -285,7 +300,6 @@ export default {
           }
         );
       }
-
     };
 
     const handleClose = function() {
@@ -293,7 +307,7 @@ export default {
       state.form.content = "";
       state.form.category = "";
       state.form.roomHashtags = [];
-      thumbnailUrl.value=null;
+      thumbnailUrl.value = null;
       emit("closeRoomCreateDialog");
     };
 
@@ -314,24 +328,63 @@ export default {
 </script>
 
 <style>
-  .select-box {
-    width: 100px;
-    padding: 5px;
-    border: 1px solid #999;
-    border-radius: 3px;
-  }
-  .create-btn {
-    background-color: #a8a0ff;
-    width: 100%;
-  }
+.select-box {
+  width: 100px;
+  padding: 5px;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+.create-btn {
+  background-color: #a8a0ff;
+  width: 100%;
+}
 
+.thumbnail-change input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  padding: 0;
+}
+
+.thumbnail-change .file-search {
+  display: flex;
+  align-items: center;
+}
+
+.thumbnail-change .file-name {
+  display: inline-block;
+  width: 100%;
+  height: 35px;
+  border: 1px solid #dcdfe6;
+  border-radius: 5px;
+  background: transparent;
+}
+
+.thumbnail-change .file-search > label {
+  display: inline-block;
+  width: 70px;
+  height: 38px;
+  margin-left: 5px;
+  background-color: #a8a0ff;
+  color: white;
+  cursor: pointer;
+  line-height: 35px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.thumbnail-change .file-name > p {
+  position: relative;
+  top: -15px;
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 480px) {
   .el-dialog {
-    width: 30% !important;
+    width: 80% !important;
   }
-
-  @media screen and (max-width: 480px) {
-    .el-dialog {
-      width: 80% !important;
-    }
-  }
+}
 </style>

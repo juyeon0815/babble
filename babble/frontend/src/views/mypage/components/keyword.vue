@@ -14,7 +14,10 @@
         maxlength="15"
       >
         <template #append>
-          <el-button icon="el-icon-plus" @click="handleInputConfirm"></el-button>
+          <el-button
+            icon="el-icon-plus"
+            @click="handleInputConfirm"
+          ></el-button>
         </template>
       </el-input>
     </div>
@@ -41,15 +44,18 @@
       ></el-switch>
     </div>
   </div>
-  <div class="keyword-circle">
+  <div class="keyword-circle" id="rotateme">
     <el-popover
       placement="top-start"
       title="Let's Ba:bble"
       trigger="hover"
       content="당신을 위한 오늘의 추천 키워드는 싸피입니다!"
-       >
+    >
       <template #reference>
-        <img class="keyword-profile" :src="require('@/assets/images/default_profile.png')" />
+        <img
+          class="keyword-profile"
+          :src="require('@/assets/images/default_profile.png')"
+        />
       </template>
     </el-popover>
   </div>
@@ -85,7 +91,7 @@ export default {
       inputValue: "",
       provider: computed(() => {
         return store.getters["auth/getProvider"];
-      }),
+      })
     });
 
     store
@@ -98,26 +104,25 @@ export default {
         }
       });
 
-
-    if (state.provider == 'google' || state.provider == 'kakao') {
+    if (state.provider == "google" || state.provider == "kakao") {
       store
-        .dispatch("auth/requestSocialUserInfo", {email: state.email})
-        .then(function (result) {
-          console.log(result, '소셜 로그인 유저 정보 받아오기')
+        .dispatch("auth/requestSocialUserInfo", { email: state.email })
+        .then(function(result) {
+          console.log(result, "소셜 로그인 유저 정보 받아오기");
           store.commit("auth/setDefaultAlarm", result.data.alarm);
-        })
+        });
     } else {
-       store
+      store
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
         .then(function(result) {
           console.log(result.data.alarm);
-          store.commit("auth/setDefaultAlarm", result.data.alarm)
+          store.commit("auth/setDefaultAlarm", result.data.alarm);
         })
-        .catch(function (err) {
+        .catch(function(err) {
           if (err) {
-            console.log(err, '키워드에서 axios날리며 받은 캐치')
+            console.log(err, "키워드에서 axios날리며 받은 캐치");
           }
-        })
+        });
     }
 
     const handleClose = function(tag) {
@@ -139,8 +144,21 @@ export default {
       if (state.inputValue == "") {
         swal({
           text: "빈 키워드는 입력되지 않아요!",
+          icon: "warning"
+        });
+      } else if (state.inputValue.includes(" ")) {
+         swal({
+          text: "공백 문자는 포함하지 않아요!",
           icon: "warning",
         });
+        state.inputValue = ""
+      } else if (state.userHashtags.includes(state.inputValue)) {
+        // console.log("같은 키워드는 입력되지 않도록")
+         swal({
+          text: "같은 키워드는 입력되지 않아요!",
+          icon: "warning",
+        });
+        state.inputValue = ""
       } else {
         store.commit("auth/setUserHashtagPush", state.inputValue);
         store
@@ -206,7 +224,7 @@ export default {
 }
 
 .keyword-box .tag-group .tag {
-  height: 5vh;
+  height: 38px;
   margin-right: 1%;
   background-image: linear-gradient(130deg, #9f05ff69 20%, #4a63cfc2 100%);
   color: white;
@@ -261,7 +279,6 @@ export default {
 
 .keyword-circle {
   margin-left: 3%;
-  border-radius: 50%;
 }
 
 .keyword-profile {
@@ -269,10 +286,8 @@ export default {
   position: fixed;
   bottom: 3%;
   width: 15%;
-  height: 25%;
-
   object-fit: cover;
-  animation: rotate 3s infinite
+  animation: rotate 3s infinite;
 }
 
 @media screen and (max-width: 480px) {
@@ -298,12 +313,10 @@ export default {
   .keyword-profile {
     position: fixed;
     bottom: 3%;
-    width: 30%;
-    height: 20%;
+    width: 20%;
     border-radius: 30%;
     object-fit: cover;
-    animation: rotate 3s infinite
+    animation: rotate 3s infinite;
   }
-
 }
 </style>

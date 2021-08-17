@@ -61,7 +61,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" round @click="clickJoin" :disabled="!state.isVal"
+        <el-button class="join-btn" type="primary" round @click="clickJoin" :disabled="!state.isVal"
           >회원가입</el-button
         >
       </span>
@@ -72,6 +72,7 @@
 <script>
 import { reactive, computed, ref } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from 'vue-router'
 
 export default {
   name: "join-dialog",
@@ -85,6 +86,7 @@ export default {
 
   setup(props, { emit }) {
     const store = useStore();
+    const router = useRouter()
     // 마운트 이후 바인딩
     const joinForm = ref(null);
 
@@ -246,10 +248,15 @@ export default {
             })
             .then(function(result) {
               swal({
-                text: "회원가입이 완료되었습니다.\n Ba:bble에 오신 것을 환영합니다!",
+                text: "회원가입이 완료되었습니다.\n Ba:bble에 대해 설명드릴게요!",
                 icon: "success",
               });
               emit("closeJoinDialog");
+              store.commit('menu/setMenuActive', 4)
+              router.push({
+                name: 'about-us'
+              })
+              .then((() =>window.scrollTo(0,0) ))
             })
             .catch(function(err) {
               alert(err);
@@ -288,7 +295,6 @@ export default {
 .el-button.el-button--primary.is-disabled {
     background-color: #a8a0ff;
     border-color: #a0cfff00;
-    width: 100%;
     }
   .el-button.el-button--primary{
     background-color: #a8a0ff;
@@ -299,8 +305,10 @@ export default {
     border-color: #a0cfff00;
   }
    .el-dialog__body {
-
     padding: 30px;
     padding-top: 10px;
     }
+  .join-btn {
+    width: 100%;
+  }
 </style>

@@ -2,14 +2,16 @@
 <el-row>
   <el-col :xs="24" :sm="8" :offset="1">
     <div class="profile-box">
-      <div v-if="state.profile == 'default'" class="circle">
-        <img class="profile" :src="require('@/assets/images/default_profile.png')" />
-      </div>
-      <div v-else class="circle">
-        <img :src="state.profile" alt="내 프로필" class="profile"/>
+      <div class="profile-header">
+        <div v-if="state.profile == 'default'" class="circle">
+          <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+        </div>
+        <div v-else class="circle">
+          <img :src="state.profile" alt="내 프로필" class="profile"/>
+        </div>
+        <label for="newProfile"><i class="fas fa-plus"></i></label>
       </div>
       <div class="profile-change-form">
-        <label for="newProfile"><i class="fas fa-plus"></i></label>
         <input type="file" id="newProfile" name="newProfile" ref="fileInput" @change="handleFileUpload()"><br/>
         <div class="file-search">
           <div class="file-name">
@@ -128,8 +130,6 @@ export default {
     const AWS = require("aws-sdk");
 
     const state = reactive({
-      circleUrl:
-        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       email: computed(() => {
         return store.getters["auth/getEmail"];
       }),
@@ -359,13 +359,14 @@ export default {
                 icon: "info",
               })
               store.commit("auth/setLogout");
-              router.push("/");
+              router.push("/")
+              .then((() =>window.scrollTo(0,0) ))
             });
         }
       });
 
 
-      
+
     };
 
     return {
@@ -408,7 +409,15 @@ export default {
 
 .profile-box {
   flex-direction: column;
-  margin-top: 4%;
+  margin-top: 9%;
+}
+
+.profile-header {
+  width: 250px;
+  height: 250px;
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
 }
 
 .profile-box .circle {
@@ -432,12 +441,11 @@ export default {
   object-fit: cover;
 }
 
-.profile-change-form>label {
+.profile-header>label {
   position: absolute;
-  left: 23rem;
-  top: 14rem;
-  display: inline-block;
-
+  display: inline;
+  left: 170px;
+  bottom: 16px;
   width: 50px;
   height: 50px;
   background-color: rgba(113, 28, 250, 0.432);
@@ -460,8 +468,8 @@ export default {
 
 .profile-change-form .file-search {
   display: flex;
+  justify-content: center;
   align-items: center;
-  margin-top: 4%;
 }
 
 .profile-change-form .file-name {
@@ -471,7 +479,6 @@ export default {
   border: 1px solid purple;
   border-radius: 5px;
   background: transparent;
-  margin-left: 25%;
 }
 
 .profile-change-form .file-search>label {
@@ -557,7 +564,7 @@ export default {
 }
 
 .delete-user-box {
-  margin-top: 30%;
+  margin-top: 16%;
   margin-left: 9%;
 }
 

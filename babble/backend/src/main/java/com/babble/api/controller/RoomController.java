@@ -72,8 +72,6 @@ public class RoomController {
         //room create
         Room room = roomService.createRoom(category, user, roomCreateReq);
 
-        HashMap<String, String> userHashtagMap = new HashMap<String, String>();
-
         //설정한 해시태그가 해시태그 테이블에 없을 경우, 추가 후 room_hashtag테이블에 roomId 와 hashtagId 함께 저장
         String[] tagList = roomCreateReq.getHashtag().split(" ");
         for (int i = 0; i < tagList.length; i++) {
@@ -84,7 +82,23 @@ public class RoomController {
             } else { //해당 해시태그 있을 경우
                 RoomHashtag roomHashtag = roomHashtagService.createRoomHashtag(tag, room);
             }
+        } //for
 
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
+    }
+
+    @PostMapping("/sendEmail")
+    @ApiOperation(value = "이메일 알람", notes = "설정한 키워드 방 생성시 이메일 알람")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity categoryBestList(@RequestBody @ApiParam(value="입장", required = true) String hashtag) throws Exception {
+        HashMap<String, String> userHashtagMap = new HashMap<String, String>();
+        String[] tagList = hashtag.split(" ");
+        for (int i = 0; i < tagList.length; i++) {
             // 해당 해시테그를 가지고 있으면서 이메일 알림을 설정한 유저들을 조회
             List<String> userList = userHashtagService.getUserByHashtag(tagList[i]);
             System.out.println(" >>>>> userList: " + userList);
@@ -99,17 +113,14 @@ public class RoomController {
                 }
             }
         } //for
-
-        System.out.println(">> 생성된 방 " + room.getId());
         // HashMap에 담긴 정보로 이메일 전송
         if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
             for(String userEmail: userHashtagMap.keySet()) {
                 System.out.println(userEmail + " "  + userHashtagMap.get(userEmail) + " 이메일 전송");
-                emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail), room.getId());
+                emailService.sendHashtagMessage(userEmail, userHashtagMap.get(userEmail));
             }
         }
-
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @PostMapping("/enter")

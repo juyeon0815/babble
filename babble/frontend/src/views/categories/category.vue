@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="category-container">
     <div class="tab-menu">
       <router-link to="all"><button class="tab-menu-link" id="all">전체보기</button></router-link>
       <router-link to="sports"><button class="tab-menu-link" id="sports">스포츠</button></router-link>
@@ -19,7 +19,7 @@
 </template>
 
 <style scoped>
-  .container {
+  .category-container {
     margin: 20px 0 20px 0;
   }
   .tab-menu {
@@ -49,6 +49,23 @@
     z-index: 0;
     overflow: hidden;
     border-bottom: 3px solid #8860D8;
+  }
+
+  @media screen and (max-width: 480px) {
+    .category-container {
+      overflow: auto;
+      white-space: nowrap;
+    }
+    .category-container::-webkit-scrollbar {
+      width: 10px;
+    }
+    .category-container::-webkit-scrollbar-thumb {
+      background-color: lightgrey;
+      border-radius: 10px;
+      background-clip: padding-box;
+      border: 6px solid transparent;
+      visibility: visible;
+    }
   }
 </style>
 

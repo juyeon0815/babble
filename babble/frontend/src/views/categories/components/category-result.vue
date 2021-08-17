@@ -1,6 +1,6 @@
 <template>
   <el-row class="result-container">
-    <el-col :offset="18">
+    <el-col :offset="18" class="hideCol">
       <div class="switch-order">
         <el-radio v-model="state.radio" label="best" @change="changetoBest"
           >인기순 정렬</el-radio
@@ -38,7 +38,7 @@
         />
       </el-row>
     </el-col>
-    <el-col :offset="20">
+    <el-col :offset="20" class="hideCol">
       <el-button
         type="text"
         @click="clickMore"
@@ -234,5 +234,11 @@ export default {
   padding: 15px;
   border-radius: 10px;
   font-size: 18px;
+}
+
+@media screen and (max-width: 480px) {
+  .hideCol {
+    display: none;
+  }
 }
 </style>
