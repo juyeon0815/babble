@@ -27,7 +27,10 @@
         <li class="circle-img">
           <button @click="clickMyPage" class="circle">
             <div v-if="state.profile == 'default'">
-              <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+              <img
+                class="profile"
+                :src="require('@/assets/images/default_profile.png')"
+              />
             </div>
             <div v-else>
               <img class="profile" :src="state.profile" />
@@ -82,11 +85,11 @@
 .header-space .overlay {
   width: 100%;
   height: 100%;
-  padding-top : 50px;
+  padding-top: 50px;
   color: #fff;
   border-radius: 0 0 90% 50% /30%;
   text-shadow: 1px 1px 1px #333;
-  background-image: linear-gradient(90deg, #9f05ff69 40%, #4a63cfc2 100%);
+  background-image: linear-gradient(to right, #9f05ff69 10%, #4a63cfc2 100%);
   position: relative;
 }
 
@@ -114,7 +117,7 @@
   justify-content: space-between;
   align-items: center;
   background: transparent;
-  background-image: linear-gradient(90deg, #9f05ff69 40%, #4a63cfc2 100%);
+  background-image: linear-gradient(to right, #9f05ff69 10%, #4a63cfc2 100%);
   padding: 10px 42px;
 }
 
@@ -334,14 +337,14 @@ export default {
       activeMenuIndex: computed(() => {
         return store.getters["menu/getActiveMenuIndex"];
       }),
-      provider : computed(()=>{
-        return store.getters["auth/getProvider"]
+      provider: computed(() => {
+        return store.getters["auth/getProvider"];
       }),
       token: computed(() => {
         return store.getters["auth/getToken"];
       }),
       email: computed(() => {
-        return store.getters["auth/getEmail"]
+        return store.getters["auth/getEmail"];
       })
     });
 
@@ -398,23 +401,22 @@ export default {
     //state.provider 타입에 따라서 로그인한 타입에 따라서 dispatch 다르게
     const clickLogout = function() {
       console.log("clickLogout");
-      console.log(state.provider)
+      console.log(state.provider);
       if (state.provider === "kakao") {
-        store.dispatch("auth/requestKakaoLogout", state.token)
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
-      }
-      else {
         store
-        .dispatch("auth/requestLogout")
-        .then(()=> store.commit("auth/setLogout"))
-        .then(()=>router.push("/"));
+          .dispatch("auth/requestKakaoLogout", state.token)
+          .then(() => store.commit("auth/setLogout"))
+          .then(() => router.push("/"));
+      } else {
+        store
+          .dispatch("auth/requestLogout")
+          .then(() => store.commit("auth/setLogout"))
+          .then(() => router.push("/"));
       }
-
     };
 
     const enterSearch = function() {
-      store.commit("menu/setMenuActive", 3)
+      store.commit("menu/setMenuActive", 3);
       store.commit("menu/setSearchWord", state.searchWord);
       router.push({
         path: `/search/${state.searchWord}`
@@ -436,27 +438,26 @@ export default {
     );
 
     const loadProfile = function() {
-      if (state.provider == 'google' || state.provider == 'kakao') {
-         store
-        .dispatch("auth/requestSocialUserInfo", {email: state.email})
-        .then(function (result) {
-          console.log(result, '소셜 로그인 유저 정보 받아오기')
-          store.commit("auth/setUserProfile", result.data.picture);
-        })
+      if (state.provider == "google" || state.provider == "kakao") {
+        store
+          .dispatch("auth/requestSocialUserInfo", { email: state.email })
+          .then(function(result) {
+            console.log(result, "소셜 로그인 유저 정보 받아오기");
+            store.commit("auth/setUserProfile", result.data.picture);
+          });
       } else {
         store
           .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-          .then(function (result) {
+          .then(function(result) {
             store.commit("auth/setUserProfile", result.data.picture);
           })
-          .catch(function (err) {
+          .catch(function(err) {
             if (err) {
-              console.log(err, '헤더에서 프로필로드하며 에러캐치')
+              console.log(err, "헤더에서 프로필로드하며 에러캐치");
               // clickLogout()
             }
-          })
+          });
       }
-
     };
 
     //  window.addEventListener('scroll', function(e) {

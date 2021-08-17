@@ -59,7 +59,7 @@ export default {
       })
       .catch(function (err) {
         swal({
-          text: "특수문자 검색은 제한됩니다. 다른 키워드를 검색해보세요!",
+          text: "특수문자 검색은 제한됩니다.\n 다른 키워드를 검색해보세요!",
           icon: "warning",
         })
       })

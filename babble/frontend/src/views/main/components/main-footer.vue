@@ -1,7 +1,8 @@
 <template>
   <div v-if="state.activeMenuIndex != -1" class="footer-container">
     <footer class="site-footer">
-      <a href="#"><h6>About Us</h6></a>
+      <!-- <a href="#"><h6>About Us</h6></a> -->
+      <h6 @click="aboutUs">About Us</h6>
       <p class="copyright-text">Copyright &copy; 2021 All Rights Reserved by Team Ba:bble</p>
     </footer>
   </div>
@@ -10,6 +11,7 @@
 <script>
 import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   setup() {
@@ -19,7 +21,17 @@ export default {
         return store.getters['menu/getActiveMenuIndex']
       })
     })
-    return { state }
+    const router = useRouter()
+    const route = useRoute()
+
+    const aboutUs = function() {
+      store.commit('menu/setMenuActive', 4)
+      router.push({
+        name: 'about-us'
+      })
+      .then((() =>window.scrollTo(0,0) ))
+    }
+    return { state, aboutUs }
   }
 }
 </script>
@@ -45,6 +57,7 @@ export default {
   margin:5px 0 20px 0;
   letter-spacing:2px;
   text-align: center;
+  cursor: pointer;
 }
 .site-footer a {
   text-decoration: none;

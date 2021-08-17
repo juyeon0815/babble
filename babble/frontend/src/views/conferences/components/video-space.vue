@@ -30,7 +30,10 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <img
+              class="nologin-profile"
+              :src="require('@/assets/images/default_profile.png')"
+            />
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -59,7 +62,10 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <img
+              class="nologin-profile"
+              :src="require('@/assets/images/default_profile.png')"
+            />
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -111,7 +117,10 @@
             @toMain="updateMainVideoStreamManager(state.publisher)"
           />
           <div v-if="!state.isLoggedin" class="nologin-video">
-            <img class="nologin-profile" :src="require('@/assets/images/default_profile.png')" />
+            <img
+              class="nologin-profile"
+              :src="require('@/assets/images/default_profile.png')"
+            />
             <p>비회원으로 방에 참여중입니다.</p>
           </div>
         </el-col>
@@ -147,11 +156,31 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 6인 이상 추가 예정 -->
+    <div
+      v-if="state.videoGrid == 'more6'"
+      class="video-container"
+      style="display:flex; flex-wrap:wrap"
+    >
+      <UserVideo
+        v-if="state.publisher"
+        :stream-manager="state.publisher"
+        @click="updateMainVideoStreamManager(publisher)"
+        style="width:20vw"
+      />
+      <UserVideo
+        v-for="sub in state.subscribers"
+        :key="sub.stream.connection.connectionId"
+        :stream-manager="sub"
+        @click="updateMainVideoStreamManager(sub)"
+        style="width:20vw"
+      />
+    </div>
   </div>
 
   <!-- 메인 비디오 크게보기  -->
   <div v-if="state.showMainVideo" class="video-container main-video">
-    <el-row>
+    <el-row align="middle">
       <el-col :span="15">
         <UserVideo
           :streamManager="state.mainStreamManager"
@@ -184,8 +213,6 @@
       </el-col>
     </el-row>
   </div>
-
-  <!-- 6인 이상 추가 예정 -->
 
   <!-- 버튼 -->
   <div v-if="state.isLoggedin" class="nav-icons">
@@ -407,7 +434,6 @@ export default {
           // 누군가 나갈 때
           state.session.on("streamDestroyed", ({ stream }) => {
             const index = state.subscribers.indexOf(stream.streamManager, 0);
-            console.log("나가~");
             if (index >= 0) {
               state.subscribers.splice(index, 1);
             }
@@ -580,9 +606,8 @@ export default {
           text: "호스트 퇴장 시 방이 자동으로 종료됩니다.\n 퇴장하시겠습니까?",
           icon: "warning",
           buttons: true,
-          dangerMode: true,
-        })
-        .then((willExit) => {
+          dangerMode: true
+        }).then(willExit => {
           if (willExit) {
             const payload = {
               roomId: state.mySessionId,
@@ -605,7 +630,7 @@ export default {
               })
               .catch(error => console.log(error));
           }
-        })
+        });
         // 오픈비두 방 종료
       } else {
         // 시청자가 나갈 때
@@ -875,13 +900,12 @@ export default {
 }
 
 .nologin-video {
-  padding-top: 50px;
   text-align: center;
 }
 
-.nologin-profile {
-  width: 200px;
-  height: 200px;
+.nologin-video .nologin-profile {
+  width: 60%;
+  height: 0%;
   object-fit: cover;
 }
 </style>

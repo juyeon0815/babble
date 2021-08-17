@@ -8,9 +8,11 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@j-t-mcc/vue3-chartjs": "^1.1.4",
     "@mdi/font": "5.9.55",
     "aws-sdk": "^2.959.0",
     "axios": "^0.21.1",
+    "chart.js": "^3.5.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.44",
     "node-sass": "^6.0.0",
@@ -22,6 +24,7 @@
     "sweetalert": "^2.1.2",
     "vue": "^3.0.0",
     "vue-axios": "^3.2.4",
+    "vue-chartjs": "^3.5.1",
     "vue-i18n": "^9.1.6",
     "vue-kakao-sdk": "^0.2.0",
     "vue-router": "^4.0.6",
