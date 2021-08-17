@@ -130,8 +130,6 @@ export default {
     const AWS = require("aws-sdk");
 
     const state = reactive({
-      circleUrl:
-        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       email: computed(() => {
         return store.getters["auth/getEmail"];
       }),
@@ -565,7 +563,7 @@ export default {
 }
 
 .delete-user-box {
-  margin-top: 30%;
+  margin-top: 16%;
   margin-left: 9%;
 }
 
