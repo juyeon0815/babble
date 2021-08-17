@@ -146,6 +146,7 @@ export default {
 
 .h-scroll .h-tag {
   display: inline-block;
+  margin-right: 5px;
 }
 
 .card-top {

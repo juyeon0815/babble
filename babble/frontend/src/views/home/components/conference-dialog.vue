@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="Ba:bble" v-model="state.dialogVisible" @close="handleClose">
+  <el-dialog title="Ba:bble" v-model="state.dialogVisible" @close="handleClose" width="45%">
     <el-row class="description">
       <el-col :offset="1">
         <h2>방 제목 : {{ state.title }}</h2>
