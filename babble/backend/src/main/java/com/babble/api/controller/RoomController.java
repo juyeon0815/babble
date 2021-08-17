@@ -87,7 +87,7 @@ public class RoomController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, room.getId().toString()));
     }
 
-    @GetMapping("/sendEmail")
+    @PostMapping("/sendEmail")
     @ApiOperation(value = "이메일 알람", notes = "설정한 키워드 방 생성시 이메일 알람")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

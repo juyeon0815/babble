@@ -12,9 +12,10 @@ axios.defaults.headers['Content-Type'] = DEFAULT_ACCEPT_TYPE
 
 axios.interceptors.request.use(
     config => {
+        console.log("%%%%%%%%%%");
+        console.log(config);
         // 이메일 보낼 때 스피너 처리 x
         if (config.url != "/room/sendEmail") {
-            console.log("%%%%%%%%%%");
             store.commit('root/startSpinner');
         }
 
