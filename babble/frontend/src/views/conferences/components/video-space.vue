@@ -188,18 +188,18 @@
     <el-row align="middle">
       <el-col :span="15">
         <UserVideo
+          :key="state.mainStreamManager.stream.connection.connectionId"
           :streamManager="state.mainStreamManager"
           :isMe="true"
-          :profile="state.profile"
           :id="state.mainStreamManager.stream.connection.connectionId"
           @click="state.showMainVideo = false"
         />
       </el-col>
       <el-col :offset="1" :span="8" class="video-scroll">
         <UserVideo
+          :key="state.publisher.stream.connection.connectionId"
           :stream-manager="state.publisher"
           :isMe="true"
-          :profile="state.profile"
           :id="state.publisher.stream.connection.connectionId"
           @toMain="updateMainVideoStreamManager(state.publisher)"
         />
@@ -208,7 +208,6 @@
           :key="sub.stream.connection.connectionId"
           :stream-manager="sub"
           :isMe="false"
-          :profile="state.profile"
           :id="sub.stream.connection.connectionId"
           @toMain="updateMainVideoStreamManager(sub)"
           @unpublishMe="unpublish(sub)"
@@ -910,5 +909,4 @@ export default {
   background-clip: padding-box;
   border: 2px solid transparent;
 }
-
 </style>

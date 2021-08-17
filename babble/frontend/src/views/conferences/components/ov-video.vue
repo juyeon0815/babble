@@ -16,6 +16,7 @@ export default {
     const el = ref(null);
 
     onMounted(() => {
+      console.log("OV-VIDEO");
       props.streamManager.addVideoElement(el.value);
     });
 
