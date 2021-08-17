@@ -382,6 +382,10 @@ export default {
   margin-left: 10px;
 }
 
+.room-tag {
+  margin-right: 3%;
+}
+
 @media screen and (max-width: 480px) {
   .el-dialog {
     width: 80% !important;
