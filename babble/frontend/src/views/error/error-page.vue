@@ -86,7 +86,7 @@ h1 {
 
 h2 {
   color: rgb(255, 255, 255);
-  font-size: 30px;
+  font-size: 20pt;
   font-family: this_is_font_name;
   text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
     0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
@@ -100,7 +100,7 @@ h1 span {
   animation: bounce 0.4s ease infinite alternate;
   font-family: this_is_font_name;
   margin: 5px;
-  font-size: 80px;
+  font-size: 70pt;
   color: #fff;
   text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
     0 5px 0 #ccc, 0 6px 0 transparent, 0 7px 0 transparent, 0 8px 0 transparent,
@@ -135,6 +135,47 @@ h1 span:nth-child(8) {
     text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
       0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
       0 50px 25px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .error-body {
+    position: absolute;
+
+    font-family: this_is_font_name;
+    width: 100%;
+    background: linear-gradient(
+      to right,
+      rgb(254, 227, 255),
+      rgb(173, 101, 235)
+    );
+    -webkit-font-smoothing: antialiased;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+
+  h2 {
+    color: rgb(255, 255, 255);
+    font-size: 15pt;
+    font-family: this_is_font_name;
+    text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
+      0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
+      0 50px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  h1 span {
+    position: relative;
+    top: 20px;
+    display: inline-block;
+    animation: bounce 0.4s ease infinite alternate;
+    font-family: this_is_font_name;
+    margin: 5px;
+    font-size: 40pt;
+    color: #fff;
+    text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
+      0 5px 0 #ccc, 0 6px 0 transparent, 0 7px 0 transparent,
+      0 8px 0 transparent, 0 9px 0 transparent, 0 10px 10px rgba(0, 0, 0, 0.4);
   }
 }
 </style>
