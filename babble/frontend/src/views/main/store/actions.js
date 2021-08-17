@@ -32,6 +32,10 @@ export function requestRoomHost ({ state }, roomId) {
   return $axios.get(`room/host/${roomId}`)
 }
 
+export function requestHashtagEmail ({ state },hashtag) {
+  return $axios.get(`room/sendEmail`,hashtag)
+}
+
 export async function requestRandomName ({ state }) {
   return await $axios.get(`room/random`)
 }

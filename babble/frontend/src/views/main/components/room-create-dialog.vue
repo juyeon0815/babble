@@ -237,6 +237,8 @@ export default {
           category: state.form.category,
           hashtag: joinHashtag
         };
+
+        // 방생성
         store.dispatch("root/requestRoomCreate", payload).then(res =>
           router.push({
             name: "conference-detail",
@@ -245,6 +247,8 @@ export default {
             }
           })
         );
+        // 이메일 보내기
+        store.dispatch("root/requestHashtagEmail", joinHashtag);
         store.commit("root/setIsHost", true);
         handleClose();
       } else {
@@ -283,6 +287,8 @@ export default {
                 }
               })
             );
+            store.dispatch("root/requestHashtagEmail", joinHashtag);
+
             store.commit("root/setIsHost", true);
             handleClose();
           },
