@@ -1,117 +1,153 @@
 <template>
-<el-row>
-  <el-col :xs="24" :sm="8" :offset="1">
-    <div class="profile-box">
-      <div class="profile-header">
-        <div v-if="state.profile == 'default'" class="circle">
-          <img class="profile" :src="require('@/assets/images/default_profile.png')" />
+  <el-row>
+    <el-col :xs="24" :sm="8" :offset="1">
+      <div class="profile-box">
+        <div class="profile-header">
+          <div v-if="state.profile == 'default'" class="circle">
+            <img
+              class="profile"
+              :src="require('@/assets/images/default_profile.png')"
+            />
+          </div>
+          <div v-else class="circle">
+            <img :src="state.profile" alt="내 프로필" class="profile" />
+          </div>
+          <label for="newProfile"><i class="fas fa-plus"></i></label>
         </div>
-        <div v-else class="circle">
-          <img :src="state.profile" alt="내 프로필" class="profile"/>
+        <div class="profile-change-form">
+          <input
+            type="file"
+            id="newProfile"
+            name="newProfile"
+            ref="fileInput"
+            @change="handleFileUpload()"
+          /><br />
+          <div class="file-search">
+            <div class="file-name">
+              <p v-if="state.form.file">{{ state.form.file.name }}</p>
+            </div>
+            <label for="newProfile">찾기</label>
+          </div>
+          <div class="profile-btn-group">
+            <button class="btn-upload" @click="updateProfile">
+              프로필 업로드
+            </button>
+            <button class="btn-delete" @click="deleteProfile">
+              프로필 삭제
+            </button>
+            <div v-if="state.provider == 'google'" class="provider-circle">
+              <img
+                class="provider-logo"
+                :src="require('@/assets/images/google-icon.png')"
+              />
+            </div>
+            <div v-else-if="state.provider == 'kakao'" class="provider-circle">
+              <img
+                class="provider-logo"
+                :src="require('@/assets/images/kakao-icon.png')"
+              />
+            </div>
+            <div v-else class="provider-circle">
+              <img
+                class="provider-babble"
+                :src="require('@/assets/images/provider_babble.png')"
+              />
+            </div>
+          </div>
         </div>
-        <label for="newProfile"><i class="fas fa-plus"></i></label>
       </div>
-      <div class="profile-change-form">
-        <input type="file" id="newProfile" name="newProfile" ref="fileInput" @change="handleFileUpload()"><br/>
-        <div class="file-search">
-          <div class="file-name">
-            <p v-if="state.form.file">{{ state.form.file.name }}</p>
-          </div>
-          <label for="newProfile">찾기</label>
-        </div>
-        <div class="profile-btn-group">
-          <button class="btn-upload" @click="updateProfile">프로필 업로드</button>
-          <button class="btn-delete" @click="deleteProfile">프로필 삭제</button>
-          <div v-if="state.provider =='google'" class="provider-circle">
-            <img class="provider-logo" :src="require('@/assets/images/google-icon.png')" />
-          </div>
-          <div v-else-if="state.provider == 'kakao'" class="provider-circle">
-            <img class="provider-logo" :src="require('@/assets/images/kakao-icon.png')" />
-          </div>
-          <div v-else class="provider-circle">
-            <img class="provider-babble" :src="require('@/assets/images/provider_babble.png')" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </el-col>
+    </el-col>
 
-  <el-col :sm="15">
-    <div class="password-change-box">
-      <p v-if="state.provider == 'babble'" class="password-change-title">비밀번호 변경</p>
-      <el-form
-        v-if="state.provider == 'babble'"
-        :model="state.form"
-        status-icon
-        :rules="state.rules"
-        ref="updateForm"
-        :label-position="state.form.align"
-        label-width="180px"
-        @change="isValid"
-        class="formMargin"
-      >
-        <el-form-item label="기존 비밀번호" prop="password" class="flexChange">
-          <el-input
-            type="password"
-            v-model="state.form.password"
-            autocomplete="off"
-            class="inputPwd"
-          ></el-input>
-          <el-button @click="checkPassword" class="checkBtn">확인</el-button
-          ><br />
-          <el-alert
-            v-show="state.isSuccess"
-            title="success alert"
-            type="success"
-            show-icon
-            class="alert"
-            @close="state.isSuccess = !state.isSuccess"
-          ></el-alert>
-          <el-alert
-            v-show="state.isFail"
-            title="failed alert"
-            type="error"
-            show-icon
-            class="alert"
-            @close="state.isFail = !state.isFail"
-          ></el-alert>
-        </el-form-item>
-        <el-form-item label="새로운 비밀번호" prop="newPassword" class="flexChange">
-          <el-input
-            type="password"
-            v-model="state.form.newPassword"
-            autocomplete="off"
-            class="inputNewPwd"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="새로운 비밀번호 확인" prop="newPasswordConfirm" class="flexChange">
-          <el-input
-            type="password"
-            v-model="state.form.newPasswordConfirm"
-            autocomplete="off"
-            class="inputNewPwd"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            @click="updatePassword"
-            :disabled="!state.isVal"
-            class="submitBtn"
-            >변경</el-button
+    <el-col :sm="15">
+      <div class="password-change-box">
+        <p v-if="state.provider == 'babble'" class="password-change-title">
+          비밀번호 변경
+        </p>
+        <el-form
+          v-if="state.provider == 'babble'"
+          :model="state.form"
+          status-icon
+          :rules="state.rules"
+          ref="updateForm"
+          :label-position="state.form.align"
+          label-width="180px"
+          @change="isValid"
+          class="formMargin"
+        >
+          <el-form-item
+            label="기존 비밀번호"
+            prop="password"
+            class="flexChange"
           >
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="delete-user-box">
-      <p class="delete-title">회원 탈퇴</p>
-      <p class="delete-content">
-        회원 탈퇴 시, Ba:bble이 제공하는 서비스의 이용이 제한됩니다. 정말로
-        탈퇴하시겠습니까?
-      </p>
-      <el-button @click="deleteUser">Adios Ba:bble</el-button>
-    </div>
-  </el-col>
-</el-row>
+            <el-input
+              type="password"
+              v-model="state.form.password"
+              autocomplete="off"
+              class="inputPwd"
+            ></el-input>
+            <el-button @click="checkPassword" class="checkBtn">확인</el-button
+            ><br />
+            <el-alert
+              v-show="state.isSuccess"
+              title="success alert"
+              type="success"
+              show-icon
+              class="alert"
+              @close="state.isSuccess = !state.isSuccess"
+            ></el-alert>
+            <el-alert
+              v-show="state.isFail"
+              title="failed alert"
+              type="error"
+              show-icon
+              class="alert"
+              @close="state.isFail = !state.isFail"
+            ></el-alert>
+          </el-form-item>
+          <el-form-item
+            label="새로운 비밀번호"
+            prop="newPassword"
+            class="flexChange"
+          >
+            <el-input
+              type="password"
+              v-model="state.form.newPassword"
+              autocomplete="off"
+              class="inputNewPwd"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="새로운 비밀번호 확인"
+            prop="newPasswordConfirm"
+            class="flexChange"
+          >
+            <el-input
+              type="password"
+              v-model="state.form.newPasswordConfirm"
+              autocomplete="off"
+              class="inputNewPwd"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              @click="updatePassword"
+              :disabled="!state.isVal"
+              class="submitBtn"
+              >변경</el-button
+            >
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="delete-user-box">
+        <p class="delete-title">회원 탈퇴</p>
+        <p class="delete-content">
+          회원 탈퇴 시, Ba:bble이 제공하는 서비스의 이용이 제한됩니다. 정말로
+          탈퇴하시겠습니까?
+        </p>
+        <el-button @click="deleteUser">Adios Ba:bble</el-button>
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -148,18 +184,30 @@ export default {
         ],
         newPassword: [
           { required: true, message: "필수 입력 항목입니다.", trigger: "blur" },
-          // { min: 9, message: '최소 9글자를 입력해야 합니다.', trigger: 'blur' },
-          // { max: 16, message: '최대 16자까지 입력 가능합니다.', trigger: 'blur' },
-          // {
-          //   trigger: 'blur',
-          //   validator (rule, value, callback) {
-          //     if (/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/.test(value)) {
-          //       callback()
-          //     } else {
-          //       callback(new Error('비밀번호는 영문, 숫자, 특수문자가 조합되어야합니다.'))
-          //     }
-          //   }
-          // },
+          { min: 9, message: "최소 9글자를 입력해야 합니다.", trigger: "blur" },
+          {
+            max: 16,
+            message: "최대 16자까지 입력 가능합니다.",
+            trigger: "blur"
+          },
+          {
+            trigger: "blur",
+            validator(rule, value, callback) {
+              if (
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/.test(
+                  value
+                )
+              ) {
+                callback();
+              } else {
+                callback(
+                  new Error(
+                    "비밀번호는 영문, 숫자, 특수문자가 조합되어야합니다."
+                  )
+                );
+              }
+            }
+          },
           {
             trigger: "blur",
             validator(rule, value, callback) {
@@ -173,18 +221,30 @@ export default {
         ],
         newPasswordConfirm: [
           { required: true, message: "필수 입력 항목입니다.", trigger: "blur" },
-          // { min: 9, message: '최소 9글자를 입력해야 합니다.', trigger: 'blur' },
-          // { max: 16, message: '최대 16자까지 입력 가능합니다.', trigger: 'blur' },
-          // {
-          //   trigger: 'blur',
-          //   validator (rule, value, callback) {
-          //     if (/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/.test(value)) {
-          //       callback()
-          //     } else {
-          //       callback(new Error('비밀번호는 영문, 숫자, 특수문자가 조합되어야합니다.'))
-          //     }
-          //   }
-          // },
+          { min: 9, message: "최소 9글자를 입력해야 합니다.", trigger: "blur" },
+          {
+            max: 16,
+            message: "최대 16자까지 입력 가능합니다.",
+            trigger: "blur"
+          },
+          {
+            trigger: "blur",
+            validator(rule, value, callback) {
+              if (
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{6,}$/.test(
+                  value
+                )
+              ) {
+                callback();
+              } else {
+                callback(
+                  new Error(
+                    "비밀번호는 영문, 숫자, 특수문자가 조합되어야합니다."
+                  )
+                );
+              }
+            }
+          },
           {
             trigger: "blur",
             validator(rule, value, callback) {
@@ -205,7 +265,7 @@ export default {
       IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f",
       provider: computed(() => {
         return store.getters["auth/getProvider"];
-      }),
+      })
     });
 
     const isValid = function() {
@@ -237,13 +297,13 @@ export default {
         });
     };
 
-    if (state.provider == 'google' || state.provider == 'kakao') {
+    if (state.provider == "google" || state.provider == "kakao") {
       store
-        .dispatch("auth/requestSocialUserInfo", {email: state.email})
-        .then(function (result) {
-          console.log(result, '소셜 로그인 유저 정보 받아오기')
+        .dispatch("auth/requestSocialUserInfo", { email: state.email })
+        .then(function(result) {
+          console.log(result, "소셜 로그인 유저 정보 받아오기");
           store.commit("auth/setUserProfile", result.data.picture);
-        })
+        });
     } else {
       store
         .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
@@ -251,11 +311,11 @@ export default {
           console.log(result.data.picture);
           store.commit("auth/setUserProfile", result.data.picture);
         })
-        .catch(function (err) {
+        .catch(function(err) {
           if (err) {
-            console.log(err, '마이페이지에서 유저정보 불러오며 받은 catch')
+            console.log(err, "마이페이지에서 유저정보 불러오며 받은 catch");
           }
-        })
+        });
     }
 
     const handleFileUpload = function() {
@@ -289,7 +349,7 @@ export default {
         function(data) {
           swal({
             text: "프로필 이미지를 업로드했습니다.",
-            icon: "success",
+            icon: "success"
           });
           store.commit("auth/setUserProfile", data.Location);
           store
@@ -298,7 +358,7 @@ export default {
               picture: data.Location
             })
             .then(res => console.log(res));
-          state.form.file = null
+          state.form.file = null;
         },
         function(err) {
           return alert(
@@ -331,14 +391,14 @@ export default {
           console.log(result);
           swal({
             text: "비밀번호가 변경되었습니다.",
-            icon: "success",
+            icon: "success"
           });
           state.form.password = "";
           state.form.newPassword = "";
           state.form.newPasswordConfirm = "";
-          state.isSuccess = false
-          state.isFail = false
-          state.isVal = false
+          state.isSuccess = false;
+          state.isFail = false;
+          state.isVal = false;
         });
     };
 
@@ -347,26 +407,21 @@ export default {
         text: "정말 Ba:bble에서 탈퇴하시겠습니까?",
         icon: "warning",
         buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
+        dangerMode: true
+      }).then(willDelete => {
         if (willDelete) {
           store
             .dispatch("auth/requestDeleteUser", { email: state.email })
             .then(function(result) {
               swal({
                 text: "탈퇴가 완료되었습니다.\n 다시 또 만나요 우리...",
-                icon: "info",
-              })
+                icon: "info"
+              });
               store.commit("auth/setLogout");
-              router.push("/")
-              .then((() =>window.scrollTo(0,0) ))
+              router.push("/").then(() => window.scrollTo(0, 0));
             });
         }
       });
-
-
-
     };
 
     return {
@@ -379,7 +434,7 @@ export default {
       updateProfile,
       deleteProfile,
       updatePassword,
-      deleteUser,
+      deleteUser
       // clickLogout
     };
   }
@@ -441,7 +496,7 @@ export default {
   object-fit: cover;
 }
 
-.profile-header>label {
+.profile-header > label {
   position: absolute;
   display: inline;
   left: 170px;
@@ -481,12 +536,12 @@ export default {
   background: transparent;
 }
 
-.profile-change-form .file-search>label {
+.profile-change-form .file-search > label {
   display: inline-block;
   width: 70px;
   height: 32px;
   margin-left: 5px;
-  background-color:rgba(113, 28, 250, 0.432);
+  background-color: rgba(113, 28, 250, 0.432);
   color: white;
   cursor: pointer;
   line-height: 30px;
@@ -494,7 +549,7 @@ export default {
   text-align: center;
 }
 
-.profile-change-form .file-name>p {
+.profile-change-form .file-name > p {
   position: relative;
   top: -12px;
   margin-left: 5px;
@@ -523,7 +578,7 @@ export default {
   border: none;
   border-radius: 10px;
   background-color: rgba(121, 23, 250, 0.13);
-  color:  rgba(113, 28, 250, 0.432);
+  color: rgba(113, 28, 250, 0.432);
   cursor: pointer;
 }
 
@@ -542,7 +597,7 @@ export default {
 
 .provider-circle .provider-babble {
   width: 110%;
-  height:110%;
+  height: 110%;
   object-fit: cover;
 }
 
@@ -556,11 +611,12 @@ export default {
   font-weight: bold;
 }
 
-.el-button:focus, .el-button:hover {
-    color: rgba(113, 28, 250, 0.432);
-    border-color: rgba(113, 28, 250, 0.432);
-    background-color: rgba(121, 23, 250, 0.13) ;
-    outline: 0;
+.el-button:focus,
+.el-button:hover {
+  color: rgba(113, 28, 250, 0.432);
+  border-color: rgba(113, 28, 250, 0.432);
+  background-color: rgba(121, 23, 250, 0.13);
+  outline: 0;
 }
 
 .delete-user-box {
@@ -576,11 +632,11 @@ export default {
 .delete-user-box .delete-content {
   font-size: 0.9rem;
   font-weight: bold;
-  color: rgb(66, 64, 64)
+  color: rgb(66, 64, 64);
 }
 
 @media screen and (max-width: 480px) {
-  .profile-change-form>label {
+  .profile-change-form > label {
     left: 18rem;
   }
 
@@ -588,7 +644,6 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: center;
-
   }
 
   .profile-change-form .file-name {
@@ -639,9 +694,5 @@ export default {
   .delete-user-box .delete-content {
     width: 80%;
   }
-
-
-
-
 }
 </style>
