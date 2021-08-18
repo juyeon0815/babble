@@ -60,7 +60,7 @@ MYSQL_ROOT_PASSWORD = ssafy
 ```
 
 [Babble](https://i5a308.p.ssafy.io/)
-```Bash
+```bash
 SDK     :   corretto-11
 .gradle :   6.7
 
@@ -84,26 +84,26 @@ ENTRYPOINT ["java", "-jar","/app.jar"]
 
 ### Other external services
 [Amazon S3](https://aws.amazon.com/ko/?nc2=h_lg)
-```JSON
+```json
 albumBucketName : "babble-test-zimin",
 bucketRegion    : "ap-northeast-2",
 IdentityPoolId  : "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f",
 ```
 
 [Oauth/Kakao](https://developers.kakao.com/product/kakaoLogin)
-```JSON
+```json
 client_id       :   "b571e5a822cacd3d5f0fdec309364338"
 redirect_uri    :   "https://i5a308.p.ssafy.io/:8443/oauth/callback/kakao"
 client_secret   :   "EbRMgQpvBg7CuKhOtJYsri2Xvln0lRbn"
 ```
 [Oauth/Google](https://developers.google.com/identity/protocols/oauth2)
-```JSON
+```json
 client_id       :   "229511140118-31d4vp160c7dd1ld4g27180fmq1qesg8.apps.googleusercontent.com"
 redirect_uri    :   "https://i5a308.p.ssafy.io/:8443/login/oauth2/code/google"
 client_secret   :   "kjfp2GRnn0NAmjEwdrG6oo6m"
 ```
 [랜덤 아이디 생성 API](https://nickname.hwanmoo.kr/)
-```Bash
+```bash
 # 방 입장 시 랜덤 닉네임 생성에 사용
 
 # API Description
@@ -119,7 +119,7 @@ GET https://nickname.hwanmoo.kr/?format=json&count=2
 
 ## Running the tests
 
-```Bash
+```bash
 cd /opt/openvidu
 
 # mysql 설정 

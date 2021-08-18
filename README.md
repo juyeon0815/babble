@@ -27,9 +27,10 @@
 ### 배포 환경 
 - __URL__ : https://i5a308.p.ssafy.io
 - __배포 여부__ : O
-- __접속 가능__ : 접속 가능 / <u>수정 중</u>
+- __접속 가능__ : 접속 가능
 - __HTTPS 적용__ : O 
-- __PORT__ : // 3rd Party에서 사용하는 포트가 있다면 기입해주세요. <- 기입 후 해당 주석 삭제
+- __PORT__ :  Mysql     - 3306
+              Openvidu  - 8443
 <br>
 
 ### 개발 환경
@@ -61,6 +62,7 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 ### 핵심 라이브러리 
 - Front : Vuex, Vue Router, Element Plus
 - Back : JPA, Hiberate, QueryDSL, Lombok
+- Server : S3, Openvidu, Kurrento-Media-Server
 
 ### 서비스 구조
 <img src="/uploads/e048db22ebd22bed08d041804db56d2d/structure.PNG" width="80%">
