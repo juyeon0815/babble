@@ -367,13 +367,6 @@ export default {
       })
     });
 
-    // store
-    //   .dispatch("auth/requestUserInfo", localStorage.getItem("jwt"))
-    //   .then(function(result) {
-    //     // console.log(result.data.picture)
-    //     store.commit("auth/setUserProfile", result.data.picture);
-    //   });
-
     const clickLogo = () => {
       store.commit("menu/setActiveCategory", null);
       store.commit("menu/setMenuActive", 0);
@@ -450,7 +443,6 @@ export default {
     watch(
       () => state.isLoggedin,
       (after, prev) => {
-        // console.log(prev + '--->' + after)
         loadProfile();
       }
     );
@@ -477,16 +469,6 @@ export default {
           });
       }
     };
-
-    //  window.addEventListener('scroll', function(e) {
-    //     if (document.documentElement.scrollTop > 100) {
-    //       let text = document.querySelector(".header-text")
-    //       text.style.opacity = "1"
-    //     } else {
-    //       let text = document.querySelector(".header-text")
-    //       text.style.opacity = "0"
-    //     }
-    //   })
 
     return {
       state,

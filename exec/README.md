@@ -136,67 +136,6 @@ sudo docker run -p 443:8080 babble
 # [https://i5a308.p.ssafy.io]
 ```
 
-### Scenario
 
-<details>
-<summary>시나리오 보기</summary>
-<div markdown="1">
-
-#### 메인 화면
-<img src = "https://i.imgur.com/QTCaU2k.png" width = "1000px">
-
-#### 회원 가입
-<img src = "https://i.imgur.com/WnMWTNQ.png" width = "1000px">
-
-#### 회원가입 인증 코드 확인
-<img src = "https://i.imgur.com/MQXBild.png" width = "1000px">
-
-#### 로그인
-<img src = "https://i.imgur.com/lom3vBh.png" width = "1000px" style ="border-radius:10px">
-
-#### 방 입장 전 대기실
-<img src = "https://i.imgur.com/NvltyvD.png" width = "1000px">
-
-#### 화상회의 room
-<img src = "https://i.imgur.com/EfOOe8i.png" width = "1000px">
-
-<img src = "https://i.imgur.com/JpOQ5S7.png" width = "1000px">
-
-#### 카테고리
-<img src = "https://i.imgur.com/NILHhqK.png" width = "1000px">
-
-#### 마이페이지
-<img src = "https://i.imgur.com/zqRS3OB.png" width = "1000px">
-
-<img src = "https://i.imgur.com/4OLokCB.png" width = "1000px">
-
-<img src = "https://i.imgur.com/k3yUWBa.png" width = "1000px">
-
-#### 에러 페이지 
-<img src = "https://i.imgur.com/tTbs15Z.gif" width = "1000px">
-</div>
-</details>
-
-
-<!-- ### 테스트는 이런 식으로 작성하시면 됩니다
-
-```
-예시
-``` -->
-
-<!-- ## Built With / 누구랑 만들었나요?
-
-* [이름](링크) - 무엇 무엇을 했어요
-* [Name](Link) - Create README.md -->
-
-<!-- ## Contributiong / 기여
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. / [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) 를 읽고 이에 맞추어 pull request 를 해주세요. -->
-
-<!-- ## License / 라이센스
-
-This project is licensed under the MIT License - see the [LICENSE.md](https://gist.github.com/PurpleBooth/LICENSE.md) file for details / 이 프로젝트는 MIT 라이센스로 라이센스가 부여되어 있습니다. 자세한 내용은 LICENSE.md 파일을 참고하세요. -->
-
-## Acknowledgments
-
-* 감사합니다.
+---
+## [Scenario 바로가기](./senario.md)
