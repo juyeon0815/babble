@@ -11,18 +11,15 @@
 
 ```
 Ubuntu          :   20.04 (Focal Fossa)
-
-JDK             :   8-jdk-alpine
-
-Docker          :   20.10.8
-Docker-compose  :   1.29.2
-        └── Openvidu/openvidu-server    :   2.19.0
-        └──         /coturn             :   5.0.0 
-        └──         /proxy              :   7.0.0
-        └── kurento/kurento-media-server:   6.16.0
-        └── babble (java -jar)          :   1.0     //0.0.0.0:443->8080/tcp
-
-Mysql           :   5.6  // 0.0.0.0:3306->3306
+    └── Docker          :   20.10.8
+            └── JDK :   8-jdk-alpine
+        Docker-compose  :   1.29.2
+            └── Openvidu/openvidu-server    :   2.19.0
+            └──         /coturn             :   5.0.0 
+            └──         /proxy              :   7.0.0
+            └── kurento/kurento-media-server:   6.16.0
+            └── babble (java -jar)          :   1.0     //0.0.0.0:443->8080/tcp
+            └── Mysql           :   5.6  // 0.0.0.0:3306->3306
 
 ```
 
@@ -66,12 +63,25 @@ MYSQL_ROOT_PASSWORD = ssafy
 
 [Babble](https://i5a308.p.ssafy.io/)
 ```Bash
-# IDE 
-VsCode      : Vue3    
-IntelliJ
-    - Project SDK : corretto-11
-    - 
-        OAUTH????????????/
+SDK     :   corretto-11
+.gradle :   6.7
+
+# email.properties
+mail.smtp.auth=true
+mail.smtp.starttls.required=true
+mail.smtp.starttls.enable=true
+mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
+mail.smtp.socketFactory.fallback=false
+mail.smtp.port=465
+mail.smtp.socketFactory.port=465
+
+AdminMail.id=babble0802@gmail.com
+AdminMail.password=babble0802pass
+
+# Dockerfile
+FROM openjdk:8-jdk-alpine
+ADD babble-1.0-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar","/app.jar"]
 ```
 
 ### Other external services
@@ -118,43 +128,86 @@ GET https://nickname.hwanmoo.kr/?format=json&count=2
 ```
 ---
 
-## Running the tests / 테스트의 실행
+## Running the tests
 
-어떻게 테스트가 이 시스템에서 돌아가는지에 대한 설명을 합니다
+```Bash
+cd /opt/openvidu
 
-### 테스트는 이런 식으로 동작합니다
+# mysql 설정 
+https://jasper-aardwolf-29e.notion.site/MySQL-4b79fed9d6f940729865a8dca40debec
 
-왜 이렇게 동작하는지, 설명합니다
+#오픈비두 실행
+sudo ./openvidu start
+
+#앱 배포 및 실행
+sudo docker build --tag babble .
+sudo docker run -p 443:8080 babble
+
+# You Can Access 
+# [https://i5a308.p.ssafy.io]
+```
+
+### Scenario
+
+<details>
+<summary>시나리오 보기</summary>
+<div markdown="1">
+
+#### 메인 화면
+<img src = "https://i.imgur.com/QTCaU2k.png" width = "1000px">
+
+#### 회원 가입
+<img src = "https://i.imgur.com/WnMWTNQ.png" width = "1000px">
+
+#### 회원가입 인증 코드 확인
+<img src = "https://i.imgur.com/MQXBild.png" width = "1000px">
+
+#### 로그인
+<img src = "https://i.imgur.com/lom3vBh.png" width = "1000px" style ="border-radius:10px">
+
+#### 방 입장 전 대기실
+<img src = "https://i.imgur.com/NvltyvD.png" width = "1000px">
+
+#### 화상회의 room
+<img src = "https://i.imgur.com/EfOOe8i.png" width = "1000px">
+
+<img src = "https://i.imgur.com/JpOQ5S7.png" width = "1000px">
+
+#### 카테고리
+<img src = "https://i.imgur.com/NILHhqK.png" width = "1000px">
+
+#### 마이페이지
+<img src = "https://i.imgur.com/zqRS3OB.png" width = "1000px">
+
+<img src = "https://i.imgur.com/4OLokCB.png" width = "1000px">
+
+<img src = "https://i.imgur.com/k3yUWBa.png" width = "1000px">
+
+#### 에러 페이지 
+<img src = "https://i.imgur.com/tTbs15Z.gif" width = "1000px">
+</div>
+</details>
+
+
+<!-- ### 테스트는 이런 식으로 작성하시면 됩니다
 
 ```
 예시
-```
+``` -->
 
-### 테스트는 이런 식으로 작성하시면 됩니다
-
-```
-예시
-```
-
-## Deployment / 배포
-
-Add additional notes about how to deploy this on a live system / 라이브 시스템을 배포하는 방법
-
-## Built With / 누구랑 만들었나요?
+<!-- ## Built With / 누구랑 만들었나요?
 
 * [이름](링크) - 무엇 무엇을 했어요
-* [Name](Link) - Create README.md
+* [Name](Link) - Create README.md -->
 
-## Contributiong / 기여
+<!-- ## Contributiong / 기여
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. / [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) 를 읽고 이에 맞추어 pull request 를 해주세요.
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. / [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) 를 읽고 이에 맞추어 pull request 를 해주세요. -->
 
-## License / 라이센스
+<!-- ## License / 라이센스
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://gist.github.com/PurpleBooth/LICENSE.md) file for details / 이 프로젝트는 MIT 라이센스로 라이센스가 부여되어 있습니다. 자세한 내용은 LICENSE.md 파일을 참고하세요.
+This project is licensed under the MIT License - see the [LICENSE.md](https://gist.github.com/PurpleBooth/LICENSE.md) file for details / 이 프로젝트는 MIT 라이센스로 라이센스가 부여되어 있습니다. 자세한 내용은 LICENSE.md 파일을 참고하세요. -->
 
-## Acknowledgments / 감사의 말
+## Acknowledgments
 
-* Hat tip to anyone whose code was used / 코드를 사용한 모든 사용자들에게 팁
-* Inspiration / 영감
-* etc / 기타
+* 감사합니다.
