@@ -3,8 +3,6 @@
 
 ## Getting Started
 
-이 곳에서 설치에 관련된 이야기를 해주시면 좋습니다.
-
 ### Prerequisites / 선행 조건
 
 아래 사항들이 설치가 되어있어야합니다.
@@ -118,15 +116,6 @@ GET https://nickname.hwanmoo.kr/?format=json&count=2
 }
 ```
 
-
-### Installing / 설치
-
-아래 사항들로 현 프로젝트에 관한 모듈들을 설치할 수 있습니다.
-
-```
-예시
-```
----
 
 ## Running the tests
 
