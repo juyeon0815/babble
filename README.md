@@ -29,8 +29,9 @@
 - __배포 여부__ : O
 - __접속 가능__ : 접속 가능
 - __HTTPS 적용__ : O 
-- __PORT__ :  Mysql     - 3306
-              Openvidu  - 8443
+- __PORT__ :  
+  - Mysql : 3306
+  - Openvidu  - 8443
 <br>
 
 ### 개발 환경
