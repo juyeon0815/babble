@@ -20,7 +20,7 @@
 | 김주현                                                       | 김주연                                                  | 이지민                                                  | 조은지                                                  | 황성현                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
 | ![jh.png](/uploads/f099e4146dce0c0946d66ad1430dc0f2/jh.png.jpg) | ![jy](/uploads/88094931803358a39705df43232e1f07/jy.png) | ![jm](/uploads/de0961883a918d25f53d94a7de7b95f9/jm.png) | ![ej](/uploads/e60efdd972598e51c47a6b29f17a7c32/ej.png) | ![sh](/uploads/f305971f3aa2c52a91e65b7c259c7269/sh.png) |
-| 팀장 / backend / 채팅                                        | back / API / 회원 관리 / 배포                           | front /                                                 | front /                                                 | backend / frontend / 화상 송출 / 배포                   |
+| 팀장 / backend / WebSocket 채팅                                        | back / REST API / 회원 관리 / 소셜 로그인 / 배포                           | front / 마이페이지 / WebSocket 이모티콘                                                 | front / 카테고리 페이지 / WebSocket 채팅 / WebRTC 화상 송출                                                 | full-stack / WebRTC 화상 송출 / 배포                   |
 | [j828h@naver.com](j828h@naver.com)                           | [wndusx1@gmail.com](wndusx1@gmail.com)                  | [jm9521@hanmail.net](jm9521@hanmail.net)                | [bagjo28841@gmail.com](bagjo28841@gmail.com)            | [ppko1233@gmail.com](ppko1233@gmail.com)                |
 
 ## ✏️ 프로젝트 명세
@@ -62,6 +62,12 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 - Front : Vuex, Vue Router, Element Plus, CSS media queries, Axios
 - Back : JPA, Hiberate, QueryDSL, Lombok
 
+
+## 🏠 프로젝트 설계
+
+### 프로토타입
+- [Figma](https://www.figma.com/file/STAQLXm4jjJnYXJD3aUkRr/Babble?node-id=0%3A1)
+
 ### 서비스 구조
 <img src="/uploads/8677ec240c5aeef57954988e1acee826/structure.png" width="80%">
 
@@ -70,12 +76,9 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 <img src="/uploads/d32ce6da95741f1c3c41f57d055ceff9/erd_0814.png" width="80%">
 
 
-
-## 🏠 프로젝트 설계
-
-### 프로토타입
-- [Figma](https://www.figma.com/file/STAQLXm4jjJnYXJD3aUkRr/Babble?node-id=0%3A1)
-
+## 🖥️ 포팅 매뉴얼
+- [Getting Started & Running the tests](./exec/README.md)
+- [Test Senario](./exec/senario.md)
 
 
 ## ❗ 주요 기능
