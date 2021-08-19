@@ -57,7 +57,7 @@
 ### Design Resources 
 - 외부 템플릿 또는 에셋 없음 (무료 이미지, 폰트만 사용)
 
-__자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
+__자체 제작 산출물__ (필요시 이미지 또는 설명 첨부)
 - Logo
 - favicon
 
@@ -78,23 +78,28 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 
 <img src="/uploads/d32ce6da95741f1c3c41f57d055ceff9/erd_0814.png" width="80%">
 
+### [Wiki](https://lab.ssafy.com/s05-webmobile1-sub3/S05P13A308/-/wikis/Babble-Wiki/Babble-Wiki)
 
 ## 🖥️ 포팅 매뉴얼
 - [Getting Started & Running the tests](./exec/README.md)
 - [Test Senario](./exec/senario.md)
 
+## 🙋‍♀️ 발표 자료
+- [기획 발표](/uploads/ad3f0d729ac68aba31fa2b1244f1c6bb/서울_3반_8팀_babble_기획발표.pdf)
+- [최종 발표](/uploads/610006a519545ce4bcb4d82854d73096/서울3반_A308_발표자료.pdf)
+- ![UCC](/uploads/30abc4636a67415b8d897a5295267eed/서울3반_A308_UCC경진대회.mp4)
 
 ## ❗ 주요 기능
 
 1. **[회원 가입 / 로그인]** E-mail / SNS로 쉽게 가입하세요.
 
-   <img src="/uploads/96f53f9bb253b569710429536e233c97/join.png" width="50%">
+   <img src="/uploads/96f53f9bb253b569710429536e233c97/join.png" width="30%">
 
-   <img src="/uploads/2605a6f145d374af8413169df32f72a4/join2.png" width="50%">
+   <img src="/uploads/2605a6f145d374af8413169df32f72a4/join2.png" width="30%">
 
    - 비회원도 방 시청 등 서비스 이용이 가능합니다.
 
-   <img src="/uploads/b31c0232ac799341eb07eaefdee11521/login.png" width="50%">
+   <img src="/uploads/b31c0232ac799341eb07eaefdee11521/login.png" width="30%">
 
 2. **[이야기방 생성]** 원하는 주제의 이야기 방을 생성하세요.
 
