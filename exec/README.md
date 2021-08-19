@@ -1,6 +1,4 @@
-![waving](https://capsule-render.vercel.app/api?type=waving&height=200&text=Ba:bble&animation=fadeIn&fontAlign=20&fontAlignY=35&fontColor=ffffff&color=#b642f5)
-
-
+![transparent](https://capsule-render.vercel.app/api?type=transparent&fontColor=703ee5&text=Ba:bble&height=150&fontSize=60&desc=당신을%20위한%20공간&descAlignY=75&descAlign=60)
 ## Getting Started
 
 ### Prerequisites / 선행 조건
