@@ -1,6 +1,4 @@
-![waving](https://capsule-render.vercel.app/api?type=waving&height=200&text=Ba:bble&animation=fadeIn&fontAlign=20&fontAlignY=35&fontColor=ffffff&color=#b642f5)
-
-
+![transparent](https://capsule-render.vercel.app/api?type=transparent&fontColor=703ee5&text=Ba:bble&height=150&fontSize=60&desc=당신을%20위한%20공간&descAlignY=75&descAlign=60)
 
 
 # Ba:bble
@@ -74,7 +72,7 @@ __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
 - [Figma](https://www.figma.com/file/STAQLXm4jjJnYXJD3aUkRr/Babble?node-id=0%3A1)
 
 ### 서비스 구조
-<img src="/uploads/0ba47adb87d76a81b55024aeedb222ed/structure.PNG" width="80%">
+<img src="/uploads/8677ec240c5aeef57954988e1acee826/structure.png" width="80%">
 
 ### ERD
 
