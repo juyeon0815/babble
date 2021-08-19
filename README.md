@@ -1,3 +1,8 @@
+![waving](https://capsule-render.vercel.app/api?type=waving&height=200&text=Ba:bble&animation=fadeIn&fontAlign=20&fontAlignY=35&fontColor=ffffff&color=#b642f5)
+
+
+
+
 # Ba:bble
 
 ## 목차
