@@ -54,18 +54,15 @@
 - 외부 템플릿 또는 에셋 없음 (무료 이미지, 폰트만 사용)
 
 __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부) (미정)
-- LOGO
-- CardView
-- Button
-- Calendar
+- Logo
+- favicon
 
 ### 핵심 라이브러리 
-- Front : Vuex, Vue Router, Element Plus
+- Front : Vuex, Vue Router, Element Plus, CSS media queries, Axios
 - Back : JPA, Hiberate, QueryDSL, Lombok
-- Server : S3, Openvidu, Kurrento-Media-Server
 
 ### 서비스 구조
-<img src="/uploads/e048db22ebd22bed08d041804db56d2d/structure.PNG" width="80%">
+<img src="/uploads/8677ec240c5aeef57954988e1acee826/structure.png" width="80%">
 
 ### ERD
 
