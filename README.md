@@ -31,7 +31,7 @@
 - __HTTPS 적용__ : O 
 - __PORT__ :  
   - Mysql : 3306
-  - Openvidu  - 8443
+  - Openvidu : 8443
 <br>
 
 ### 개발 환경
