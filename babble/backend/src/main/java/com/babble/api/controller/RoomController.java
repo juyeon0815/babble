@@ -113,6 +113,7 @@ public class RoomController {
                 }
             }
         } //for
+
         // HashMap에 담긴 정보로 이메일 전송
         if(!userHashtagMap.isEmpty() && userHashtagMap.size()>0) {
             for(String userEmail: userHashtagMap.keySet()) {
