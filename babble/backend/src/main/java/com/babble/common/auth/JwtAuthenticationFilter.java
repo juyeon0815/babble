@@ -31,14 +31,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
 		super(authenticationManager);
 		this.userService = userService;
-		System.out.println("무슨요청이왔는데?");
 	}
 
 	//인증이나 권한이 필요한 주소요청이 있을 대 해당 필터를 타게 된다.
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		// Read the Authorization header, where the JWT Token should be
+
+
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING); //jwt 헤더 토큰
         System.out.println("header : "+ header);
             // header가 있는지 확인
@@ -47,7 +47,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
                 return;
             }
             try {
-                // If header is present, try grab user principal from database and perform authorization
                 Authentication authentication = getAuthentication(request);
                 // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -65,16 +64,16 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter { //토�
         System.out.println("token :" + token);
         String provider = request.getHeader("provider");
         System.out.println("provider :" + provider);
+
         // 요청 헤더에 Authorization 키값에 jwt 토큰이 포함된 경우에만, 토큰 검증 및 인증 처리 로직 실행.
         if (token != null && provider.equals("babble") ) {
-            // parse the token and validate it (decode)
+
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
             JwtTokenUtil.handleError(token);
             DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
             String userEmail = decodedJWT.getSubject();
-            System.out.println("userEmail : "+userEmail);
-            // Search in the DB if we find the user by token subject (username)
-            // If so, then grab user details and create spring auth token using username, pass, authorities/roles
+
+
             if (userEmail != null) {
                     // jwt 토큰에 포함된 계정 정보(userEmail) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
             		User user = userService.getUserByUserEmail(userEmail);

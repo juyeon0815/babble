@@ -85,7 +85,7 @@ public class EmailServiceImpl implements EmailService {
         return ePw;
     }
 
-    // 방이 생성되면 해당 해시테그를 가진 유젇르에게 이메일을 보낸다.
+    // 방이 생성되면 해당 해시테그를 가진 유저들에게 이메일을 보낸다.
     private MimeMessage createHashTagMessage(String to, String hashtag) throws Exception{
         System.out.println("보내는 대상 : "+ to);
         MimeMessage  message = emailSender.createMimeMessage();

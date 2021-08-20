@@ -19,8 +19,6 @@ public class MessageController {
 
     @MessageMapping("/message")
     public void sendMessage(@Payload MessageReq message) {
-//        log.info("전달 메세지 : " + message);
-        // 내가 보내주고자 한 사람이 subscribe한 링크로 보내준다
         System.out.println(">>>>> 전달 메시지 " + message);
         template.convertAndSend("/sub/message/" + message.getChatroomId(), message);
     }

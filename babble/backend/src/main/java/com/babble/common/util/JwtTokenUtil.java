@@ -29,7 +29,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * jwt 토큰 유틸 정의.
  * 유저 정보로 jwt 토큰을 만들거나 토큰을 바탕으로 유저 정보를 가져옴
  */
-//@RequiredArgsConstructor
+
 @Component
 @Slf4j
 public class JwtTokenUtil {
@@ -48,7 +48,6 @@ public class JwtTokenUtil {
     }
 
     public static boolean validateToken(String jwt) { // Jwt Token의 유효성을 체크
-//        System.out.println(">>> getClaims(jwt )" + getClaims(jwt));
         return getClaims(jwt) != null;
     }
 
@@ -77,25 +76,6 @@ public class JwtTokenUtil {
         }
     }
 
-    // 토큰에서 회원 정보 추출
-    public static String getUserInfo(String jwt) {
-//        return Jwts.parser()
-//                .setSigningKey(secretKey.getBytes(Charset.forName("UTF-8")))
-//                .parseClaimsJws(jwt.replace("{", "")
-//                .replace("}",""))
-//                .getBody()
-//                .getSubject();
-        return Jwts.parser()
-                .setSigningKey(secretKey.getBytes(Charset.forName("UTF-8")))
-                .parseClaimsJws(jwt.replace("{", "")
-                .replace("}","")).toString();
-    }
-
-    public void setExpirationTime() {
-        //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-        JwtTokenUtil.expirationTime = expirationTime;
-    }
-
     public static JWTVerifier getVerifier() {
         return JWT
                 .require(Algorithm.HMAC512(secretKey.getBytes()))
@@ -114,21 +94,14 @@ public class JwtTokenUtil {
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
 
-    public static String getToken(Instant expires, String userId) {
-        return JWT.create()
-                .withSubject(userId)
-                .withExpiresAt(Date.from(expires))
-                .withIssuer(ISSUER)
-                .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
-                .sign(Algorithm.HMAC512(secretKey.getBytes()));
-    }
+
 
     public static Date getTokenExpiration(int expirationTime) { //토큰 만료일자
         Date now = new Date();
         return new Date(now.getTime() + expirationTime);
     }
 
-    public static void handleError(String token) throws Exception {
+    public static void handleError(String token) {
 
         try {
             JWTVerifier verifier = JWT
@@ -154,55 +127,31 @@ public class JwtTokenUtil {
             System.out.println("jwt audience list : " + jwt.getAudience());
 
         } catch (AlgorithmMismatchException ex) {
-            System.out.println("여기들어옴1");
+            log.error("AlgorithmMismatchException");
             throw ex;
         } catch (InvalidClaimException ex) {
-            System.out.println("여기들어옴2");
+            log.error("InvalidClaimException");
             throw ex;
         } catch (SignatureGenerationException ex) {
-            System.out.println("여기들어옴3");
+            log.error("SignatureGenerationException");
             throw ex;
         } catch (SignatureVerificationException ex) {
-            System.out.println("여기들어옴4");
+            log.error("SignatureVerificationException");
             throw ex;
         } catch (TokenExpiredException ex) {
-            System.out.println("여기들어옴4");
+            log.error("TokenExpiredException");
             throw ex;
         } catch (JWTCreationException ex) {
-            System.out.println("여기들어옴6");
+            log.error("JWTCreationException");
             throw ex;
         } catch (JWTDecodeException ex) {
-            System.out.println("여기들어옴7");
+            log.error("JWTDecodeException");
             throw ex;
         } catch (JWTVerificationException ex) {
-            System.out.println("여기들어옴8");
+            log.error("JWTVerificationException");
             throw ex;
         } catch (Exception ex) {
-            System.out.println("여기들어옴9");
-            throw ex;
-        }
-    }
-
-    public static void handleError(JWTVerifier verifier, String token) {
-        try {
-            verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (AlgorithmMismatchException ex) {
-            throw ex;
-        } catch (InvalidClaimException ex) {
-            throw ex;
-        } catch (SignatureGenerationException ex) {
-            throw ex;
-        } catch (SignatureVerificationException ex) {
-            throw ex;
-        } catch (TokenExpiredException ex) {
-            throw ex;
-        } catch (JWTCreationException ex) {
-            throw ex;
-        } catch (JWTDecodeException ex) {
-            throw ex;
-        } catch (JWTVerificationException ex) {
-            throw ex;
-        } catch (Exception ex) {
+            log.error("Exception");
             throw ex;
         }
     }
