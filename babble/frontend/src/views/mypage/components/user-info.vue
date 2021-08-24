@@ -200,9 +200,9 @@ export default {
       isVal: false,
       isSuccess: false,
       isFail: false,
-      albumBucketName: "babble-test-zimin",
-      bucketRegion: "ap-northeast-2",
-      IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f",
+      albumBucketName: "album-bucket-name",
+      bucketRegion: "bucket-region",
+      IdentityPoolId: "identity-pool-id",
       provider: computed(() => {
         return store.getters["auth/getProvider"];
       }),

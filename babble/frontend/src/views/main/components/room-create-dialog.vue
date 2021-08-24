@@ -171,9 +171,9 @@ export default {
       isVal: false,
       dialogVisible: computed(() => props.open),
       formLabelWidth: "30%",
-      albumBucketName: "babble-test-zimin",
-      bucketRegion: "ap-northeast-2",
-      IdentityPoolId: "ap-northeast-2:bc050f66-b34f-4742-be97-12b75f402f1f"
+      albumBucketName: "album-bucket-name",
+      bucketRegion: "bucket-region",
+      IdentityPoolId: "identity-pool-id"
     });
 
     const isValid = function() {
